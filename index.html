@@ -1,0 +1,4075 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>松江南京站，到了</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;700&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --ink: #e9ecea;
+    --muted: #8f9a96;
+    --faint: #5c6662;
+    --line-green: #3aa36a;   /* 松山新店線 綠 */
+    --line-orange: #f0a232;  /* 中和新蘆線 橙 */
+    --black: #000;
+    --serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+    --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  /* 手機點擊時不要出現瀏覽器預設的藍色反白 */
+  * { -webkit-tap-highlight-color: transparent; }
+  body {
+    background: var(--black);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  [hidden] { display: none !important; }
+
+  /* ---------- 首頁 ---------- */
+  #title-screen, .title-clone {
+    position: fixed; inset: 0;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding: 24px 16px calc(15vh + env(safe-area-inset-bottom, 0px));
+    background:
+      url("https://images.plurk.com/354QmmqGvNUZIJ072J9KoI.png") center / cover no-repeat,
+      #0b0e0d;
+  }
+  .title-inner {
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    max-width: 640px;
+    animation: rise 1.6s ease-out both;
+  }
+  .lines {
+    display: flex; gap: 6px;
+  }
+  .lines span { width: 44px; height: 4px; border-radius: 2px; }
+  .lines .g { background: var(--line-green); }
+  .lines .o { background: var(--line-orange); }
+  h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: clamp(2.2rem, 7vw, 4.2rem);
+    letter-spacing: .12em;
+    line-height: 1.25;
+    text-wrap: balance;
+    text-shadow: 0 0 4px rgba(0,0,0,.9), 0 2px 18px rgba(0,0,0,.85);
+  }
+  h1 .comma { color: #fff; }
+  .intro {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(.95rem, 2.4vw, 1.1rem);
+    line-height: 2;
+    color: #fff;
+    text-shadow: 0 0 3px #000, 0 1px 10px rgba(0,0,0,.95);
+  }
+  .intro.broken { white-space: pre-line; }
+  .intro .note { display: block; font-size: .85em; color: #fff; letter-spacing: .08em; }
+  .menu { display: flex; gap: 2.4em; margin-top: 8px; }
+  .link {
+    background: none; border: 0; padding: 4px 0; cursor: pointer;
+    font-family: var(--serif); font-size: 1.1rem; letter-spacing: .2em;
+    color: var(--ink);
+    text-shadow: 0 0 3px #000, 0 1px 10px rgba(0,0,0,.95);
+    border-bottom: 1px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+  .link:hover, .link:focus-visible { color: #fff; border-bottom-color: var(--line-green); outline: none; }
+  .link::before { content: "▸ "; opacity: 0; transition: opacity .2s; color: var(--line-green); }
+  .link:hover::before, .link:focus-visible::before { opacity: 1; }
+
+  /* 首頁選單：滑鼠移過時以綠色【】框住文字 */
+  .menu .link { position: relative; white-space: nowrap; }
+  .menu { flex-wrap: wrap; justify-content: center; }
+  @media (max-width: 480px) {
+    .menu { gap: .9em; }
+    .menu .link { font-size: .9rem; letter-spacing: .05em; }
+  }
+  .menu .link:hover, .menu .link:focus-visible { border-bottom-color: transparent; }
+  .menu .link::before, .menu .link::after {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--line-green); letter-spacing: 0;
+    opacity: 0; transition: opacity .2s;
+  }
+  .menu .link::before { content: "【"; right: 100%; }
+  .menu .link::after  { content: "】"; left: calc(100% - .2em); }
+  .menu .link:hover::before, .menu .link:hover::after,
+  .menu .link:focus-visible::before, .menu .link:focus-visible::after { opacity: 1; }
+
+  /* 首頁下方的小連結（其他作品／贊助我們） */
+  .extra-links { display: flex; gap: 2em; margin-top: -4px; }
+  .extra-links a {
+    font-family: var(--serif); font-size: .85rem; letter-spacing: .15em; color: #cfd6d3; text-decoration: none;
+    text-shadow: 0 0 3px #000, 0 1px 8px rgba(0,0,0,.95);
+    border-bottom: 1px solid transparent; transition: color .2s, border-color .2s;
+  }
+  .extra-links a:hover, .extra-links a:focus-visible { color: #fff; border-bottom-color: var(--line-green); outline: none; }
+
+  /* 解鎖通知 */
+  #toasts { position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 90;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+  .toast { padding: 8px 20px; background: rgba(0,0,0,.85); border: 1px solid var(--line-green); color: var(--line-green);
+    font-family: var(--serif); font-weight: 700; font-size: 1rem; letter-spacing: .12em; white-space: nowrap;
+    box-shadow: 0 0 16px rgba(58,163,106,.25); animation: toastin .35s ease-out both; transition: opacity .5s, transform .5s; }
+  .toast.out { opacity: 0; transform: translateY(-8px); }
+  @keyframes toastin { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+
+  /* 來電彈窗 */
+  .call-mask { position: fixed; inset: 0; z-index: 75; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,.35); animation: fadein .2s ease-out both; }
+  .call-box { min-width: min(300px, 100%); padding: 24px 32px 26px; background: #000; border: 1px solid #555; text-align: center; color: #fff;
+    font-family: var(--sans); box-shadow: 0 0 24px rgba(0,0,0,.8); }
+  .call-status { font-size: .85rem; letter-spacing: .15em; color: #aaa; }
+  .call-name { margin: 10px 0 20px; font-size: 1.4rem; font-weight: 700; letter-spacing: .1em; }
+  .call-actions { display: flex; justify-content: center; gap: 18px; }
+  .call-btn { padding: 8px 26px; border: 0; border-radius: 0; color: #fff; font: 700 1rem var(--sans); letter-spacing: .1em; cursor: pointer; }
+  .call-mask.in-call .call-actions { display: none; }
+  .call-mask.in-call .call-name { margin-bottom: 0; }
+  .call-after { display: none; }
+  .call-mask.after .call-status, .call-mask.after .call-name, .call-mask.after .call-actions { display: none; }
+  .call-mask.after .call-after { display: block; }
+  .call-after p { margin: 0 0 18px; line-height: 1.9; letter-spacing: .08em; }
+  .call-dl { padding: 4px 8px; border: 0; background: none; color: #fff; font: 700 1rem var(--sans); letter-spacing: .1em; cursor: pointer; }
+  .call-dl:hover, .call-dl:focus-visible { color: #ffd76a; outline: none; }
+  .call-btn.answer { background: #2fa552; }
+  .call-btn.hang { background: #d23b30; }
+  .call-btn:hover, .call-btn:focus-visible { filter: brightness(1.15); outline: none; }
+
+  /* 隧道逃生小遊戲 */
+  .tunnel-win { position: fixed; inset: 0; z-index: 85; background: #020403; }
+  .tunnel-win iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+  /* ---------- 劇情頁 ---------- */
+  #story-screen { transition: background-color 1.2s ease; }
+  #story-screen.blood { background: #3a0707; }
+  /* 下墜：往上飛的速度線 */
+  #story-screen.fall::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      linear-gradient(transparent 55%, rgba(255,255,255,0.5) 88%, transparent) 4% 0 / 1px 300px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.3) 88%, transparent) 11% 0 / 2px 200px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.55) 88%, transparent) 17% 0 / 1px 600px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.3) 88%, transparent) 24% 0 / 1px 150px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.4) 88%, transparent) 30% 0 / 2px 300px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.5) 88%, transparent) 37% 0 / 1px 200px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.35) 88%, transparent) 43% 0 / 1px 600px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.3) 88%, transparent) 50% 0 / 2px 150px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.55) 88%, transparent) 56% 0 / 1px 300px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.35) 88%, transparent) 63% 0 / 1px 200px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.45) 88%, transparent) 69% 0 / 2px 600px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.3) 88%, transparent) 76% 0 / 1px 150px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.5) 88%, transparent) 82% 0 / 1px 300px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.35) 88%, transparent) 88% 0 / 2px 200px repeat-y,
+      linear-gradient(transparent 55%, rgba(255,255,255,0.5) 88%, transparent) 95% 0 / 1px 600px repeat-y;
+    animation: fallspeed .45s linear infinite;
+  }
+  @keyframes fallspeed {
+    to { background-position: 4% -600px, 11% -600px, 17% -600px, 24% -600px, 30% -600px, 37% -600px, 43% -600px, 50% -600px, 56% -600px, 63% -600px, 69% -600px, 76% -600px, 82% -600px, 88% -600px, 95% -600px; }
+  }
+  @media (prefers-reduced-motion: reduce) { #story-screen.fall::before { animation-duration: 3s; } }
+  /* 夢醒：白色背景、淺棕色文字 */
+  #story-screen.dream { background: #fff; }
+  #story-screen.dream .stage p, #story-screen.dream .stage p.old { color: #a8835e; }
+  #story-screen.dream .stage p.end.dream { color: #8a6440; }
+  #story-screen.dream .choice, #story-screen.dream .link, #story-screen.dream .hint { color: #a8835e; text-shadow: none; }
+  #story-screen.dream .choice:hover, #story-screen.dream .choice:focus-visible { color: #6e4c2c; }
+  #story-screen.dream .caret { background: #a8835e; }
+  /* 不醒來：全白畫面，只剩文字 */
+  #story-screen.white { background: #fff; }
+  #story-screen.white .stage p, #story-screen.white .stage p.old { color: #a8835e; }
+  #story-screen.white .choice { color: #a8835e; }
+  #story-screen.white .choice:hover, #story-screen.white .choice:focus-visible { color: #6e4c2c; }
+  #story-screen.white .caret { background: #a8835e; }
+  #story-screen .stage p.reload-hint, #story-screen .stage p.reload-hint.old { margin-top: 2.2em; font-size: .8rem; letter-spacing: .12em; color: #c9b39b; }
+  #story-screen.white .story-actions, #story-screen.white .story-left, #story-screen.white .hint { visibility: hidden; }
+  #story-screen, #endings-screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px;
+    padding: 16px;
+    background: var(--black);
+  }
+  .stage-wrap {
+    width: 800px; height: 600px;
+    max-width: 100%;
+    max-height: calc(100% - 110px);
+    position: relative;
+  }
+  .stage {
+    width: 100%; height: 100%;
+    padding: 48px 64px;
+    overflow-y: auto;
+    cursor: pointer;
+    user-select: none;
+  }
+  .stage p {
+    margin: 0 0 .6em;
+    font-family: var(--serif);
+    font-size: 1.12rem;
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 38em;
+  }
+  /* 細綠色捲軸 */
+  .stage { scrollbar-width: thin; scrollbar-color: var(--line-green) transparent; }
+  .stage::-webkit-scrollbar { width: 4px; }
+  .stage::-webkit-scrollbar-track { background: transparent; }
+  .stage::-webkit-scrollbar-thumb { background: var(--line-green); border-radius: 2px; }
+  .stage::-webkit-scrollbar-thumb:hover { background: #4fc283; }
+  .stage p.old { color: #b9c0bd; }
+  .stage p.glow { color: #fff; text-shadow: 0 0 8px rgba(255,255,255,.7), 0 0 20px rgba(200,230,255,.55), 0 0 38px rgba(170,215,255,.4); }
+  .stage p.glow.old { color: #eef4f2; }
+  .stage p.gap { margin-top: 1.4em; }
+  .stage p.bold { font-weight: 700; color: #fff; }
+  .stage p.shout, .stage p.shout.old { font-weight: 700; font-size: 1.5rem; color: #fff; letter-spacing: .04em; }
+  .stage p.shout.red, .stage p.shout.red.old { color: #d8423a; }
+  .stage p.redbold, .stage p.redbold.old { font-weight: 700; color: #d8423a; }
+  .stage p.mirror { transform: scaleX(-1); }
+  .stage p.end.good, .stage p.end.good.old { color: var(--line-green); }
+  /* 電梯門：從兩側關上，文字跟著被擠壓 */
+  .stage-wrap { --door: 0; }
+  .stage { transition: padding .9s ease; }
+  .stage-wrap.doors .stage { padding-left: max(64px, calc(var(--door) * 100% + 20px)); padding-right: max(64px, calc(var(--door) * 100% + 20px)); }
+  .door {
+    position: absolute; top: 0; bottom: 0; width: calc(var(--door) * 100%); z-index: 2; pointer-events: none;
+    background:
+      linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,0) 30%, rgba(0,0,0,.25)),
+      repeating-linear-gradient(to bottom, #2a2f2e 0 2px, #252a29 2px 4px);
+    transition: width .9s ease;
+  }
+  .door.l { left: 0; border-right: 2px solid #5c6662; box-shadow: 6px 0 14px rgba(0,0,0,.6); }
+  .door.r { right: 0; border-left: 2px solid #5c6662; box-shadow: -6px 0 14px rgba(0,0,0,.6); }
+  .stage-wrap:not(.doors) .door { display: none; }
+  /* 手電筒：只有游標周圍看得見 */
+  .torch {
+    position: absolute; inset: 0; z-index: 4; pointer-events: none; display: none;
+    background: radial-gradient(circle 150px at var(--fx, 50%) var(--fy, 50%),
+      rgba(0,0,0,0) 0, rgba(0,0,0,0) 55%, rgba(0,0,0,.85) 80%, #000 100%);
+  }
+  .stage-wrap.flashlight .torch { display: block; }
+  .stage-wrap.flashlight, .stage-wrap.flashlight .stage { touch-action: none; }
+  @media (prefers-reduced-motion: reduce) { .stage, .door { transition: none; } }
+  .stage p.end.normal, .stage p.end.normal.old { color: #fff; }
+  .stage p.chant { word-break: break-all; }
+  .stage .blur { filter: blur(3px); }
+  .stage .copy-code { cursor: pointer; color: var(--line-green); text-decoration: underline dotted; text-underline-offset: 3px; word-break: break-all; }
+  .stage .copy-code:hover { color: #5fd08f; }
+  .scene-video { margin: .4em 0 1.4em; width: 100%; animation: fadein .6s ease-out both; }
+  .scene-video { position: relative; }
+  .video-shield { position: absolute; inset: 0; z-index: 1; }
+  .scene-video video { display: block; width: 100%; height: auto; background: #000; }
+  .choice.danger { color: #d8423a; }
+  /* 電梯按鈕面板（金屬質感圓形按鈕） */
+  /* 控制室的顏色按鈕 */
+  .color-wrap { margin: .6em 0 1em; animation: fadein .4s ease-out both; cursor: default; }
+  .color-pad { display: inline-grid; grid-template-columns: repeat(5, 46px); gap: 12px; padding: 18px 20px; margin-bottom: 10px;
+    background: linear-gradient(135deg, #3a3f42, #5b6164 40%, #33383b); border: 1px solid #222; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 6px 18px rgba(0,0,0,.6); }
+  .color-btn { width: 46px; height: 46px; padding: 0; border-radius: 50%; border: 3px solid #1a1a1a; background: var(--c); cursor: pointer;
+    box-shadow: inset 0 -5px 0 rgba(0,0,0,.28), inset 0 3px 0 rgba(255,255,255,.35), 0 4px 0 #111; transition: transform .08s, box-shadow .08s; }
+  .color-btn[aria-pressed="true"] { transform: translateY(3px); border-color: #fff; box-shadow: inset 0 4px 6px rgba(0,0,0,.4), 0 1px 0 #111, 0 0 10px rgba(255,255,255,.55); }
+  .color-btn:focus-visible { outline: 2px solid #ffd76a; outline-offset: 3px; }
+  .color-wrap.done .color-btn { cursor: default; }
+  .color-wrap .choice { display: block; }
+  .stage p.color-msg { margin: .4em 0 0; color: #bbb; animation: fadein .3s ease-out both; }
+  @media (max-width: 420px) { .color-pad { grid-template-columns: repeat(5, 40px); gap: 9px; padding: 14px; } .color-btn { width: 40px; height: 40px; } }
+  .lift-pad { display: inline-flex; flex-direction: column; align-items: center; gap: 14px; margin: .6em 0 1em; padding: 18px 22px 20px;
+    background: linear-gradient(135deg, #8d9396, #c9cdcf 22%, #7c8285 48%, #b9bec0 72%, #6f7578);
+    border: 1px solid #4b5053; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 6px 18px rgba(0,0,0,.6);
+    animation: fadein .4s ease-out both; cursor: default; }
+  .lift-screen { width: 196px; height: 30px; overflow: hidden; white-space: nowrap; text-align: right; padding: 0 8px; box-sizing: border-box;
+    background: #120604; border: 2px inset #555; border-radius: 3px; color: #ff4a2a; font: 700 17px/26px "Courier New", monospace; letter-spacing: 1px;
+    text-shadow: 0 0 6px rgba(255,80,40,.8); }
+  .lift-cols { display: flex; gap: 22px; }
+  .lift-col { display: flex; flex-direction: column; gap: 10px; }
+  .lift-ctl { display: flex; gap: 22px; }
+  .lift-btn { width: 46px; height: 46px; border-radius: 50%; padding: 0; cursor: pointer;
+    font: 700 17px/1 "Noto Sans TC", sans-serif; color: #2b2f31; text-shadow: 0 1px 0 rgba(255,255,255,.6);
+    background: radial-gradient(circle at 35% 30%, #ffffff, #d7dbdd 30%, #9aa0a3 70%, #6d7376);
+    border: 2px solid #5d6366; box-shadow: inset 0 -2px 3px rgba(0,0,0,.35), inset 0 2px 2px rgba(255,255,255,.7), 0 2px 3px rgba(0,0,0,.5);
+    transition: box-shadow .15s, color .15s; }
+  .lift-btn.word { font-size: 13px; }
+  .lift-btn:hover, .lift-btn:focus-visible { outline: none; color: #000; box-shadow: inset 0 -2px 3px rgba(0,0,0,.35), inset 0 2px 2px rgba(255,255,255,.7), 0 0 0 2px var(--line-green); }
+  .lift-btn:active, .lift-btn.lit { color: #ff8a1a; text-shadow: 0 0 6px rgba(255,150,40,.9); box-shadow: inset 0 2px 4px rgba(0,0,0,.45), 0 0 8px rgba(255,150,40,.7); }
+  .lift-pad.done .lift-btn { cursor: default; }
+  .stage p.lift-msg { animation: fadein .4s ease-out both; }
+  .stage-wrap.lift-shake { animation: liftshake .14s linear infinite; }
+  @keyframes liftshake { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.5px,1px); } 50% { transform: translate(1px,-1px); } 75% { transform: translate(1.5px,1px); } }
+  @media (prefers-reduced-motion: reduce) { .stage-wrap.lift-shake { animation: none; } }
+  .choice.danger:hover, .choice.danger:focus-visible { color: #ff5a4f; }
+  /* QR 碼網頁視窗 */
+  .qr-win {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2vh 2vw; background: rgba(0,0,0,.7);
+    animation: fadein .2s ease-out both;
+  }
+  .qr-frame-wrap {
+    position: relative; width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    background: #000; border: 2px solid #3a4441;
+    box-shadow: 0 0 40px rgba(0,0,0,.8);
+  }
+  /* CRT 螢幕效果：只疊在網頁內容上（不含上方工具列），不影響點擊 */
+  .crt-screen { position: relative; flex: 1; min-height: 0; display: flex; }
+  .crt-screen::before,
+  .crt-screen::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  }
+  .crt-screen::before { display: none; }   /* 掃描線已移除 */
+  .crt-screen::after {
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 60%, rgba(0,0,0,.3) 90%, rgba(0,0,0,.55) 100%);
+  }
+  .crt-screen iframe { filter: contrast(1.08) saturate(1.12) brightness(1.03); }
+  .qr-bar {
+    flex: none; display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; background: #0b0e0d; border-bottom: 1px solid #3a4441;
+  }
+  .qr-nav {
+    height: 30px; padding: 0 12px; cursor: pointer;
+    background: #000; border: 1px solid #5c6662; border-radius: 2px;
+    font-family: var(--serif); font-size: .9rem; letter-spacing: .06em; color: #e9ecea;
+  }
+  .qr-nav:hover:not(:disabled), .qr-nav:focus-visible { border-color: var(--line-green); color: var(--line-green); outline: none; }
+  .qr-nav:disabled { color: #4a524f; border-color: #262c2a; cursor: default; }
+  .qr-frame-wrap iframe { display: block; flex: 1; width: 100%; min-height: 0; border: 0; background: #000; }
+  .qr-close {
+    margin-left: auto;
+    width: 30px; height: 30px; padding: 0; cursor: pointer;
+    background: #000; border: 1px solid #c9d1ce; border-radius: 2px;
+    font-family: var(--sans); font-size: 1.2rem; line-height: 1; color: #fff;
+  }
+  .qr-close:hover, .qr-close:focus-visible { border-color: var(--line-green); color: var(--line-green); outline: none; }
+  .modal {
+    position: fixed; inset: 0; z-index: 70;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px; background: rgba(0,0,0,.55);
+    animation: fadein .15s ease-out both;
+  }
+  .modal-box {
+    min-width: min(280px, 100%); max-width: min(560px, 100%); padding: 28px 40px;
+    line-height: 1.6; overflow-wrap: anywhere;
+    background: #000; border: 1px solid var(--line-green);
+    font-family: var(--serif); font-weight: 700; font-size: 1.3rem; letter-spacing: .15em;
+    color: var(--line-green); text-align: center;
+    box-shadow: 0 0 24px rgba(58,163,106,.25);
+  }
+  .modal-box.bad { color: #d8423a; border-color: #d8423a; box-shadow: 0 0 24px rgba(216,66,58,.3); }
+  .modal-box.bad small { color: #9c6f6c; }
+  .wake-msg, .skip-msg { margin: 0 0 14px; }
+  .wake-box .choice { color: #d8423a; }
+  .wake-box .choice:hover, .wake-box .choice:focus-visible { color: #ff6a5f; }
+  /* 電量過低：像被強制關機一樣變黑 */
+  .shutdown { position: fixed; inset: 0; z-index: 65; background: #000; overflow: hidden; }
+  .shutdown::before {
+    content: ""; position: absolute; inset: 0; background: #e9ecea;
+    animation: poweroff .75s cubic-bezier(.6,0,.4,1) forwards;
+  }
+  @keyframes poweroff {
+    0%   { transform: scale(1, 1); opacity: .85; }
+    45%  { transform: scale(1, .004); opacity: 1; }
+    80%  { transform: scale(0, .004); opacity: 1; }
+    100% { transform: scale(0, 0); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .shutdown::before { animation: none; opacity: 0; } }
+  /* 精神崩潰：畫面崩壞效果 */
+  #story-screen.collapse .stage-wrap { animation: quake .09s steps(2) infinite, warp 2.6s ease-in forwards; }
+  /* 輕微的畫面故障（DREAM END 醒來）：細小左右抖動＋低飽和的紅藍錯位 */
+  #story-screen.glitch-soft .stage-wrap { animation: softjitter .16s steps(2) infinite; }
+  #story-screen.glitch-soft .stage p, #story-screen.glitch-soft .stage p.old { text-shadow: 2px 0 rgba(190,110,110,.55), -2px 0 rgba(110,135,190,.55); }
+  @keyframes softjitter { 0% { transform: translateX(0); } 50% { transform: translateX(-2px); } 100% { transform: translateX(1px); } }
+  @media (prefers-reduced-motion: reduce) { #story-screen.glitch-soft .stage-wrap { animation: none; } }
+  /* 畫面故障：抖動、反色、畫面切割 */
+  #story-screen.glitch .stage-wrap { animation: quake .07s steps(2) infinite, glitchcut .35s steps(1) infinite; }
+  @keyframes glitchcut {
+    0%   { clip-path: inset(0 0 0 0); filter: none; }
+    25%  { clip-path: inset(12% 0 58% 0); filter: invert(1); }
+    50%  { clip-path: inset(46% 0 20% 0); filter: hue-rotate(90deg) contrast(2); }
+    75%  { clip-path: inset(70% 0 4% 0); filter: invert(1) hue-rotate(200deg); }
+  }
+  #story-screen.collapse .stage p { color: #d8423a; text-shadow: 3px 0 #3aa36a, -3px 0 #4a6cff; }
+  @keyframes quake {
+    0% { transform: translate(0, 0) skewX(0); }
+    50% { transform: translate(-6px, 3px) skewX(-4deg); }
+    100% { transform: translate(5px, -4px) skewX(3deg); }
+  }
+  @keyframes warp {
+    0%   { filter: none; }
+    40%  { filter: contrast(1.6) hue-rotate(40deg); }
+    70%  { filter: invert(1) contrast(2) blur(1px); }
+    100% { filter: invert(1) contrast(3) blur(3px) brightness(.4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #story-screen.collapse .stage-wrap { animation: warp 2.6s ease-in forwards; }
+  }
+  .modal-box .modal-sub { display: block; margin-top: 6px; font-size: .8em; letter-spacing: .08em; }
+  /* 標題左上角的小輸入框 */
+  .cheat-form {
+    position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); left: 16px; z-index: 2;
+    display: flex; gap: 6px; align-items: center;
+  }
+  .cheat-form input {
+    width: 9em; padding: 3px 6px;
+    background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.35); border-radius: 2px;
+    font-family: var(--sans); font-size: .8rem; color: #fff;
+  }
+  .cheat-form input:focus { outline: none; border-color: var(--line-green); }
+  .cheat-form button {
+    padding: 3px 8px; cursor: pointer;
+    background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.35); border-radius: 2px;
+    font-family: var(--sans); font-size: .8rem; color: #fff;
+  }
+  .cheat-form button:hover, .cheat-form button:focus-visible { border-color: var(--line-green); color: var(--line-green); outline: none; }
+  .cheat-form.shake { animation: quake .08s steps(2) 4; }
+  /* 只在觸控裝置（手機、平板）顯示；電腦用鍵盤輸入上上下下左右左右BA */
+  @media (hover: hover) and (pointer: fine) { .cheat-form { display: none; } }
+  /* 玻璃碎裂 */
+  .shatter { position: fixed; inset: 0; z-index: 80; overflow: hidden; background: #fff; }
+  .shard { position: absolute; inset: 0; will-change: transform, opacity; }
+  .shard > * { position: absolute; inset: 0; }
+  .crack { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .crack path { fill: none; stroke: rgba(255,255,255,.9); stroke-width: 1.6; filter: drop-shadow(0 0 2px rgba(0,0,0,.8)); }
+  .cheat-text {
+    position: fixed; inset: 0; z-index: 81; background: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.1em;
+    padding: 24px 16px; cursor: pointer; user-select: none; text-align: center;
+  }
+  .cheat-text p { margin: 0; font-family: var(--serif); font-size: 1.1rem; line-height: 1.7; color: #8a8f8d; max-width: 36em; animation: fadein .6s ease-out both; }
+  .cheat-text p.end { margin-top: .8em; font-weight: 700; font-size: 1.3rem; color: #6d7270; letter-spacing: .12em; }
+  .modal-box small { display: block; margin-top: 14px; font-size: .75rem; font-weight: 400; letter-spacing: .1em; color: #6f9c83; }
+  .stage p.announce, .stage p.announce.old {
+    font-weight: 700; color: #d8423a; letter-spacing: .08em;
+  }
+  .stage p.end, .stage p.end.old {
+    margin-top: .6em;
+    font-family: var(--serif); font-weight: 700; font-size: 1.3rem; letter-spacing: .12em;
+    color: #d8423a;
+  }
+  .scene-img { margin: .4em 0 1.4em; width: 100%; animation: fadein .6s ease-out both; }
+  .scene-img img.dl-img { cursor: pointer; }
+  .scene-img .dl-cap { margin-top: 6px; font-size: .8rem; color: #8a9591; letter-spacing: .1em; }
+  .scene-img img.dl-img:hover { outline: 1px solid var(--line-green); outline-offset: 3px; }
+  .scene-img img { display: block; width: 100%; height: auto; border-radius: 2px; }
+  .choices { display: flex; flex-wrap: wrap; gap: 1.2em; margin-top: .6em; animation: fadein .4s ease-out both; }
+  .choice {
+    background: none; border: 0; padding: 4px 0; cursor: pointer;
+    font-family: var(--serif); font-weight: 700; font-size: 1.12rem; letter-spacing: .05em;
+    color: #fff;
+    transition: color .2s;
+  }
+  .choice:hover, .choice:focus-visible { color: var(--line-green); outline: none; }
+  .link.glow, .choice.glow { color: #fff; animation: choiceglow 2.4s ease-in-out infinite; }
+  @keyframes choiceglow {
+    0%, 100% { text-shadow: 0 0 4px rgba(255,255,255,.5), 0 0 10px rgba(170,215,255,.3); }
+    50%      { text-shadow: 0 0 8px rgba(255,255,255,.95), 0 0 22px rgba(170,215,255,.75); }
+  }
+  @media (prefers-reduced-motion: reduce) { .link.glow { animation: none; text-shadow: 0 0 8px rgba(255,255,255,.8); } }
+  .stage p.end.true, .stage p.end.true.old { color: #f1d38a; text-shadow: 0 0 10px rgba(241,211,138,.45); }
+  .stage p.end.secret, .stage p.end.secret.old { animation: secretGlow 2.4s ease-in-out infinite; }
+  @keyframes secretGlow { 0%, 100% { text-shadow: 0 0 8px rgba(241,211,138,.45); } 50% { text-shadow: 0 0 18px rgba(255,220,120,.95), 0 0 34px rgba(255,200,80,.55); } }
+  .dial { display: flex; flex-wrap: wrap; align-items: center; gap: 1em; margin-top: .4em; animation: fadein .4s ease-out both; cursor: default; }
+  .dial input {
+    flex: 1 1 12em; max-width: 20em; min-width: 0;
+    background: transparent; border: 0; border-bottom: 1px solid #5c6662;
+    padding: 6px 2px; color: #fff;
+    font-family: var(--serif); font-size: 1.12rem; letter-spacing: .05em;
+  }
+  .dial input::placeholder { color: #6f7a76; }
+  .dial input:focus { outline: none; border-bottom-color: var(--line-green); }
+  .caret {
+    display: inline-block; width: .5em; height: 1.1em;
+    vertical-align: -0.15em; margin-left: 2px;
+    background: var(--ink);
+    animation: blink 1s steps(1) infinite;
+  }
+  #story-screen { -webkit-touch-callout: none; }
+  .hint {
+    font-size: .85rem; letter-spacing: .15em;
+    color: #aab4b0;
+  }
+  .back {
+    font-size: .95rem; letter-spacing: .15em; color: #c9d1ce;
+  }
+  .story-left {
+    position: absolute; left: 0; top: calc(100% + 8px);
+  }
+  .story-actions {
+    position: absolute; right: 0; top: calc(100% + 8px);
+    display: flex; gap: 1.6em;
+  }
+  /* 跳轉劇情彈窗 */
+  .jump-box {
+    width: min(460px, 100%); max-height: min(70vh, 520px);
+    display: flex; flex-direction: column;
+    background: #000; border: 1px solid var(--line-green);
+    box-shadow: 0 0 24px rgba(58,163,106,.25);
+    font-family: var(--serif);
+  }
+  .jump-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    padding: 16px 20px 12px; border-bottom: 1px solid #1f3a2b;
+  }
+  .jump-head h3 { margin: 0; font-size: 1.15rem; letter-spacing: .2em; color: var(--line-green); }
+  .jump-close {
+    background: none; border: 0; cursor: pointer; padding: 2px 0;
+    font-family: var(--serif); font-size: .9rem; letter-spacing: .12em; color: #8fb9a1;
+  }
+  .jump-close:hover, .jump-close:focus-visible { color: #fff; outline: none; }
+  .jump-list {
+    list-style: none; margin: 0; padding: 6px 0; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: var(--line-green) transparent;
+  }
+  .jump-list::-webkit-scrollbar { width: 4px; }
+  .jump-list::-webkit-scrollbar-track { background: transparent; }
+  .jump-list::-webkit-scrollbar-thumb { background: var(--line-green); border-radius: 2px; }
+  .jump-item {
+    display: block; width: 100%; text-align: left; cursor: pointer;
+    background: none; border: 0; padding: 12px 20px;
+    font-family: var(--serif); color: var(--ink);
+    transition: background .15s;
+  }
+  .jump-item:hover, .jump-item:focus-visible { background: #0d1f16; outline: none; }
+  .jump-item b { display: block; font-size: 1.02rem; font-weight: 700; letter-spacing: .06em; }
+  .jump-item:hover b, .jump-item:focus-visible b { color: var(--line-green); }
+  .jump-item span { display: block; margin-top: 3px; font-size: .82rem; color: #8a9591; }
+  .reset-box { padding: 24px 28px; gap: 10px; text-align: center; }
+  /* 安心開關彈窗：文字在左，綿綿貼在右下角 */
+  .safe-box { flex-direction: row; align-items: stretch; gap: 16px; padding: 22px 18px 18px 26px; width: min(520px, 100%); max-height: none; }
+  .safe-text { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-width: 0; }
+  .safe-text p { margin: 0; font-size: 1rem; line-height: 1.8; color: var(--ink); letter-spacing: .04em; }
+  .safe-text .reset-actions { justify-content: flex-start; margin: 0; }
+  .safe-pic { flex: 0 0 auto; align-self: flex-end; width: clamp(70px, 24%, 130px); height: auto; max-height: 150px; object-fit: contain; }
+  .reset-msg { margin: 0; font-size: 1.15rem; font-weight: 700; letter-spacing: .12em; color: var(--line-green); }
+  .reset-note { margin: 0; font-size: .85rem; line-height: 1.6; color: #8a9591; }
+  .reset-actions { display: flex; justify-content: center; gap: 1.6em; margin-top: 8px; }
+  .jump-empty { padding: 20px; font-size: .9rem; color: #8a9591; }
+  .endings .back { align-self: flex-end; }
+  .back:hover, .back:focus-visible { color: #fff; }
+
+  /* ---------- 結局列表 ---------- */
+  .endings {
+    width: 800px; max-width: 100%;
+    display: flex; flex-direction: column; gap: 20px;
+    padding: 0 24px;
+  }
+  .endings h2 {
+    margin: 0; font-family: var(--serif); font-weight: 700;
+    font-size: 1.6rem; letter-spacing: .2em;
+  }
+  .endings ol {
+    list-style: none; margin: 0; padding: 0 6px 0 0; display: flex; flex-direction: column;
+    max-height: min(530px, 58vh); overflow-y: auto;   /* 約十筆，超過就捲動 */
+    scrollbar-width: thin; scrollbar-color: var(--line-green) transparent;
+  }
+  .endings ol::-webkit-scrollbar { width: 4px; }
+  .endings ol::-webkit-scrollbar-track { background: transparent; }
+  .endings ol::-webkit-scrollbar-thumb { background: var(--line-green); border-radius: 2px; }
+  .endings li { flex: none; }
+  .endings li {
+    display: flex; gap: 1.2em; align-items: baseline;
+    padding: 14px 0; border-bottom: 1px solid #1c2220;
+    font-family: var(--serif); color: var(--faint);
+  }
+  .endings li .no { font-variant-numeric: tabular-nums; font-size: .85rem; min-width: 4.5em; }
+  .ending-link {
+    background: none; border: 0; padding: 0; cursor: pointer; text-align: left;
+    font-family: var(--serif); font-size: 1rem; color: #e9ecea;
+    transition: color .2s;
+  }
+  .ending-link:hover, .ending-link:focus-visible { color: var(--line-green); outline: none; text-decoration: underline; text-underline-offset: 4px; }
+  .endings .empty { color: var(--muted); font-size: .9rem; }
+
+  @keyframes rise { from { opacity: .0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  @media (max-width: 600px) {
+    .stage { padding: 28px 20px; }
+    .hint { margin-top: 34px; }
+    .stage p { font-size: 1.02rem; }
+    .menu { gap: 1.6em; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .title-inner { animation: none; }
+    .caret { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 首頁 -->
+<section id="title-screen">
+  <form class="cheat-form" id="cheat-form" autocomplete="off">
+    <input id="cheat-input" type="text" aria-label="密碼">
+    <button type="submit">確認</button>
+  </form>
+  <div class="title-inner">
+    <h1>松江南京站<span class="comma">，</span>到了</h1>
+    <p class="intro">
+      <span class="note">本故事由作者親身經驗改編。</span>
+      聽說，在松江南京站一個不小心，<br>就會陷入無盡的輪迴。
+    </p>
+    <nav class="menu">
+      <button class="link" id="btn-start" type="button">開始遊戲</button>
+      <button class="link" id="btn-endings" type="button">結局列表</button>
+      <button class="link" id="btn-reset" type="button">清除記錄</button>
+      <button class="link" id="btn-safe" type="button">安心開關</button>
+    </nav>
+    <!-- 達成過「歡迎來到松江南京站」後出現 -->
+    <nav class="extra-links" id="extra-links" hidden>
+      <a href="https://portaly.cc/beifudianxiaoer" target="_blank" rel="noopener">其他作品</a>
+      <a href="https://portaly.cc/beifudianxiaoer/support" target="_blank" rel="noopener">贊助我們</a>
+    </nav>
+  </div>
+</section>
+
+<!-- 劇情 -->
+<section id="story-screen" hidden>
+  <div class="stage-wrap">
+    <div class="torch" aria-hidden="true"></div>
+    <div class="door l" aria-hidden="true"></div>
+    <div class="door r" aria-hidden="true"></div>
+    <div class="stage" id="stage" role="log" aria-live="polite"></div>
+    <div class="story-left">
+      <button class="link back" id="story-browser" type="button" hidden>查看瀏覽器</button>
+    </div>
+    <div class="story-actions">
+      <button class="link back" id="story-jump" type="button">跳轉劇情</button>
+      <button class="link back" id="story-back" type="button">返回標題</button>
+    </div>
+  </div>
+  <div class="hint">點擊螢幕閱讀劇情，長按快速跳過。</div>
+</section>
+
+<div class="modal" id="jump" hidden role="dialog" aria-modal="true" aria-labelledby="jump-title">
+  <div class="jump-box">
+    <div class="jump-head">
+      <h3 id="jump-title">跳轉劇情</h3>
+      <button class="jump-close" id="jump-close" type="button">關閉</button>
+    </div>
+    <ul class="jump-list" id="jump-list"></ul>
+  </div>
+</div>
+
+<div class="modal" id="safe" hidden role="alertdialog" aria-modal="true" aria-labelledby="safe-msg">
+  <div class="jump-box safe-box">
+    <div class="safe-text">
+      <p id="safe-msg"></p>
+      <div class="reset-actions">
+        <button class="choice" id="safe-yes" type="button">【是】</button>
+        <button class="choice" id="safe-no" type="button">【否】</button>
+      </div>
+    </div>
+    <img class="safe-pic" src="https://images.plurk.com/3Be24gOKRJBOZnmtxMRXKZ.png" alt="">
+  </div>
+</div>
+
+<div class="modal" id="reset" hidden role="alertdialog" aria-modal="true" aria-labelledby="reset-title">
+  <div class="jump-box reset-box">
+    <p id="reset-title" class="reset-msg">確定要清除所有記錄嗎？</p>
+    <p class="reset-note" id="reset-note">讀過的劇情和遊戲進度都會被刪除，無法復原。結局列表會保留。</p>
+    <div class="reset-actions">
+      <button class="choice" id="reset-yes" type="button">【確定】</button>
+      <button class="choice" id="reset-all" type="button" hidden>【全部清除】</button>
+      <button class="choice" id="reset-no" type="button">【取消】</button>
+    </div>
+  </div>
+</div>
+
+<!-- DREAM END：要從夢裡醒來嗎？ -->
+<div class="modal" id="wake" hidden role="alertdialog" aria-modal="true" aria-labelledby="wake-title">
+  <div class="modal-box bad wake-box">
+    <p id="wake-title" class="wake-msg">要從夢裡醒來嗎？</p>
+    <div class="reset-actions">
+      <button class="choice" id="wake-yes" type="button">【是】</button>
+      <button class="choice" id="wake-no" type="button">【否】</button>
+    </div>
+  </div>
+</div>
+
+<!-- 來電（成人網預約 Cherry）：蓋在瀏覽器上面的黑底彈窗 -->
+<div class="call-mask" id="call" hidden role="alertdialog" aria-modal="true" aria-labelledby="call-name">
+  <div class="call-box">
+    <div class="call-status" id="call-status">📞 來電中……</div>
+    <div class="call-name" id="call-name">不明</div>
+    <div class="call-actions">
+      <button class="call-btn answer" id="call-answer" type="button">接聽</button>
+      <button class="call-btn hang" id="call-hang" type="button">掛斷</button>
+    </div>
+    <div class="call-after">
+      <p>後面那段話完全聽不懂……<br>先保存起來吧。</p>
+      <button class="call-dl" id="call-dl" type="button">【下載】</button>
+    </div>
+  </div>
+</div>
+
+<!-- 通關過跑酷之後：要跳過小遊戲嗎？ -->
+<div class="modal" id="skip-tunnel" hidden role="alertdialog" aria-modal="true" aria-labelledby="skip-title">
+  <div class="modal-box">
+    <p id="skip-title" class="skip-msg">要跳過小遊戲嗎？</p>
+    <div class="reset-actions">
+      <button class="choice" id="skip-yes" type="button">【是】</button>
+      <button class="choice" id="skip-no" type="button">【否】</button>
+    </div>
+  </div>
+</div>
+
+<!-- 隧道逃生小遊戲 -->
+<div class="tunnel-win" id="tunnel-win" hidden>
+  <iframe id="tunnel-frame" title="隧道逃生" allow="autoplay"></iframe>
+</div>
+
+<div class="qr-win" id="qr-win" hidden role="dialog" aria-modal="true" aria-label="掃描 QR 碼後開啟的網頁">
+  <div class="qr-frame-wrap">
+    <div class="qr-bar">
+      <button class="qr-nav" id="qr-back" type="button">◀ 上一頁</button>
+      <button class="qr-nav" id="qr-fwd" type="button">下一頁 ▶</button>
+      <button class="qr-close" id="qr-close" type="button" aria-label="關閉">X</button>
+    </div>
+    <div class="crt-screen">
+      <iframe id="qr-frame" title="掃描 QR 碼後開啟的網頁"></iframe>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden role="alertdialog" aria-live="assertive">
+  <div class="modal-box"><span id="modal-text">無法選擇！</span><span class="modal-sub" id="modal-sub" hidden></span><small>點擊任意處關閉</small></div>
+</div>
+
+<!-- 結局列表 -->
+<section id="endings-screen" hidden>
+  <div class="endings">
+    <h2>結局列表</h2>
+    <ol id="endings-list"></ol>
+    <button class="link back" id="endings-back" type="button">返回標題</button>
+  </div>
+</section>
+
+
+<script>
+  const CLIP_SRC = "media/clip.mp4";
+  const CLIP_SAFE_SRC = "media/clip_safe.mp4";
+  const MANNEQUIN_SRC = "media/mannequin.mp4";
+  const MANNEQUIN_SAFE_SRC = "media/mannequin_safe.mp4";
+  const NOTE_PSD_B64 = null;
+  const CALL_AUDIO_B64 = null;   // Cherry 來電接聽後播放的音檔（播完可下載）
+  // 【軌道】→【快跑！】的隧道逃生小遊戲（整個網頁，放進 iframe 播放）
+  const TUNNEL_HTML = null;
+</script>
+
+<script>
+(function () {
+  // ---------- 劇情資料 ----------
+  // 每個場景：lines 為逐行內容（字串＝文字，{ img } ＝圖片），choices 為最後出現的選項。
+  const IMG = (url) => ({ img: url });
+  const SEA_LOCK = "錯誤！現在無法離開。";   // 女廁路線的樓梯迷宮：禁止跳轉劇情、返回標題
+  const scenes = {
+    start: {
+      lines: [
+        "對許多台北人來說，搭捷運通勤已經是日常生活的一部分。",
+        "「不管是去到多麼陌生的地方，只要搭上捷運，就能找到回家的路。」",
+        "這樣的認知，帶來充足的安心感。",
+        "這天跟朋友去了一直想去的餐廳，分別後又稍微逛了一下，不知不覺就天黑了。",
+        "幸好，附近就有捷運站。",
+        "遠遠地看到松江南京站的橫幅，不禁鬆了口氣。",
+        "從最近的七號出口進去吧。",
+        IMG("https://images.plurk.com/3tq1jA1Xblg2SFsCLdKcXQ.png")
+      ],
+      // 觸發過「歡迎來到松江南京站」後，進站會先接到 omen
+      noJump: true,   // 第一頁不列入跳轉劇情
+      // 達成過 TRUE END、清除記錄時選擇保留結局列表：第一頁多一個前往 TRUE END 的選項
+      choices: () => [
+        { text: "進站", to: welcomeReached ? "omen" : "lobby" },
+        ...(unlocked.has("true") && truePaused ? [{ text: "前往終點", to: "trueEnd", cls: "glow" }] : [])
+      ]
+    },
+    lobby: {
+      lines: [
+        "早已過了尖峰時間，站裡只有零星的旅客。",
+        "在大廳確認過了，要搭的是往松山方向的車。",
+        "雖然經常搭捷運，但印象中是第一次從這裡上車。",
+        "這一站的路線很複雜，想到對向月台還必須爬樓梯。",
+        "或許是因為這樣，地面上貼心地畫著不同顏色的指示線。",
+        IMG("https://images.plurk.com/3NgFdjImIVi0mMSRUEsOgs.png"),
+        "只要跟著走，即使第一次來也不會走錯。"
+      ],
+      choices: [
+        { text: "沿著地上的線走", to: "xindian" },
+        { text: "先去上個廁所", to: "toilet" }
+      ]
+    },
+    xindian: {
+      lines: [
+        "我沿著地上的指示線移動。",
+        "「……咦？」",
+        "明明朝著往松山的方向走，最後看見的卻是往新店的月台。",
+        "一名推著嬰兒車的女性站在最前方，旁邊是幾個穿黑西裝的上班族。",
+        "有個拄拐杖的老爺爺，正專注地盯著跑馬燈。",
+        "穿著制服的保全自身邊走過。",
+        "下一班列車還有三分鐘，我望著月台上大大的「新店」兩個字，陷入茫然。"
+      ],
+      choices: [
+        { text: "重走一次", to: "again" },
+        { text: "停下來思考", to: "stopThink" }
+      ]
+    },
+    again: {
+      lines: [
+        "大概是哪裡搞錯了。",
+        "這麼想著，仔細檢查所有能看見的指示，但果然這裡是往新店的月台。",
+        "好奇怪……",
+        "乾脆再走一次吧。",
+        "走下有著巨大「松山↘」標示的樓梯，來到中和新蘆線的月台。",
+        "面前是另一道往上的樓梯，一樣有「松山↑」的標示。"
+      ],
+      choices: [{ text: "走上去", to: "loop" }]
+    },
+    loop: {
+      lines: [
+        "好不容易爬上旋轉樓梯，卻再度看到了往新店的月台。",
+        "推嬰兒車的女性、上班族們、老人，還有再一次錯身而過的保全。",
+        "下一班列車，還有三分鐘。",
+        "全都跟剛才一模一樣。",
+        "冷汗從下巴滑落。",
+        "「松山↘」的樓梯就在眼前。",
+        "回頭一看，身後的旋轉樓梯上方，有著「蘆洲迴龍↑」的標示。",
+        "原本就是這樣的構造嗎？",
+        "當時的我，已經沒有辦法去思考這些了。"
+      ],
+      choices: [
+        { text: "繼續走", to: "keepGoing" },
+        { text: "回頭", to: "turnBack" }
+      ]
+    },
+    turnBack: {
+      lines: [
+        "猶豫半晌，我決定走「蘆洲迴龍↑」的樓梯。",
+        "本以為這樣就能回到原先的地方，可是等著我的，仍然是往新店方向的月台。",
+        "我看了下自己出來的這個樓梯的標示，明確寫著「松山↘」。",
+        "不對勁。",
+        "我想起了關於松江南京站有名的鬼打牆傳說。",
+        "不過，我聽說的都是「搭上車之後會不斷回到松江南京站」的故事。",
+        "像我這樣還沒上車就開始鬼打牆的，真是聞所未聞。",
+        "這算什麼？隱藏劇情？",
+        "想來竟莫名的惱火，已經走了一天，連好好回家睡覺都不行嗎？"
+      ],
+      choices: [
+        { text: "直接睡在這裡", to: "sleep" }
+      ]
+    },
+    sleep: {
+      lines: [
+        "不讓我出去是吧？那我就直接在這裡睡覺，看你能拿我怎麼辦！",
+        "我一直深信，只要夠不要臉，鬼也拿我沒輒。",
+        "於是我找到座椅，把背包當枕頭，脫了鞋子整個人躺上去。"
+      ],
+      choices: [{ text: "翌日", to: "endVanish" }]
+    },
+    endVanish: {
+      ending: "vanish",
+      lines: [
+        IMG("https://images.plurk.com/2rqqqCwOlAhJmIyhhBMwsp.png"),
+        "……。",
+        { text: "BAD END：人間蒸發", cls: "end" }
+      ],
+      choices: [
+        { text: "重新來過", to: "loop" },   // 回到【繼續走】【回頭】那一頁
+        { text: "回首頁", to: "@title" }
+      ]
+    },
+    keepGoing: {
+      lines: [
+        "我走下樓梯。",
+        IMG("https://images.plurk.com/6staiAuhQgh1O9yyVfzFwe.png"),
+        "……跟剛才一模一樣的場景。",
+        "嬰兒車、女性、上班族、老人、保全。",
+        "所有人都像被安排好的一樣，待在相同的位置。",
+        "已經開始感到混亂了。"
+      ],
+      choices: [
+        { text: "再次下樓", to: "downAgain" },
+        { text: "跟人搭話", to: "talk" },
+        { text: "打電話求救", to: "phone" }
+      ]
+    },
+    downAgain: {
+      lines: [
+        "我走下樓梯。",
+        "眼前的景象讓我不禁楞了許久。",
+        IMG("https://images.plurk.com/3aYOnrTqtJn4lp0gHQRDe3.png"),
+        "再怎麼遲鈍，也應該能察覺詭異之處，月台上的人們卻依舊若無其事地站在那裡。",
+        "不，到這個地步，我已經無法相信他們是人類了。"
+      ],
+      choices: [{ text: "逃跑", to: "flee" }]
+    },
+    flee: {
+      onEnter: () => { runCount = 0; },
+      lines: [
+        "還是相同的樓層，但已經完全不是我認識的松江南京站了。",
+        IMG("https://images.plurk.com/3Z79PHmu4VS3SgWdrEO9iS.jpg"),
+        "看板上出現的，是陌生的文字。"
+      ],
+      choices: [{ text: "繼續跑", to: "run" }]
+    },
+    run: {
+      onEnter: () => { runCount++; },
+      // 付錢給老人之前不能離開；付過錢後，第七次以前不能跳轉或返回標題
+      // 達成過「歡迎來到松江南京站」之後，樓梯輪迴時不再鎖住跳轉劇情、返回標題
+      lockNav: () => (!welcomeReached && (!paidOldMan || runCount < 7)) ? "錯誤！輪迴還沒有結束。" : "",
+      lines: [
+        "不行。",
+        "無論如何都到不了。",
+        "不管下樓幾次，都找不到出口。"
+      ],
+      // 第七次出現時，【繼續跑】變成【思考】，並多出【停下來】
+      // 給過老人一百塊：第七次出現【停下來】【思考】
+      // 還沒給：永遠只有【繼續跑】，第十次時畫面崩壞（BAD END：精神崩潰）
+      choices: () => (paidOldMan && runCount >= 7)
+        ? [{ text: "停下來", to: "endWelcome" }]
+        : [{ text: "繼續跑", to: "run" }],
+      afterLines: () => {
+        if ((!paidOldMan || forceCollapse) && runCount >= 10) { forceCollapse = false; collapse(); return true; }
+        return false;
+      }
+    },
+    phone: {
+      lines: [
+        "我停下腳步。",
+        "一直這樣跑下去沒有意義，冷靜思考其他的出路吧。",
+        "我順手摸了摸口袋，直到這時，我才後知後覺地發現，自己帶著手機。",
+        "對啊，從剛才到現在，因為太緊張了，完全忘了有手機。",
+        "打電話求助吧！",
+        { text: "打給誰好呢……", cls: "gap" }
+      ],
+      // 輸入框＋【撥打】，下面有【放棄】
+      dial: (who) => dialRoute(who),
+      giveUp: "keepGoing"   // 【放棄】回到「一模一樣的場景」
+    },
+    call110: {
+      lines: [
+        "報警吧！",
+        "就算被當成玩笑也沒關係，只要耐心解釋，一定會有人來救我的。",
+        "抱著希望撥出電話，不久後便接通了。",
+        "「喂？」",
+        { text: "『您好？怎麼了嗎？』", cls: "mirror" },
+        "奇怪，他在說什麼？",
+        { text: "『喂？請問您遇到什麼困難了嗎？如果不方便說話，請敲一下話筒……』", cls: "mirror" },
+        "冷汗滑落脖頸，我「知道」對方說的是中文，卻無法「理解」他的意思。",
+        "我拼命地解釋自己遇到的狀況，對方的聲音卻越來越小，最後只剩下無盡的雜音。",
+        { text: "要打別的電話嗎……", cls: "gap" }
+      ],
+      dial: (who) => dialRoute(who),
+      giveUp: "keepGoing"   // 【放棄】回到「一模一樣的場景」
+    },
+    callNote: {
+      lines: [
+        "試著撥打貼在廁所門口的神祕號碼。",
+        "響了幾聲之後，電話被接通了。",
+        "『咳、咳，這是自動播放的語音留言，聽見這段話，代表我已經不在了。』",
+        "『不知道你是不是已經發現了，這裡並不是現實世界……待在這裡太久，我好像有點不正常了……』",
+        "『真想親眼見證《獵人》的結局啊……唉，就算跟你說這些也沒用吧，呵呵，早知道就不要相信什麼內臟教了，你也是，千萬不要被他騙了啊！』",
+        "『我已經快不行了，在此，把我最後的秘技傳授給你──』",
+        "『如果出現BUG，就使用Konami Code逃出去吧！加油啊！』",
+        "一大串莫名其妙的錄音播放完後，通話就結束了，再次打過去，已經變成了空號……",
+        { text: "要打別的電話嗎……", cls: "gap" }
+      ],
+      dial: (who) => dialRoute(who),
+      giveUp: "keepGoing"   // 【放棄】回到「一模一樣的場景」
+    },
+    // 撥打失蹤人口協尋網的電話（男廁路線在網頁按過【知道】）
+    callMissing: {
+      lines: [
+        "撥打了尋人網站上的電話。",
+        "『您好，請問您知道任何關於王百端的事嗎？』",
+        "出現了聽不出性別與年齡的電子語音，忽然就提到王百端，讓我打了個冷顫。",
+        "『您好，請問您知道任何關於王百端的事嗎？』",
+        "「我……可能在松江南京站見過他……」",
+        "『太好了！』",
+        "無機質的語音稍微提高了音調。",
+        "『那麼，我們將立刻進行逮捕，謝謝您的協助。』",
+        "「喂，等一下啊！」",
+        "電話被掛斷了……",
+        "忽然，我的視線被一道白光籠罩，什麼都看不見。"
+      ],
+      choices: [{ text: "遮住眼睛", to: "endBroadcast" }]
+    },
+    endBroadcast: {
+      ending: "broadcast",
+      lines: [
+        "我抬肘捂住雙眼，過了一會，我聽見了人群聲。",
+        "睜開眼，我竟回到了「普通的世界」，許許多多的人站在月台上，沒有恐怖的怪物，沒有老人、保全、嬰兒車。",
+        "月台上方的廣告螢幕上，播放著那個人的影像──",
+        "『今天，是我重生的十週年。』",
+        "『十年前的那天晚上，有個異端者，打算殺死我。但是，多虧了某位好心人的匿名電話，警察得以及時將他制服，他是賦予我新生的，我的恩人。』",
+        "『如今的我，已經成為了首相，我會讓每個人都獲得內臟，讓所有人都得到幸福。』",
+        "男人說完，台下響起了久久不停的熱烈掌聲。",
+        { text: "BAD END：不該播出的電話", cls: "end" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    callSite: {
+      lines: [
+        "撥打了那神祕網站裡的電話號碼。",
+        "響了幾聲之後，有人回應了。",
+        "『歡迎使用我們的服務，請問您遇到了什麼困難嗎？』",
+        "非常有朝氣的年輕女性的聲音。",
+        "「我現在在松江南京站……」",
+        "『啊～我了解了！您現在正處於輪迴之中吧！』",
+        "「請問……」",
+        "『根據義津川先生的說法，初次進入能量場時不小心開啟輪迴是相當正常的！請不用驚慌！』",
+        "「妳聽我說──」",
+        "『雖然義津川先生已經圓滿完成了人生的任務，但他將自己的一部分留在車站裡，永遠陪伴著會員們！關於找到他的方式，請在網站中輸入您所在的車站名稱查詢！』",
+        "女性從頭到尾都沒有給我說話的空間，自顧自講完就掛斷了電話。",
+        { text: "要打別的電話嗎……", cls: "gap" }
+      ],
+      dial: (who) => dialRoute(who),
+      giveUp: "keepGoing"   // 【放棄】回到「一模一樣的場景」
+    },
+    dialed: {
+      lines: ["打不通……"],
+      dial: (who) => dialRoute(who),
+      giveUp: "keepGoing"   // 【放棄】回到「一模一樣的場景」
+    },
+    endWelcome: {
+      ending: "welcome",
+      // 只有第一次走到這個結局時清空跳轉劇情列表（onEnter 在記錄結局之前執行）
+      onEnter: () => { if (!welcomeReached) clearVisited(); setWelcomeReached(true); },
+      lines: [
+        "無數次狂奔過後，用盡力氣的我從樓梯上滾落。",
+        IMG("https://images.plurk.com/7Gw60Hnn5jXR81SLTTxrNw.png"),
+        "眼前依舊是同樣的月台。",
+        "不，這裡真的是往新店的月台嗎？那究竟是什麼呢？",
+        "現在所看見的，跟最初的樣貌有哪裡不同呢？我想不起來了。",
+        "不知從第幾次開始，那些等車的人都消失了。",
+        "遠方傳來燈光，列車進站。",
+        "然而，我已經連活下去的念頭都沒有了。",
+        { text: "NORMAL END：歡迎來到松江南京站", cls: "end normal" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    toilet: {
+      lines: [
+        "忽然有股尿意……還是先去上個廁所好了。",
+        "廁所門口貼著這樣的字條……這是誰的電話？",
+        IMG("https://images.plurk.com/71vtg431wCo5KTdvIwtIZV.png"),
+        "算了，先別管那麼多。"
+      ],
+      // 進過其中一間後，另一間就不能進（清除記錄才重置）
+      choices: () => [
+        restroom === "women"
+          ? { text: "進入男廁", blocked: "還是不要隨便跑進男廁吧……" }
+          : { text: "進入男廁", to: "mensRoom" },
+        restroom === "men"
+          ? { text: "進入女廁", blocked: "還是不要隨便跑進女廁吧……" }
+          : { text: "進入女廁", to: "womensRoom" },
+        { text: "算了", to: "skipToilet" }
+      ]
+    },
+    womensRoom: {
+      onEnter: () => setRestroom("women"),
+      // 選了【回答】之後才鎖住跳轉劇情與返回標題
+      lockNav: () => answering ? "請回答！" : "",
+      lines: [
+        "剛踏入廁所內，就聽見裡面有奇怪的聲音。",
+        "咚、咚、咚。",
+        "彷彿是在撞擊著什麼。",
+        "聲音是從其中一個隔間傳出來的。",
+        "裡面的人出了什麼事嗎？",
+        "雖然想開口詢問，可直覺告訴我，還是不要理會為妙。",
+        "廁所什麼的到站再上就好了。",
+        "正打算轉身離開，有人叫住了我。",
+        { text: "「今天是什麼日子？」", cls: "bold" },
+        "聽不出性別，無比沙啞的聲音。",
+        "不對，不可以回頭，絕對不可以有任何反應，得快點逃走。",
+        "我拼命這麼想，但雙腿像灌了鉛一樣動也不動。",
+        "「今天是什麼日子？」",
+        "那個人又問了一次。",
+        "我該說什麼嗎……"
+      ],
+      // 撿過鑰匙後再來，【不回答】改接沒有鑰匙的版本
+      choices: () => [
+        // 在同一頁換成輸入框
+        { text: "回答", action: () => startAnswer(WOMENS_ASK) },
+        { text: "不回答", to: hasKey() ? "noAnswerAgain" : "noAnswer" }
+      ]
+    },
+    notEnough: {
+      lines: [
+        "「還不夠……還不夠……」",
+        "那聲音重複說著，我忽然感到一陣暈眩……"
+      ],
+      choices: [{ text: "醒來", to: "toilet" }]   // 回到【先去上個廁所】那一頁
+    },
+    noAnswerAgain: {
+      lines: [
+        "我緊閉雙唇，不敢發出任何聲音。",
+        "隔間裡沉默了一會。",
+        "意外地沒有發生任何可怕的事，隔間裡的人說話了：",
+        "「請小心變成亂碼的月台，必須停止呼吸，否則會被帶走的，不要讓它們抓到妳，時間不多了，請妳一定要活下來。」",
+        "聲音聽起來像年輕的女性，而且似乎沒有惡意……",
+        "隔間的門緩緩敞開，裡面一個人也沒有。",
+        "束縛著雙腳的無形力量消失了，我竟完全忘了要害怕。"
+      ],
+      choices: [{ text: "離開廁所", action: () => { setBreathUnlocked(true); goScene("xindian"); } }]
+    },
+    noAnswer: {
+      onEnter: () => setKey(true),   // 撿到銀色小鑰匙
+      lines: [
+        "我緊閉雙唇，不敢發出任何聲音。",
+        "隔間裡沉默了一會。",
+        "意外地沒有發生任何可怕的事，隔間裡的人說話了：",
+        "「請小心變成亂碼的月台，必須停止呼吸，否則會被帶走的，不要讓它們抓到妳，時間不多了，請妳一定要活下來。」",
+        "聲音聽起來像年輕的女性，而且似乎沒有惡意……",
+        "隔間的門緩緩敞開，裡面一個人也沒有，隔間裡的置物架上有什麼亮晶晶的東西。",
+        "那是一把銀色的小鑰匙。",
+        "束縛著雙腳的無形力量消失了，我竟完全忘了要害怕，鬼使神差地將鑰匙撿起。"
+      ],
+      // 離開時解鎖【停止呼吸】
+      choices: [{ text: "離開廁所", action: () => { setBreathUnlocked(true); goScene("xindian"); } }]
+    },
+    endWrong: {
+      ending: "wrong",
+      lines: [
+        "聽了我的回答，門裡面沉默了幾秒。",
+        "隨後，那聲音吃吃地笑起來：「答錯了！」",
+        "腳下的地板應聲消失，然後，我整個人掉進無盡的虛空之中。",
+        { text: "BAD END：錯誤的回答", cls: "end" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    rightAnswer: {
+      lines: [
+        "為什麼要問這個？",
+        "在腦袋裡閃過疑惑之前，嘴巴卻不聽使喚地回答了。",
+        // 前半段帶入玩家電腦當天的日期
+        () => {
+          const d = new Date();
+          return `今天是${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日，不，今天是2016年3月12日，是那女孩為了信仰而死的日子。`;
+        },
+        "門裡的人沒有回應。",
+        "我向前跨了一步：「妳是……」"
+      ],
+      ask: {
+        placeholder: "輸入她的全名",
+        label: "她的全名",
+        button: "確認",
+        answer: (v) => v.replace(/\s/g, "") === "江語涵" ? "herName" : "endWrong"   // 名字錯誤 → BAD END：錯誤的回答
+      }
+    },
+    herName: {
+      lines: [
+        "「妳是語涵嗎？是江語涵對不對！」",
+        "這個名字脫口而出的瞬間，鮮紅的血液從門縫裡湧出，越來越多、越來越多。",
+        "胸口窒息般地疼痛。",
+        "「妳怎 麼 會 知 道……」",
+        "那個聲音，不，江語涵的聲音褪去了雜質，變得像活生生的人一樣。",
+        "鮮血越來越多。",
+        "我想起來了。",
+        "我並不是第一次來到這裡，也不是偶然說出她的名字。",
+        "這是歷經了無數次失敗過後，好不容易摸索出的，正確的道路。",
+        "「語涵，我來帶妳出去了！」",
+        "我用力握住隔間門的把手，可是門被牢牢鎖上了。",
+        "血已經漫過了鞋面，宛如一片赤紅的海洋。",
+        "「妳再也不用孤單一個人了，跟我離開這裡吧！已經不用害怕了、不會再痛苦了！那傢伙已經不在了！」",
+        "我吶喊著，此生第一次，用盡全身的力量，為了拯救某人拼命吶喊著。",
+        "那一夜獨自在這狹小的廁所裡割斷手腕的江語涵，肯定承受了我永遠無法想像的絕望吧，她究竟在這車站裡徘徊了多久，才做出這樣的決定呢？",
+        "如果沒有她一路上的幫助，我大概也無法找到出去的方法，所以我必須帶她一起走。",
+        { text: "「開門啊──！！！」", cls: "shout" }
+      ],
+      choices: [{ text: "喀啦", to: "doorOpen" }]
+    },
+    doorOpen: {
+      lines: [
+        "門被從裡面打開了，頓時失去施力點的我整個人向後仰倒。",
+        "我連忙抬頭，但是，裡面沒有人。",
+        "語涵不在，血海也消失了。",
+        "只有正前方的牆上，深深地刻著幾句話。",
+        IMG("https://images.plurk.com/6IrqymTfOD6YecuBQLa6J.png"),
+        "刻痕因為風化過許久時間，變成了鐵鏽般的褐色。",
+        "強烈的暈眩感襲來，我失去了意識。"
+      ],
+      choices: [{ text: "……", to: "endHer" }]
+    },
+    endHer: {
+      ending: "her",
+      lines: [
+        "醒過來的時候，正躺在陌生的床上。",
+        "刺鼻的藥水味還有點滴架，提醒著我這裡是醫院。",
+        "得救了……？",
+        "病床邊打著盹的是我的哥哥，似乎察覺到我的動靜，他醒了過來。",
+        "從他口中得知，我已經昏睡三天了。",
+        "被保全發現躺在捷運站的廁所裡，怎麼樣也叫不醒。",
+        "幸好檢查過後，除了血糖有點低之外沒什麼大礙。",
+        "發現的時候，廁所裡除了我之外沒有別人，當然也沒有看到江語涵。",
+        "那首奇妙的詩究竟是什麼意思，我已經不想去追究了。",
+        "以後松江南京站，應該不會再出現鬼打牆了吧？我由衷期望著……",
+        { text: "GOOD END_女主角SIDE：她的名字", cls: "end good" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    stopThink: {
+      lines: [
+        "正疑惑著的時候，隧道深處傳來轟隆隆的聲音。",
+        "列車進站了。",
+        "忽然浮現奇怪的念頭，覺得就這樣搭上車也無所謂。",
+        "車廂門緩緩打開。",
+        "這時，我察覺到不對勁。"
+      ],
+      choices: [
+        { text: "為什麼車上都沒人？", to: "emptyCar" },
+        { text: "為什麼沒有人上車？", to: "noOneBoards" }
+      ]
+    },
+    emptyCar: {
+      lines: [
+        "為什麼車廂裡一個乘客都沒有呢？",
+        "剛這麼想，馬上就意識到，現在已是晚上十點多了，沒有人也是很正常的。",
+        "而且列車那麼長，也許乘客都在其他車廂吧。",
+        "雖然是相反的方向，但經過轉乘依然可以回到我家，不必那麼糾結。",
+        "彷彿被那敞開的門吸引一般，踏入車內。"
+      ],
+      choices: [{ text: "上車", to: "onTrain" }]
+    },
+    onTrain: {
+      lines: [
+        "我隨便找了個位置坐下，四處看了看。",
+        "與方才想像的不同，放眼望去真的一個人也沒有。",
+        "車門關上之前，我注意到另一個事實。",
+        "沒有人上車。",
+        "月台上的人們都沒有離開原本的位置，只是抬起頭，用毫無感情的眼睛盯著我。",
+        "上班族、老爺爺、保全，推嬰兒車的女性。",
+        "甚至躺在那裡的嬰兒，也都在看我。",
+        "車門在他們的注視下緩緩合攏，總有預感，要是就這麼被載走的話，就再也回不到原來的世界了。",
+        "怎麼辦？"
+      ],
+      choices: [
+        { text: "扳開車門", to: "pryDoor" },
+        { text: "衝出去", to: "endCrush" }
+      ]
+    },
+    pryDoor: {
+      lines: [
+        "不顧一切用雙手把車門扳開。",
+        "曾經看過一個歐巴桑，用這樣的方式硬擠上即將開走的列車。",
+        "論力氣的話，有自信不會輸給她。",
+        "可我忘記了，車門有兩道，即使扳開車廂的門，月台門也不會打開。",
+        "絕望頓時淹沒大腦。",
+        "那些人還是一樣，毫無表情地、沉默地注視著我。",
+        "誰也沒有理會我的求救，列車就這樣載著我離站。",
+        "抬頭看了下車門上方的跑馬燈，下一站是南京復興站。",
+        "如果可以順利來到下一站，就搭計程車回去。",
+        "只能不斷這麼想著，短短幾分鐘的路程，宛如一生般無比漫長。",
+        "這時，廣播響起。",
+        "「即將抵達，松江南京站。」",
+        "冷汗滑落下來。"
+      ],
+      choices: [{ text: "怎麼可能！", to: "backAgain" }]
+    },
+    backAgain: {
+      lines: [
+        "儘管不願相信，可當列車停下時，出現在眼前的，仍是與剛才一模一樣的月台。",
+        "回來了。",
+        "列車始終向前行駛，中途完全沒有轉彎，卻回到了相同的地方。",
+        "忽然想起曾聽過的，關於松江南京站的傳說。",
+        "明明已經經過一站的距離，下了車卻還是在同一站。",
+        "明明搭上往蘆洲的列車，卻在南京復興站停靠。",
+        "明明想要去松山，卻不知怎地變成了往新店──",
+        "通常聽到這樣的話，總會反射性地覺得，一定是他自己搞錯了。",
+        "在路線錯綜複雜的捷運站，不小心搭錯車根本沒什麼好奇怪。",
+        "可是唯獨「會不斷回到同一站」這點，無法用「搭錯車」來解釋。",
+        "這是無論如何，物理上做不到的。",
+        "我說不定，正是遇上了傳說中的鬼打牆。"
+      ],
+      choices: [{ text: "怎麼辦？", to: "stayOn" }]
+    },
+    endCrush: {
+      ending: "crush",
+      lines: [
+        "已經沒空思考了。",
+        "我奮力朝著所剩無幾的門縫撲過去。",
+        "喀嘰。",
+        "還是慢了一步。",
+        "沉重的車門自左右兩邊壓迫我的身體。",
+        "再也動不了了，我聽到骨頭斷裂的聲音。",
+        { text: "BAD END：禁止突破", cls: "end" }
+      ],
+      choices: [
+        { text: "重新來過", to: "onTrain" },
+        { text: "回首頁", to: "@title" }
+      ]
+    },
+    noOneBoards: {
+      lines: [
+        "為什麼沒有人上車呢？",
+        "明明車門已經敞開，所有人卻動也不動，安靜得彷彿連呼吸聲都聽不見。",
+        "於是，我決定停下腳步。",
+        "車廂內空無一人，停了很久很久，也沒有要開走的跡象，彷彿正張大嘴巴，等待著獵物上鉤一般。",
+        "忽然，我聽見了說話聲。",
+        "「人類，是尚未完整的，生命。」",
+        "「所以我，踏上了，尋找內臟的旅途，來到台灣。」",
+        "「內臟，是處於宇宙中的，遺失的器官，那是每個人都必須追尋的，重要的東西。」",
+        "「我試過，在能量場中央祈禱，也曾經為了得到內臟，將某人逼到絕境。」",
+        "「但是一切，都很值得。」",
+        "「為了幸福的人生，一切，都很值得。」",
+        "是男人的聲音，說著奇怪口音的中文，內容也莫名其妙。",
+        "車廂裡響起如雷的掌聲。",
+        "啪啪啪啪啪。",
+        "回過神來，才發現自己也在鼓掌，不知何時已經滿臉淚水。",
+        "明明是一段毫無邏輯、令人厭惡與恐懼的演講，我卻忽然覺得「自己終於被理解了」。",
+        "「來吧，為了幸福的人生。」",
+        "男人的聲音再度傳來，那瞬間，我隱約想起了什麼。"
+      ],
+      // 掃過 QR 碼：直接打開存下來的網頁，劇情停在原地
+      // 沒掃過：接到「電量過低」
+      // 觸發過「歡迎來到松江南京站」之前，【開始探索】不能選
+      choices: () => [
+        { text: "拿出手機", action: () => { if (loadQrSeen()) openQR(); else goScene("lowBattery"); } },
+        welcomeReached
+          ? { text: "開始探索", to: "explore" }
+          : { text: "開始探索", blocked: "無法選擇！", cls: "danger" }
+      ]
+    },
+    lowBattery: {
+      lines: [
+        "不行，找不到。",
+        "明明差一點點就能想起來了，我卻找不到任何可以搜尋的關鍵字。",
+        "手機的電量肉眼可見地正在減少。",
+        "義津……川……我想起來了，那個人就是──"
+      ],
+      // 讀完最後一句再點一下：畫面強制關機，跳出結局
+      endOnClick: () => shutdown("BAD END：電量過低")
+    },
+    explore: {
+      lines: ["去看看之前沒注意到的地方吧。"],
+      // 【軌道】選過老人那裡的【給】（四十塊）之後才解鎖，之前顯示【？？】
+      // 其他地點要先從【軌道】通關跑酷小遊戲、走完之後的劇情才解鎖
+      choices: () => [
+        trackDone ? { text: "電梯", to: "exploreLift" } : { text: "電梯", blocked: "該地點尚未解鎖。", cls: "danger" },
+        trackDone ? { text: "對向月台", to: "explorePlatform" } : { text: "對向月台", blocked: "該地點尚未解鎖。", cls: "danger" },
+        trackDone ? { text: "控制室", to: "exploreControl" } : { text: "控制室", blocked: "該地點尚未解鎖。", cls: "danger" },
+        !visited.has("giveTen")
+          ? { text: "？？", blocked: "該地點尚未解鎖。" }
+          : restroom   // 沒進過任何一間廁所也不能走軌道
+            ? { text: "軌道", to: "exploreTrack" }
+            : { text: "軌道", blocked: "要不要先去上個廁所呢……", cls: "danger" },
+        { text: "回月台", to: "talk" }   // 隨時可選：回到向月台上的人搭話那一頁
+      ]
+    },
+    exploreLift: {
+      lines: [
+        "搭電梯的話，說不定能順利抵達別的樓層。",
+        "走進電梯按下關門鈕，卻發現樓層數字不太正常……",
+        "這裡有這麼多層樓嗎？！",
+        "仔細一看，下面有小字寫著：",
+        "請輸入您欲前往的樓層或精確位置。",
+        "樓層就算了，精確位置是什麼啊？"
+      ],
+      liftPad: true   // 讀完後出現電梯按鈕面板，下方一開始就有【出去】（回到【開始探索】）
+    },
+    liftFloor: {
+      lines: [
+        "電梯門打開了。",
+        "我來到了一條陌生的長廊。",
+        "地板是乾淨的白色磁磚，四面牆都是毛玻璃的霧面質感，一個我從未想過會在捷運站裡見到的地方。",
+        "走廊不長，只有大約十公尺，左側有兩扇金屬門。",
+        "第一扇門上寫著「服務台」，另一扇門則什麼都沒寫。",
+        "要進去嗎？"
+      ],
+      // 【未知的門2】：達成 CHEAT END 之前點了會畫面故障、跳回首頁
+      choices: () => [
+        { text: "服務台", to: "serviceDesk" },
+        // 【未知的門】：女廁路線、撿過銀色小鑰匙才打得開
+        (restroom === "women" && hasKey())
+          ? { text: "未知的門", to: "unknownDoor" }
+          : { text: "未知的門", blocked: "上鎖了……" },
+        unlocked.has("cheat")
+          ? { text: "未知的門2", to: "unknownDoor2" }
+          : { text: "未知的門2", action: bugCrash }
+      ]
+    },
+    // 在內臟教網站用優惠碼訂購過茂夫石（且還沒拿平安符）→ 櫃檯上有平安符
+    serviceDesk: {
+      get lines() {
+        const base = [
+          "推開標示著服務台的門，內部是比廁所隔間沒大多少的狹窄空間，但跟真正的捷運站服務處布局一模一樣。",
+          "透明的環狀玻璃包圍櫃檯，裡面有對講機、電話、用於悠遊卡加值的器具等。",
+          "裡面一個人也沒有。"
+        ];
+        if (!mofuOrdered || hasAmulet) return base;
+        return base.concat([
+          "櫃檯桌面上，一枚黃色的平安符靜靜地躺在那裡。",
+          "我拿起平安符，上面有媽祖的圖案。",
+          "空盪盪的服務處響起了廣播──",
+          "心誠則靈，祝您一路平安。",
+          "這就是那個保全讓我買的東西嗎？不，與其說買，我根本沒花半毛錢。",
+          "網站上寫的明明是石頭，我拿到的卻是平安符……",
+          "仔細一看，平安符已經很舊了，彷彿是某人常年帶在身上之後，又輾轉來到我手中。",
+          "有種很安心的感覺。"
+        ]);
+      },
+      choices: () => (mofuOrdered && !hasAmulet)
+        ? [{ text: "帶著平安符離開", action: () => { setAmulet(true); goScene("liftFloor"); } }]
+        : [{ text: "離開", to: "liftFloor" }]
+    },
+    unknownDoor2: {
+      bg: "fall",   // 背景出現往上飛的速度線（正在下墜）
+      lines: [
+        "一踏進門裡，我就開始迅速下墜。",
+        "什麼都沒有、什麼都抓不住，就連慘叫也被淹沒。",
+        "等著我的只有無盡的虛空。",
+        "我要……死了嗎？"
+      ],
+      choices: [{ text: "………", to: "endDream" }]
+    },
+    endDream: {
+      ending: "dream",
+      bg: "dream",   // 白色背景、淺棕色文字
+      lines: [
+        "我在床上睜開眼睛。",
+        IMG("https://images.plurk.com/31Uan4jSylW4nsUQTuB5kr.png"),
+        "夏天的陽光透過薄薄的紗窗灑進房間，窗外樹影搖曳。",
+        "木質家具的氣味包裹著我。",
+        "日曆上寫著2008年。",
+        "好像做了一場很長很長的惡夢。",
+        "廚房裡傳來碗盤碰撞的聲音，媽媽已經在做早餐了嗎？",
+        "不過今天是假日呢，看來可以再睡一會。",
+        "夏天還很長，人生也是。",
+        "我閉上眼睛，重新進入夢鄉。",
+        { text: "DREAM END：回家", cls: "end dream" }
+      ],
+      // 這一頁的【回首頁】與跳轉劇情、返回標題、查看瀏覽器都會先問「要從夢裡醒來嗎？」
+      choices: [{ text: "回首頁", action: () => askWake() }]
+    },
+    dreamStay: {   // 不醒來
+      bg: "white",
+      lines: [
+        "你回到了最懷念的年紀、見到了最想見的人。",
+        "走不出去的捷運站、內臟、寧根，一切都已經不重要了……",
+        "下一次，會做什麼樣的夢呢？",
+        { text: "若想繼續遊戲，請重新整理畫面。", cls: "reload-hint" }
+      ],
+      choices: []   // 沒有按鈕；重新整理後回到首頁
+    },
+    underpass: {   // 電梯輸入 B18：地下道
+      lines: [
+        "電梯門一打開，就聞到了潮溼的氣息。",
+        "映入眼簾的是積水的隧道，兩旁的燈管不時閃爍著。",
+        "我想起在網站裡看到的訊息。",
+        "林志雄真的在這裡嗎？"
+      ],
+      choices: [{ text: "向前走", to: "wade" }]
+    },
+    endUnblessed: {
+      ending: "unblessed",
+      bg: "blood",   // 畫面底色變成暗紅色
+      lines: [
+        "度過了比想像中還要漫長的時間，電梯門打開了。",
+        "眼前是一片屍山血海。",
+        { img: "https://images.plurk.com/5Bll7NBG6xOmhES9E93n9q.png", safe: "https://images.plurk.com/2hPHuTjXAdY6ubarHEHKNK.png" },
+        "隧道裡四處都是白骨和肉塊，血水幾乎淹沒小腿。",
+        "血的氣味、屍體的腥臭，還有踩踏肉塊時發出的聲音猛烈地衝擊著神經。",
+        "即使告訴自己這是幻覺也於事無補。",
+        "回過神時正不停地嘔吐，心臟和胃都好痛。",
+        "好噁心。",
+        "好可怕。",
+        "救救我……",
+        "我似乎，忘了某件重要的事……",
+        { text: "BAD END：不被庇佑的人", cls: "end" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    wade: {
+      lines: [
+        "隧道彎彎繞繞，甚至坡度都不停改變，完全無法預測下一步。",
+        "越往裡走，照明就越稀少，手機也快沒電了。",
+        "還是把照明留到關鍵時刻吧。",
+        "摸著冰冷的牆壁涉水前進。",
+        "水位越來越高了……",
+        "好冷、好睏。",
+        "平安符在口袋裡微微發熱。",
+        "似乎聞到了香的氣味。",
+        "小時候跟父母去廟裡拜拜時的回憶閃過腦海。",
+        "心中的恐懼漸漸平息下來。",
+        "有媽祖在我身邊，一定沒問題的。",
+        "我撐著沉重的身體，機械式地驅使雙腿前進。",
+        "不知過了多久的時間，我踢到了某樣東西。"
+      ],
+      choices: [{ text: "打開手電筒", to: "bones" }]
+    },
+    bones: {
+      lines: [
+        { img: "https://images.plurk.com/7Mkg7vfnHT5VPboJaX0tv9.png", safe: "https://images.plurk.com/7FTMhRiTsJ0Wo4RAnhaJ9q.png" },
+        "「林……志雄……？」",
+        "這裡就是隧道的盡頭。",
+        "殘破的白骨倒在巨大的防洪門前，仔細一看，地上似乎有一些符紙的殘骸。",
+        "我嚥了嚥唾沫，把手伸向白骨外套的口袋。",
+        "裡面有一整疊的符咒。",
+        "雖然被水氣浸蝕，但保存得相當完好，至少依然可以看清上面的文字。",
+        "只要用符咒將這扇門封印，就不會再有能量溢出，也不會有「寧根」出現。",
+        "但符咒卻還有那麼多，他為什麼會失敗呢？",
+        "我握著符咒，凝視著微微敞開的防水門。"
+      ],
+      choices: [
+        { text: "執行封印", to: "seal" },
+        { text: "進入門內", to: "enterDoor" }
+      ]
+    },
+    seal: {
+      lines: [
+        "我將防水門用力關上、鎖緊，將那些符咒沿著門框貼滿。",
+        "神奇的是，明明沒有使用任何黏著劑，符咒一碰到門就像被吸住一般，牢牢附著在上面。",
+        "比想像中來得簡單……",
+        "「你當初沒能完成的事我幫你做到了，你可要保佑我，讓我順利離開這裡啊……」",
+        "我一邊貼符，一邊對白骨說道。",
+        "不知是不是錯覺，我感覺空氣變得稀薄了。",
+        "忘記是在哪裡聽說，貼符咒這個行為本身就會消耗人的精氣。",
+        "像我這樣沒有經過修煉的外行人，能做到這樣已經很了不起了。",
+        "手電筒沒電了，視野變回一片漆黑。",
+        "我不小心鬆了手，最後一張符就這樣掉落在積水裡。",
+        "我在黑暗中瘋狂摸索，就差一點點、就差一點點了啊！不行，我必須做完這件事，不然的話……",
+        "不然的話，會怎麼樣？",
+        "我一愣，發現自己什麼都想不起來。",
+        "為什麼會來到這裡、為什麼會執著於此，為什麼會有這麼強烈的使命感，我全都不明白。",
+        "忽然，某種冰冷堅硬的東西覆上了我的手。",
+        // 淡淡發光的幾行
+        { text: "「對不 起」", cls: "glow" },
+        "那個東西──不，林志雄如此說著。",
+        { text: "「你 做 得很 好」", cls: "glow" },
+        { text: "「是我的執 念 把你困在這 裡」", cls: "glow" },
+        { text: "「已 經沒事 了」", cls: "glow" },
+        { text: "「謝 謝你」", cls: "glow" },
+        "然後，我便深深地睡了過去。"
+      ],
+      choices: [{ text: "後來", to: "endObsession" }]
+    },
+    endObsession: {
+      ending: "obsession",
+      lines: [
+        "回過神，我正站在松江南京站的入口處。",
+        "一切都很普通，旅客人來人往，天空沒有星星，就跟我認識的台北一樣。",
+        "今天是這樣、明天也是，彷彿永遠都不會改變。",
+        "我恍惚地拿出手機，電量還有20%，妹妹在家庭群組發來訊息，說她今天會晚一點回家。",
+        "我又回到了我的世界。",
+        "就像夢醒的時刻一般，記憶迅速從腦海消失，就連那個名字，也變得如此模糊……",
+        "輪迴的月台、地下十八層的白骨、還有那個窮極一生追尋內臟的男人。",
+        "這一切，都已經與我無關了。",
+        "我收起手機，安心地踏上回家的路。",
+        { text: "GOOD END_男主角SIDE：執念", cls: "end good" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    enterDoor: {
+      ending: "illusion",
+      lines: [
+        "雖然已經走到這一步了，我還是有想知道的事。",
+        "我想知道林志雄究竟是被誰害死的。",
+        "真相一定就在這扇門裡。",
+        "只要看一眼就好。我這麼告訴自己，握緊手裡的平安符，走進門內。",
+        "「……不會吧？」",
+        "與我想像得不同，門裡竟是一片看不見邊際的廣大草原。",
+        "藍色的天空中沒有雲，像是被定格的照片。",
+        "草原的遠處，似乎有一棟紅色屋頂的小房子。",
+        IMG("https://images.plurk.com/2mXNN9dO4851tdV4XfnTV5.png"),
+        "好像在哪看過這副風景……",
+        "對了，視力檢查。",
+        "我著了魔似地盯著那紅色的屋頂。",
+        "視野開始扭曲。",
+        "幸福感源源不絕從心中湧出，幸福到想吐。",
+        "小房子裡走出來幾個白色小人，柔軟地朝我招手。",
+        "這是幻覺。這是我過於思念天空而產生的幻覺，絕不能往前一步。",
+        "我忽然感覺手心空空的，平安符不見了。",
+        "但是，沒關係。",
+        "只要永遠待在這裡就好了，林志雄一定也跟我一樣，被這些幸福的感情包圍，捨不得離開吧。",
+        "要是把門封印起來，就永遠見不到那麼美麗的景色了。",
+        "太可惜了。",
+        "我朝著那紅色的屋頂，狂奔而去。",
+        { text: "NORMAL END：幻夢", cls: "end" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    // TRUE END：兩個 GOOD END 都達成後，按「開始遊戲」直接來到這裡
+    // TRUE END：讀過成人網「公廁無名屍」的話，第一次打開新聞時可以點「內臟女孩」；點過之後關掉網頁 → SECRET END
+    trueEnd: {
+      get lines() { return [
+        () => { const d = new Date(), z = (n) => String(n).padStart(2, "0");
+                return `現在是${d.getMonth() + 1}月${d.getDate()}日${z(d.getHours())}:${z(d.getMinutes())}。`; },
+        "列車平穩地行駛著，你坐在最角落的位子上，半夢半醒間，你聽見了到站的廣播。",
+        "松江南京站……",
+        "你想起了什麼，打開手機搜尋前陣子的新聞……",
+        // 【閱讀】：打開新聞網頁（可以重複按）；第一次關掉網頁後才繼續往下
+        { gate: "閱讀", action: (release) => openTrueNews(release) },
+        ...(trueSecret ? [
+          "你忽然想起了什麼，找到了最初爆料的那則匿名貼文，詢問樓主：所以那些內臟女孩，後來怎麼樣了？",
+          "過了一陣子，你收到了一封私訊，正是那則匿名貼文的原PO。",
+          "信中寫道：",
+          "由於松江南京站地下的空間被封印，能量不再溢出、無論寧根和內臟，都無法再影響眾人。",
+          "巧合的是，義津川麗華在封印儀式後不久就忽然猝死，「內臟教」如今群龍無首。",
+          "活著的女孩們向協會提出集體訴訟，將事件公布在網路上，連帶過往死去的女孩的公道一起討回來。",
+          "雖然許多律師願意免費協助、電視新聞爭相報導，但這註定是場漫長的戰爭。",
+          "「你願意幫助我們尋找失蹤的『內臟女孩』嗎？」",
+          "信的最後，原PO這麼問你。",
+          { text: "SECRET END：援手", cls: "end true secret", unlock: "help" }
+        ] : [
+          "什麼嘛，真是一派胡言。",
+          "你訕笑幾聲，這世上怎麼可能存在那種東西呢？現在的新聞真是越來越無聊了。",
+          "關掉手機，你閉上眼，等待捷運將你安全送往目的地的時刻。",
+          { text: "TRUE END：到站", cls: "end true", unlock: "true" }
+        ])
+      ]; },
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    unknownDoor: {
+      lines: [
+        "用在廁所撿到的鑰匙打開了門。",
+        "門裡是全然漆黑的空間，正中央擺放著一具棺材。",
+        "儘管害怕，我依然鼓起勇氣上前將棺蓋打開。",
+        "一名穿著白色洋裝的年輕女性，像睡著般躺在裡面。"
+      ],
+      choices: [
+        { text: "檢查臉部", to: "coffinFace" },
+        { text: "檢查身體", to: "coffinBody" },
+        { text: "檢查雙腳", to: "coffinFeet" },
+        // 同一頁出現輸入框：輸入 ring 或「戒指」
+        { text: "檢查其他位置", action: () => startAnswer(RING_ASK) },
+        { text: "返回", to: "liftFloor" }   // 回電梯走廊
+      ]
+    },
+    coffinFace: {
+      lines: [
+        "她就是Cherry嗎？",
+        "與官網的照片比起來削瘦很多，皮膚也蒼白得嚇人，依然能看出生前相當漂亮。"
+      ],
+      choices: [{ text: "返回", to: "unknownDoor" }]
+    },
+    coffinBody: {
+      lines: [
+        "她的洋裝有些泛黃，裸露在外的右手腕上有著怵目驚心的傷痕。",
+        "雖然傷口早就不會流血了，卻不禁替她感到疼痛。",
+        "除此之外，她的身上並沒有其他傷口，就像被人精心打理過。"
+      ],
+      choices: [{ text: "返回", to: "unknownDoor" }]
+    },
+    coffinFeet: {
+      lines: [
+        "沒有穿鞋子……",
+        "據說死者不穿鞋子的話，就找不到回家的路。",
+        "難道有誰把她的鞋子藏起來了嗎？"
+      ],
+      choices: [{ text: "返回", to: "unknownDoor" }]
+    },
+    coffinRing: {
+      lines: [
+        "她的左手無名指上戴著一枚銀戒指。",
+        "我輕輕握起她冰涼的手，說了聲「對不起」後將戒指取下。",
+        "戒指內側上面刻著一串英文──cherrymylove。"
+      ],
+      choices: [{ text: "返回", to: "unknownDoor" }]
+    },
+    // 對向月台：在內臟教網站訂購過「內臟之水」之後再來，椅子上會放著水
+    explorePlatform: {
+      get lines() {
+        if (waterOrdered) return [
+          "實在太過口渴，所以在網路上買了「內臟之水」。",
+          "居然會相信這種東西，我的腦子大概也有點不正常了吧。",
+          "我回到發現會員證的椅子旁，發現那裡真的放著一罐……看起來像是礦泉水的東西。",
+          "那個人影已經不見了，會員證倒是還在。",
+          "要喝嗎？"
+        ];
+        return [
+          "在對向月台等了很久，都沒有人車經過。",
+          "把長長的月台從頭走到尾、又從尾走到頭，感覺異常口渴，腳也酸了。",
+          "我在月台的椅子上坐下，忽然瞄到椅子上好像有東西。",
+          IMG("https://images.plurk.com/EEQjdhbxJIZ69F2vSp9dc.png"),
+          "這是什麼……高級會員證？",
+          "難道也是迷失在這裡的人留下的物品嗎……",
+          "忽然，椅子上浮現出一個模糊的人形，就像在宣示著「這是我的位子！」一樣。",
+          "還是不要打擾他吧……"
+        ];
+      },
+      choices: () => waterOrdered
+        ? [{ text: "喝", to: "platformDrink" }, { text: "不喝", to: "platformNoDrink" }]
+        : [{ text: "返回", to: "explore" }]
+    },
+    platformNoDrink: {
+      lines: [
+        "就算再怎麼渴，我也寧可喝廁所洗手臺的水。",
+        "雖然現在應該是回不去廁所了……",
+        "我駐足許久，那罐可疑的礦泉水就像黃金般閃閃發光，不停召喚著我。",
+        "還是不喝了吧……"
+      ],
+      choices: [{ text: "返回", to: "explore" }]
+    },
+    platformDrink: {
+      lines: [
+        "就算再怎麼渴，我也寧可喝廁所洗手臺的水。",
+        "雖然現在應該是回不去廁所了……",
+        "我駐足許久，那罐可疑的礦泉水就像黃金般閃閃發光，不停召喚著我。",
+        "「受不了了！喝就喝！」",
+        "一把拿起瓶子，打開就往嘴裡灌。",
+        "咕嚕咕嚕咕嚕咕嚕……",
+        "比想像中更甘甜，有一股奇特的氣味，但真的非常好喝。",
+        "這輩子從沒喝過這麼棒的水！真想再買一百罐。",
+        "我拿出手機，打算再次購買的時候，忽然感到太陽穴一陣劇痛。",
+        "眼前浮現出模糊的畫面……"
+      ],
+      choices: [{ text: "仔細看", to: "endSecret" }]
+    },
+    endSecret: {
+      ending: "secret",
+      lines: [
+        "嘩啦啦……",
+        "某間陌生的浴室裡傳來水聲。",
+        "義津川坐在小板凳上，一名該說是美麗呢？還是雍容華貴呢？總之，一名與他完全不相稱的女人正在替他洗腳，還兼腳底按摩。",
+        "「麗華……再用力……一點……」",
+        "義津川發出噁心的呻吟，用不太標準的中文呢喃道。",
+        "「我常常在想，為什麼他們會那麼喜歡喝這些水呢？因為你的腳實在是太漂亮了嘛。」",
+        "麗華回答。是台灣口音。",
+        "我猛然意識到，義津川的洗腳盆旁邊擺滿了空的礦泉水瓶。",
+        "這對夫婦忽然轉過頭來，對著我微笑。",
+        { img: "https://images.plurk.com/7wcALbSoluWoFS21yIkZku.png", noScroll: true },   // 圖片出現時不自動往下捲
+        { swapImg: "https://images.plurk.com/5qnZGayqKRkY2LVAlgRlJ6.png" },   // 再點一下畫面換圖
+        { text: "「嗚……嗚噁噁噁噁噁噁！！！！」", cls: "shout" },
+        "我痛苦地跪倒在地，不停嘔吐。",
+        { text: "BAD END：商業機密", cls: "end" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    // 控制室：十個顏色按鈕，同時按下義津川著作封面的五個顏色再按【確定】→ 成人網的「公廁無名屍」開放
+    exploreControl: {
+      lines: [
+        "平常禁止進入的控制室，如今對我敞開著大門。",
+        "裡面有許多我看不懂的儀器，還有掃具、工作服、垃圾袋、文件夾等雜物。",
+        "撇除這些，裡面意外地明亮寬敞，是個會讓人想逗留的安心空間。",
+        "桌面上擺著一本奇怪的書。",
+        IMG("https://images.plurk.com/5bjet8YVvrfE8GCYkfuD9q.png"),
+        "瑜伽……",
+        "我轉頭看向儀器，期盼可以從中找出逃出去的方法。",
+        "上面有一些奇怪的按鈕……",
+        "似乎必須同時按下五個按鈕的樣子。",
+        { colorPad: true },
+        "將所有跟義津川出過的書封面顏色相近的按鈕按下後，控制室開始劇烈震動。",
+        "「怎、怎麼了？！」",
+        "明知不會有人回答我，我還是忍不住喊道。",
+        "大約過了十秒，震動漸漸平息下來……",
+        "儀器上方的小螢幕，跳出幾行奇怪的文字：",
+        "「恭喜過關！從現在起，您可以瀏覽內臟女孩的隱藏頁面囉！」",
+        "什麼跟什麼啊？"
+      ],
+      choices: [{ text: "出去", to: "explore" }]
+    },
+    exploreTrack: {
+      lines: [
+        "老人說，只要沿著軌道走就能出去……",
+        "我跳下月台，踩在生鏽的鐵軌上，望著眼前的一片黑暗猶豫。",
+        "忽然，身後傳來沉悶的震動，上方的跑馬燈變成了亂碼。",
+        "它要來了？！"
+      ],
+      // 進入隧道逃生小遊戲（通關過一次之後會先問要不要跳過）
+      choices: [{ text: "快跑！", action: () => tunnelCleared ? askSkipTunnel() : openTunnel() }]
+    },
+    // 小遊戲撐過 60 秒之後：依走過的廁所分成兩個版本
+    trackEscape: {
+      get lines() {
+        const base = [
+          "我爬回月台上，這裡依然是松江南京站。",
+          "但，與我熟知的松江南京不同，這裡顯得更破舊、更陰暗。",
+          "周圍似乎有很多人，但無論是人還是景物，都像在夢裡般模糊不堪。",
+          "我感到一陣暈眩，趴在地上大口喘氣。"
+        ];
+        if (restroom === "women") return base.concat([
+          "在一片模糊中，唯有一人的樣貌特別清晰。",
+          "那是一名身穿粉紅色長裙的女子。",
+          "她緩緩地走在人群中，不時踉蹌一下，好像相當疲憊。",
+          "「等一下！」",
+          "我立刻起身追了上去，月台彷彿被無限延長，怎麼走都走不到終點，我與她的距離也始終沒有改變。",
+          "忽然，女子的面前出現一位可以用英俊來形容的男人。",
+          "「志雄，你不要去，拜託你留在我身邊！我已經一無所有了！」",
+          "女子撲倒在男人懷裡，喊著對方俗氣的名字，八點檔般的發展讓我不小心笑了出來。",
+          "「Cherry，我會保護妳，我不會輸給義津川的。」",
+          "志雄緊緊擁住女子，仔細一看，他竟然在哭。",
+          "就像上戰場前的生離死別般，然而我完全無法理解眼前的狀況。",
+          // 點【】裡的字串會複製到剪貼簿
+          { segs: [["「妳要記得，不要忘記自己的臉，妳的臉……"], ["【5SguWHpF6zRJYLzyQ5h71O】", "copy-code"], ["……」"]] },
+          "奇怪，最後那是什麼東西？",
+          "我想再多待一會，然而視野逐漸變白，意識漸漸模糊……"
+        ]);
+        return base.concat([
+          "這時，眼前出現了一個戴著眼鏡的削瘦男人。",
+          "他緊握著一把長刀，衣服沾滿鮮血。",
+          IMG("https://images.plurk.com/475gz3PDrqUCmLD1QcKz1e.jpg"),
+          "「完了，這下子……真的要GAME OVER了啊……」",
+          "男子茫然地來回踱步，數次與周遭的人影錯身而過，卻沒有人多看他一眼。",
+          "忽然他轉過頭，直直望著我的方向。",
+          "「義津川茂夫已經死了，他已經死了啊！哈哈哈哈……」",
+          "他的聲音很耳熟，但我想不起來在哪聽過，只是楞楞地聽著。",
+          "明明對著我的方向說話，他卻似乎看不見我。",
+          "「這裡是世界的夾縫……以遊戲來譬喻的話，應該說是BUG吧？」",
+          "「……BUG？」",
+          "不自覺回答了他。",
+          "那一刻，兩個本不該交錯的時空終於重疊了。",
+          "他震驚地望著我，然後露出微笑。",
+          "「遇到BUG的時候，應該怎麼做呢？」",
+          "好像在哪聽過這句話……"
+        ]);
+      },
+      // 男廁版本：回答問題（包含 Konami Code 就算對）
+      get ask() { return restroom === "women" ? undefined : BUG_ASK; },
+      choices: [{ text: "睜開眼睛", action: () => finishTrack() }]
+    },
+    trackKonami: {
+      lines: [
+        "「使用Konami Code！」",
+        "我脫口而出。",
+        "「沒錯！不管碰上多麼困難的關卡，只要有這個秘技，我就是最強的！」",
+        "男子的眼神再度從我身上移開，自顧自地掏出手機：「我得把這些話錄下來才行，我得……把這件事，告訴其他玩家才行……」",
+        "我的視野逐漸變白，意識漸漸模糊……"
+      ],
+      choices: [{ text: "睜開眼睛", action: () => finishTrack() }]
+    },
+    endBeheaded: {
+      ending: "behead",
+      lines: [
+        "我不太確定地回答完之後，男子沉默了。",
+        "「看來，你不是我的同志呢，為什麼你會出現在這裡……你也是義津川的同夥……嗎」",
+        "「等一下！你誤會了！我──」",
+        "不等我說完，他已迅速逼近，持刀揮向我。",
+        { text: "BAD END：斬首", cls: "end" }
+      ],
+      choices: [{ text: "重新輪迴", to: "afterQR" }, { text: "回首頁", to: "@title" }]
+    },
+    stayOn: {
+      lines: [
+        "我決定留在車上。",
+        "雖然依舊很不安，可是，至少現在我正處於被載著移動的狀態。",
+        "只要能「動」的話，情況總會出現變化，努力這麼相信著。",
+        "其實，只是不想回去那詭異的車站而已。",
+        "不久，即將到站的廣播再度響起。",
+        "「下一站，松江南京……」",
+        "意料之內還是同一站，看來再繼續搭下去也沒有意義。",
+        "正當我打算下車時，列車竟然直接開走。",
+        "喂，不是這樣玩的吧？都到站了，好歹車門也開一下吧？",
+        "真的有鬼在整我，可惡，早知道剛才就下車了……",
+        "咚。",
+        "身後傳來某種東西掉落的聲音。",
+        "回過頭，車廂裡不知何時多了一個人。",
+        "不，或者該說「半個」。",
+        "只有上半身、穿著學校制服的男生倒臥在車廂中，像個被棄置的物品。",
+        IMG("https://images.plurk.com/1jH3URARM5sLofovzOnQ3f.png")
+      ],
+      choices: [{ text: "靠近看", to: "closeLook" }]
+    },
+    closeLook: {
+      lines: [
+        "男生的下半身被平整地切斷，沒有任何血腥的東西，就是一片平坦的黑色。",
+        "制服上繡著校徽，是我從沒聽說過的學校。",
+        "胸前的口袋裡似乎有什麼東西，仔細一看居然是兩張一百塊。"
+      ],
+      choices: [
+        { text: "拿走", to: "takeMoney" },   // 即【撿錢】：之後錢包有三百四十塊
+        { text: "不拿", to: "leaveMoney" }
+      ]
+    },
+    takeMoney: {
+      onEnter: () => setPickedMoney(true),
+      lines: [
+        "反正你已經死了，這些錢也用不到了吧！就由我代為保管吧。",
+        "我把兩百塊收進自己的錢包裡。",
+        "然而那之後，列車只是不斷在黑暗的山洞裡掠過相同的車站，一次又一次。",
+        "難道真的沒有從車上下去的辦法嗎？",
+        "我看向眼前的半截屍體，這個人該不會也跟我一樣，是上了車之後被困住的吧？",
+        "這麼說來，他是被「車上的某種東西」殺死的。",
+        "直到剛才都麻痺著的恐懼神經，此刻忽然運作起來，背後立刻滲出了冷汗。",
+        "忽然，車廂裡的燈光全數熄滅。"
+      ],
+      choices: [{ text: "打開手電筒", to: "flashlight" }]
+    },
+    leaveMoney: {
+      lines: [
+        "還是不要動死者的東西比較好……",
+        "然而那之後，列車只是不斷在黑暗的山洞裡掠過相同的車站，一次又一次。",
+        "難道真的沒有從車上下去的辦法嗎？",
+        "我看向眼前的半截屍體，這個人該不會也跟我一樣，是上了車之後被困住的吧？",
+        "這麼說來，他是被「車上的某種東西」殺死的。",
+        "直到剛才都麻痺著的恐懼神經，此刻忽然運作起來，背後立刻滲出了冷汗。",
+        "忽然，車廂裡的燈光全數熄滅。"
+      ],
+      choices: [{ text: "打開手電筒", to: "flashlight" }]
+    },
+    flashlight: {
+      flashlight: true,   // 全黑，只有滑鼠周圍的圓圈看得見
+      lines: [
+        "不僅燈光，連聲音也一起消失，但從地板的震動能感覺到列車還在行駛。",
+        "似乎有什麼要過來了。",
+        "我繃緊神經，用手機的手電筒小心翼翼照亮眼前的空間。",
+        IMG("https://images.plurk.com/2GELp53A2GvFtG0pd0jOtk.png"),
+        "車廂深處好像有什麼東西在動……"
+      ],
+      choices: [{ text: "看", to: "lookDark" }]
+    },
+    lookDark: {
+      flashlight: true,   // 維持手電筒效果，背景音樂靜音
+      lines: [
+        "純白色的……人體模型？！",
+        { video: MANNEQUIN_SRC, safe: MANNEQUIN_SAFE_SRC },   // 安心開關開啟時播放綿綿跑跑
+        "它朝我衝過來了──我緊閉雙眼，做好要被殺掉的心理準備，卻只感覺一陣風從身邊經過，什麼都沒發生。",
+        "再次睜眼，車廂裡又只剩我一個人了。",
+        "地板上多出了幾個淺淺的文字。",
+        IMG("https://images.plurk.com/3kSatza86Tj8OjWMw4DBqD.png"),
+        "列車緩緩停下，我又回到了松江南京站的月台。",
+        "車門開了。"
+      ],
+      // 觸發過「歡迎來到松江南京站」才能下車；之前【下車】是紅字，再點一下畫面就進入 BAD END
+      choices: () => welcomeReached
+        ? [{ text: "下車", to: "explore" }]   // 與【開始探索】同一頁
+        : [{ text: "下車", blocked: "無法選擇！", cls: "danger" }],
+      thenClick: () => welcomeReached ? null : "endForever"
+    },
+    endForever: {
+      ending: "forever",
+      flashlight: true,
+      lines: [
+        "為什麼……為什麼我動不了？！",
+        "車門已經開了，月台就近在眼前啊，我不想再留在這裡了，讓我出去！",
+        "然而，神並沒有聽見我的呼喚。",
+        "白色的人體模型朝我撲來。",
+        { text: "BAD END：永遠的列車", cls: "end" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    skipToilet: {
+      lines: ["還是家裡的廁所舒服，先搭車吧……"],
+      choices: [{ text: "沿著地上的線走", to: "xindian" }]
+    },
+    mensRoom: {
+      onEnter: () => setRestroom("men"),
+      lines: [
+        "一走進廁所，就看見洗手臺前站一個光頭大叔。",
+        "「……欸？」",
+        "「唷，小哥，你是來上廁所的嗎？」大叔擋在我前面。",
+        "廢話，來廁所當然是要上廁所啊………",
+        "不過在那之前，還有更值得吐槽的地方。",
+        "「為什麼只穿內褲啊！！！」",
+        "大叔全身上下，就只穿著一條白色三角褲。",
+        IMG("https://images.plurk.com/6LSc8Cccb6Gkr6IbImMrOq.png"),
+        "「這可是老夫的戰鬥服，穿著這條內褲，不管碰到多艱難的事情都會湧現出力量。」",
+        "「誰要聽你解釋這些啦！話說你是怎麼進站的？悠遊卡放哪啊？！」",
+        "「即使沒帶悠遊卡，也能在外面的售票機買票，你連這個都不知道嗎？」",
+        "「所以說你從哪裡掏錢出來的啊！！」",
+        "「想知道嗎？呼呼呼呼……小哥，你好色喔❤」",
+        "「『呼呼呼呼』你個頭啦！」",
+        "總覺得好像莫名其妙跟這個大叔講起漫才了。",
+        "還是先出去吧……",
+        "正打算轉身就走，大叔忽然叫住我。",
+        "「小哥，等一下！」"
+      ],
+      choices: [{ text: "幹嘛啦？", to: "uncleWarning" }]
+    },
+    uncleWarning: {
+      lines: [
+        "「幹、幹嘛？」",
+        "「你是不是遇到麻煩了？」",
+        "「蛤？」",
+        "「我有預感，你等等會遇到非常恐怖的事。」",
+        "大叔用與他的打扮完全不搭嘎的嚴肅表情說。",
+        "「三小啊，不要恐嚇我欸。」",
+        "「你難道不知道嗎？有時抵達月台的不是捷運喔。」",
+        "「什麼意思？」",
+        "「如果上面的跑馬燈忽然變成亂碼的話，就表示接下來要進站的是別的東西，稍微注意一下吧。」",
+        "每個字都能聽懂，湊在一起卻很詭異。",
+        "真是令人不舒服的一段陳述。",
+        "「要是進來的不是捷運，千萬不能動喔，連眨眼睛跟呼吸都不行，要記得喔。」",
+        "大叔說完，也不等我回答，便把我推出廁所。",
+        "「好啦，你快點回家，超過十點就來不及了！」"
+      ],
+      // 離開時解鎖【停止呼吸】
+      choices: [{ text: "離開廁所", action: () => { setBreathUnlocked(true); goScene("xindian"); } }]
+    },
+    afterQR: {
+      lines: [
+        "完全搞不懂在幹什麼的網站。",
+        "也許用得上，就先存在手機裡吧……"
+      ],
+      choices: [
+        { text: "沿著地上的線走", to: "xindian" },
+        { text: "先去上個廁所", to: "toilet" }
+      ]
+    },
+    talk: {
+      lines: ["要不要向月台上的人搭話呢？"],
+      // 沒進過任何一間廁所，【保全】不能選
+      choices: () => [
+        { text: "女子", to: "woman" },
+        { text: "上班族", to: "workers" },
+        { text: "老人", to: "oldMan" },
+        restroom
+          ? { text: "保全", to: "guard" }
+          : { text: "保全", blocked: "無法選擇！", cls: "danger" }
+      ]
+    },
+    woman: {
+      ending: "you",
+      lines: [
+        "嘗試向推著嬰兒車的女子搭話。",
+        "「不好意思……」",
+        "女子沒有抬頭。",
+        "「請問一下，往松山的車要在哪裡搭？」",
+        "鼓起勇氣說完時，嬰兒車裡傳來刺耳的哭聲。",
+        "女子恍若未覺，眼睛連眨都沒眨，手微微發抖著。",
+        "她在害怕什麼？",
+        "我四處張望，從月台門的玻璃反射看見自己的倒影。",
+        { text: "不是我。", cls: "bold" },
+        "玻璃中映照出的，是從未見過的陌生人。",
+        "一名微笑著的，留鬍子的中年男子，眼神卻無比冷酷。",
+        "他緩緩張嘴，我感覺聲音從喉嚨裡被擠壓出來。",
+        "『", "你", "也", "來", "了", "。", "』",
+        "我知道，自己再也離不開這裡了。",
+        { text: "BAD END：你也來了", cls: "end" }
+      ],
+      choices: [
+        { text: "重新來過", to: "talk" },
+        { text: "回首頁", to: "@title" }
+      ]
+    },
+    workers: {
+      ending: "pray",
+      lines: [
+        "嘗試向穿著西裝的上班族們搭話，然而他們的姿勢很奇怪。",
+        "五名男子低著頭，面對面圍成一圈，不斷喃喃自語。",
+        "仔細一聽……",
+        { text: "唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽不要靠近我唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽必須躲避祂唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛呢叭咪吽唵嘛", cls: "chant" },
+        "原來如此。",
+        "因為無法離開這裡，只能不斷不斷地祈求。",
+        "我也不自覺地跟著呢喃起來：",
+        "「唵嘛呢叭咪吽……」",
+        { text: "BAD END：求佛", cls: "end" }
+      ],
+      choices: [
+        { text: "重新來過", to: "talk" },
+        { text: "回首頁", to: "@title" }
+      ]
+    },
+    oldMan: {
+      lines: [
+        "嘗試向盯著跑馬燈的老爺爺搭話。",
+        "「不好意思……」",
+        "老人看向我，用沙啞的聲音說：「你知道嗎？以前這裡的月台沒有玻璃門。」",
+        "「什麼？」",
+        "「玻璃門，是為了不讓『那個』過來。」",
+        "他伸出枯槁如樹枝的手指，指向漆黑的隧道。",
+        "在那之前，我注意到跑馬燈變成了亂碼，原本應該存在的玻璃外門也消失了。",
+        "「對，就像是這樣……」",
+        "老人的眼神變得遙遠。",
+        "遠方傳來震動，是列車要進站了嗎？",
+        "月台與隧道之間被密閉的外門擋住，只有列車進站時，門才會開啟。",
+        "這是為了防止有人落軌，我一直都是這麼理解的。",
+        "但是，如果真相其實完全相反的話……？"
+      ],
+      choices: [{ text: "仔細看", to: "lookClose" }]
+    },
+    lookClose: {
+      lines: [
+        "我望向空蕩蕩的隧道，在那暗黑之中，有什麼東西正在蠕動。",
+        { video: CLIP_SRC, safe: CLIP_SAFE_SRC },   // 安心開關開啟時播放綿綿版
+        { segs: [["「"], ["那個東西", "blur"], ["」無比巨大、扭曲，像是把數個人類打散，再硬生生重組之後的產物。"]] },
+        "長髮覆蓋之下，可以看見許多漆黑的凹陷遍佈頭顱，沒有任何可見的五官，那黑洞般的凹洞中，傳出奇異的呢喃。",
+        "數不清的手臂跟腿被隨意安插在裸露的軀體上，交錯擺動著，在軌道上匍匐前進。",
+        "它的速度很慢，隧道幾乎容不下巨大的身軀，因為，光是「臉部」的直徑就至少有兩公尺。",
+        "月台上的其他人，卻對它的到來一點反應都沒有。",
+        "不行，我得立刻……"
+      ],
+      // 聽過男廁大叔的警告後，【停止呼吸】才能選
+      choices: () => [
+        { text: "逃跑", to: "oldManFlee" },
+        breathUnlocked
+          ? { text: "停止呼吸", to: "holdBreath" }
+          : { text: "停止呼吸", blocked: "無法選擇！", cls: "danger" }
+      ]
+    },
+    oldManFlee: {
+      lines: [
+        "管不了那麼多，我立刻拔腿就逃。",
+        { text: "「何不歸去何不歸去何不歸去何不歸去……」", cls: "shout red" },
+        { segs: [["飽含怨念的呢喃緊跟在後，「"], ["那個", "blur"], ["」追上來了。"]] },
+        "我不敢回頭，不能回頭，只能拼命地狂奔。",
+        "可是，能逃去哪裡？！"
+      ],
+      choices: [
+        { text: "爬樓梯", to: "endOrgan" },
+        { text: "搭電梯", to: "elevator" }
+      ]
+    },
+    endOrgan: {
+      ending: "organ",
+      lines: [
+        "衝上樓梯後，映入眼簾的是星空。",
+        "從未在台北這樣的都市見過的，巨大的銀河橫臥在夜色裡，綢帶般的極光緩緩盪漾。",
+        "我到外面……了嗎？",
+        "我回過頭，自己出來的地方是木公■南?京站的50號出口。",
+        IMG("https://images.plurk.com/3TldsnWFipMzZ8E74NMf9L.png"),
+        "不對，這裡不是「外面」，至少不是我所熟悉的世界。",
+        "空氣非常寒冷，我身處某座建築物的頂樓，往下看卻什麼都沒有。",
+        "沒有光、沒有樓房，很遠很遠的遠方似乎有什麼東西正朝我緩緩走來。",
+        "祂溫柔地親吻我、撫摸我，我感覺自己變成了極光的顏色。",
+        { img: "https://images.plurk.com/40SuOE1fvCPtMAoq6MBKHN.png", safe: "https://images.plurk.com/dLDfDjIgHXStIpedG3yLb.png" },
+        "這裡就是南極嗎？",
+        "我好像什麼都明白了，我得到了內臟。",
+        { text: "NORMAL END：內臟", cls: "end normal" }
+      ],
+      choices: [{ text: "回首頁", to: "@title" }]
+    },
+    elevator: {
+      lines: [
+        "在猶豫著該往哪跑的時候，我忽然靈光一閃。",
+        "還有電梯啊！",
+        "它的體型那麼大，不可能進得來。",
+        "我重整呼吸朝著電梯跑去，幸好電梯就停在這層樓，按下按鈕，門立刻就打開了。",
+        "我迫不及待衝進電梯裡。",
+        // door：兩側電梯門各關到容器寬度的幾成（0.25＝合起來關上一半）
+        { text: "門以極其緩慢的速度關上，眼角餘光瞄到，那不屬於人間之物已從樓梯口現身。", door: 0.08 },
+        { text: "明知按再多次也無法改變關門的速度，我仍沒有停止。", door: 0.16 },
+        { text: "無數的手臂和腿，揮舞著朝這邊過來了，門卻僅僅關上一半。", door: 0.25 },
+        { text: "轉眼間，它已來到我的面前，將那碩大的頭顱探進門裡。", door: 0.27 },
+        // 安心開關開啟時改用 safe 的圖片
+        { img: "https://images.plurk.com/kIliMdRaKdT7423kxS89n.png", safe: "https://images.plurk.com/6msfGp6kfTCkc7LXiRivw5.png", door: 0.27 },
+        { text: "我與它的「視線」相對了。", door: 0.27 }
+      ],
+      choices: [{ text: "閉上眼睛", to: "endUnderstand" }]
+    },
+    endUnderstand: {
+      ending: "understand",
+      lines: [
+        "閉上眼睛之後，我只能聽見吐息的聲音。",
+        "它在呼吸，這代表它擁有生命嗎？不，無論怎麼看，那都不是真實世界存在的東西。",
+        "啊，我明白了。",
+        "這裡並不是現實。",
+        "這裡並非我熟悉的松江南京站，而是某個相似卻又截然不同的所在，我只不過是誤闖這裡的不速之客……",
+        "我睜開眼睛，它還在，距離我的臉只有不到三十公分。",
+        "從那應該是口腔的空洞裡，傳出扭曲的話語。",
+        { text: "「何不歸去何不歸去何不歸去……」", cls: "redbold" },
+        "這樣啊，你也跟我一樣，是被困在這裡的嗎？",
+        "我彷彿第一次理解了它的語言。",
+        "不自由主，朝它伸出了手。",
+        { text: "BAD END：理解", cls: "end" }
+      ],
+      choices: [
+        { text: "重新來過", to: "oldManFlee" },
+        { text: "回首頁", to: "@title" }
+      ]
+    },
+    holdBreath: {
+      lines: [
+        "變成亂碼的話，進站的就會是「別的東西」。",
+        // 依玩家進的是哪間廁所，想起不同人的提醒
+        () => `我想起${restroom === "women" ? "隔間裡的女生" : "內褲大叔"}說的話，立刻屏息。`,
+        "月台上的人都沒動，不知道他們是否跟我一樣，要是沒這麼做的話，會發生什麼呢？",
+        { segs: [["我按捺著忐忑的情緒，凝視著隧道深處的「"], ["那個", "blur"], ["」。"]] },
+        { segs: [["「"], ["那個", "blur"], ["」巨大的臉孔轉向我們，我無法從那些凹陷中讀出它的情緒，可是，我聽見了。"]] },
+        "它的確在「說話」。",
+        { text: "「何不歸去何不歸去何不歸去……」", cls: "shout", speed: 140, lock: true },
+        "我大氣都不敢喘一口。",
+        "它四處張望一會，便轉頭繼續爬行。",
+        "軌道上漸漸安靜下來。"
+      ],
+      choices: [{ text: "問老人那是什麼", to: "askOldMan" }]
+    },
+    askOldMan: {
+      lines: [
+        "「那到底是什麼鬼東西？！」我用幾乎快哭出來的聲音問。",
+        "「那是這座車站的罪孽，要是超過晚上十點還沒上車，祂們就會出現。」",
+        "「三小啦！那這樣我要怎麼回家？！」",
+        "「你已經被盯上了，沒有辦法離開，不管怎麼走，最後都會回到月台上……」",
+        "老人緊閉著眼睛搖頭。",
+        "「不可能，一定有別的辦法！」",
+        "我一再追問，老人才一副不甘願的樣子，說：「有是有，可是……」",
+        "「怎麼了？」",
+        "「你有錢嗎？」",
+        "「蛤？」",
+        "「你有沒有一百塊？五十塊也可以喔。」",
+        "老人走到旁邊的椅子上，一屁股坐下：「你要給我一千塊，我也不反對啦。」",
+        "怎麼搞的，為什麼忽然跟我要錢？！",
+        "要取得情報的話，得付出代價的意思嗎……",
+        // 撿過錢之前只有一百四十塊
+        () => `打開錢包，裡面只有${pickedMoney ? "三百四十" : "一百四十"}塊現金。`,
+        "一百塊應該就可以了吧？"
+      ],
+      choices: () => [
+        { text: "給他一百", to: "give100" },
+        // 撿過錢、而且達成過「歡迎來到松江南京站」才能選
+        (pickedMoney && welcomeReached)
+          ? { text: "給他更多", to: "giveMore" }
+          : { text: "給他更多", blocked: "無法選擇！", cls: "danger" }
+      ]
+    },
+    give100: {
+      onEnter: () => setPaidOldMan(true),
+      lines: [
+        "拿出一百塊遞給老人，他開心地收下了。",
+        "「可以告訴我要怎麼出去了嗎？」",
+        "「很簡單，只要連續從那個樓梯走下去七次就可以了。」",
+        "他指著標示「松山↘」的樓梯。",
+        "就這樣？這麼容易的嗎？",
+        "儘管抱持懷疑，「終於能離開這裡」的喜悅仍佔據了大部分理性。"
+      ],
+      // 接到無限下樓的頁面，從第一次重新計算
+      choices: [{ text: "下樓", action: () => { runCount = 0; goScene("run"); } }]
+    },
+    giveMore: {
+      lines: [
+        "如果真的能回去，三百塊又算什麼。",
+        "「我只有這麼多，請笑納……」",
+        "「不對，你還有四十塊，我看到了。」",
+        "「……」",
+        "非得要這樣嗎？非得要這樣把我吃乾抹淨嗎？！",
+        "四十塊而已計較個屁啊！",
+        "可是，要是不給他的話，說不定他就不告訴我情報了……"
+      ],
+      choices: [
+        { text: "給", to: "giveTen" },
+        { text: "不給", to: "refuseForty" }
+      ]
+    },
+    refuseForty: {
+      ending: "regret",
+      lines: [
+        "我不想再給他任何錢，雖然壓根沒必要為了幾十塊斤斤計較，但一想到這是我僅有的財產，我就感到委屈。",
+        "說起來這個老頭真的是人類嗎？他真的需要這些錢嗎？",
+        "我把錢包死死捏在手中。",
+        "「乖，給我。」",
+        "老人伸長枯槁的手指，朝我逼近，我不得不越來越往後退。",
+        "「給我錢給我錢給我錢給我錢給我錢給我錢給我錢給我錢給我錢！」",
+        "「我不要！」",
+        "我放聲尖叫，忽然感覺腳下一空，整個人往後下墜。",
+        "「啊……」",
+        "破碎的哭喊從喉嚨中擠出，列車的燈光照亮漆黑的隧道。",
+        IMG("https://images.plurk.com/2GTR7j0jcnkHA7P1fUvCLv.png"),
+        "我最後看見的，是老人面無表情的臉……",
+        { text: "BAD END：千金難買早知道", cls: "end" }
+      ],
+      choices: [
+        { text: "重新來過", to: "giveMore" },
+        { text: "回首頁", to: "@title" }
+      ]
+    },
+    giveTen: {
+      lines: [
+        "開什麼玩笑，這可是我僅剩的財產。",
+        "如果一定要給的話，那就十塊吧，不能再多了，心已經很痛了。",
+        "不甘不願地掏出十塊遞給老人。",
+        "「嘿嘿嘿……你這條命只值這樣嗎？」",
+        "老人把銅板用兩隻手指捏著，神秘兮兮地說：",
+        "「不過，即使有錢也不想給我，代表你真的渴望能離開這裡。」",
+        "「什麼意思？」",
+        "「要活著出去，身上當然不能沒有一點錢，你是這樣精打細算的人吧。」",
+        "「……」",
+        "雖然完全不是那樣，不過似乎意外讓老人很滿意。",
+        "「我就告訴你真話吧。」",
+        "「如果走樓梯或電梯，一輩子也出不去。」",
+        "老人把視線轉向前方：「但是，從那裡就可以，只要沿著軌道走，就一定能出去。」",
+        "我楞了一下，才會意過來，他的意思是要直接走隧道！",
+        "「可是，那裡面不是有……」",
+        { segs: [["我想起方才看見的「"], ["那個", "blur"], ["」，渾身僵硬起來。"]] },
+        "「沒錯，必須要在它追上來之前就走到出口。」",
+        "我嚥了口唾沫。",
+        "這種事情真的有辦法做到嗎？",
+        "可是，或許這是唯一的生路了……"
+      ],
+      choices: [{ text: "考慮一下", to: "talk" }]   // 回到跟人搭話那一頁
+    },
+    guard: {
+      // 進過男廁的玩家才會看到後半段
+      get lines() {
+        const base = [
+          "嘗試向已經不知道第幾次路過身邊的保全搭話。",
+          "「請問一下……」",
+          "保全沒有理我，像機器人一般直直看著前方。",
+          "我不死心大喊：「不好意思，我有事想請你幫忙！」",
+          "他頓了頓，沒有回頭，卻忽然轉彎朝著樓梯走去，我也默默跟在後面。"
+        ];
+        // 女廁路線：保全帶路到旋轉樓梯的岔路（之後是樓梯迷宮，見 seaRidge～seaEnd）
+        if (restroom === "women") return base.concat([
+          "保全不斷地往下走，旋轉樓梯彷彿無止盡一般……",
+          "再轉過一個彎，眼前已沒有他的身影。",
+          "出現了岔路。",
+          "可惡……該走哪一邊？",
+          IMG("https://images.plurk.com/13KOvsm64cpP8MAaZ8yrpT.png")
+        ]);
+        if (restroom !== "men") return base;
+        return base.concat([
+          "旋轉樓梯走到一半，他才放鬆了警戒，靠在牆上問我：「你剛去過廁所了嗎？」",
+          "「啊？去過了……」",
+          "「那你應該見過內褲伯了吧。」",
+          "「你是說那個變態？你認識他？」",
+          "不知道把錢塞在哪裡的謎之大叔浮現腦海。",
+          "「他是幾年前這座車站剛啟用的時候，住在這裡的流浪漢。」",
+          "保全冷冷地說：「聽說他炒股票虧慘後精神就有點不正常，跑去買了一堆莫名其妙的石頭，連最後的積蓄也花光了。」",
+          "「石頭……」",
+          "「人在走投無路的時候，不管多離譜的東西都會相信，你要不要也試試看？」",
+          "保全遞給我一張紙條，隨後走下樓梯，無論我再怎麼呼喊都沒有回應了。",
+          "那張字條上，只有一串莫名其妙的文字……",
+          // 點這張圖會下載 PSD 檔
+          { img: "https://images.plurk.com/17cmarUkMGc6fJxZQv4K0S.png", download: { url: "media/00001.psd", name: "00001.psd" } }
+        ]);
+      },
+      // 女廁路線：之後的樓梯迷宮都不能跳轉劇情、返回標題
+      lockNav: () => restroom === "women" ? SEA_LOCK : "",
+      noJump: true,
+      choices: () => restroom === "women"
+        ? [{ text: "淵", to: "seaAbyss" }, { text: "稜", to: "seaRidge" }]
+        : [{ text: "回到月台", to: "talk" }]
+    },
+    // ---------- 女廁路線：樓梯迷宮（走錯都回到【稜】那一頁） ----------
+    seaRidge: {
+      lockNav: () => SEA_LOCK, noJump: true,
+      lines: [
+        "沿著樓梯走下去……為什麼又繞回來了？",
+        "不會連樓梯都要鬼打牆吧！",
+        IMG("https://images.plurk.com/13KOvsm64cpP8MAaZ8yrpT.png")
+      ],
+      choices: [{ text: "淵", to: "seaAbyss" }, { text: "稜", to: "seaRidge" }]
+    },
+    seaAbyss: {
+      lockNav: () => SEA_LOCK, noJump: true,
+      lines: [
+        "怎麼還是樓梯啊，該走哪邊才好……",
+        IMG("https://images.plurk.com/2nvKdut2bxp9VduMBEIRx3.png")
+      ],
+      choices: [{ text: "花", to: "seaRidge" }, { text: "雲", to: "seaCloud" }]
+    },
+    seaCloud: {
+      lockNav: () => SEA_LOCK, noJump: true,
+      lines: [
+        "叉路居然還變多了！該走哪邊才好……",
+        IMG("https://images.plurk.com/2efCD51uRvYUUgEfEtdCLV.png")
+      ],
+      choices: [
+        { text: "中", to: "seaRidge" }, { text: "西", to: "seaRidge" }, { text: "南", to: "seaRidge" },
+        { text: "北", to: "seaNorth" }, { text: "東", to: "seaRidge" }
+      ]
+    },
+    seaNorth: {
+      lockNav: () => SEA_LOCK, noJump: true,
+      lines: [
+        "還是樓梯……",
+        IMG("https://images.plurk.com/niesGyD8KFQ4vu823em1F.png")
+      ],
+      choices: [{ text: "春風吹又生", to: "seaRidge" }, { text: "脈脈不得語", to: "seaLast" }]
+    },
+    seaLast: {
+      lockNav: () => SEA_LOCK, noJump: true,
+      lines: [
+        "已經很疲倦了，這應該是最後一次了吧……",
+        IMG("https://images.plurk.com/4CEqSBMsGHtuoh2KtqZnue.png")
+      ],
+      choices: [{ text: "半圓形", to: "seaEnd" }, { text: "正方形", to: "seaRidge" }, { text: "三角形", to: "seaRidge" }]
+    },
+    seaEnd: {
+      ending: "sea",
+      lockNav: () => SEA_LOCK, noJump: true,
+      lines: [
+        "我緩緩走下樓梯。",
+        "不記得過了多久的時間，最後一個轉彎後，出現在我面前的，是一片在夜色下閃閃發光的大海。",
+        "「在有水的地方等你」是這個意思啊。",
+        "洶湧的浪拍碎月光，在那片水面下，有誰正窺視著這裡。",
+        "有什麼東西緩緩浮了上來，將海面撐起弧度。",
+        "月光映照下，她有著蒼白的皮膚，應該是臉的部位有著巨大的空洞。",
+        "以淺薄的常識，無法判斷那是什麼器官。",
+        "「對不起。」",
+        "她的聲音從臉部的空腔發出來，帶有一點海的濕氣。",
+        { img: "https://images.plurk.com/3RvSC6wyDDyILFzyvrkF74.png", safe: "https://images.plurk.com/6xRiMXyVYzMRHfVk6b4zEE.png" },
+        "「我是Cherry，請妳找到我……」",
+        "她說完，遠方的海出現一具巨大的白色人形，將她輕輕托起。",
+        { segs: [["她瘦小的身軀與白色的巨人融合在一起，扦插一般，變成了「"], ["那個", "blur"], ["」的一部分。"]] },
+        "那是我此生見過最美麗的光景。",
+        { text: "NORMAL END：海", cls: "end normal" }
+      ],
+      choices: [{ text: "重新來過", to: "talk" }, { text: "回首頁", to: "@title" }]
+    },
+    omen: {
+      lines: [
+        "一走進車站，不知為何感到一陣惡寒。",
+        "總覺得好像忘了什麼重要的事。",
+        "腦海深處，似乎有「某種活生生的東西」在掙扎，試圖衝破記憶的枷鎖。"
+      ],
+      choices: [
+        { text: "無視", to: "endHell" },
+        { text: "仔細想想", to: "recall" }
+      ]
+    },
+    endHell: {
+      ending: "hell",
+      lines: [
+        "一定是錯覺吧……",
+        "不就只是再平常不過的，搭車回家的過程而已。",
+        "有什麼好怕的呢？",
+        "我跟著地上的標線，順利來到往松山方向的月台。",
+        "恰好列車進站，我踏著輕快的步伐上了車。",
+        "轟隆──",
+        "行駛在地下的捷運，即使往窗外看，也只能看到偶爾閃過的照明燈。",
+        "可是這次不同。",
+        "在掠過燈光的剎那，我看見了某種東西。",
+        "由於速度太快，無法分辨那是什麼，但很快地，我發現了不對勁。",
+        IMG("https://images.plurk.com/3ZjsmDKLYk5b7cDQ84BUfD.png"),
+        "車窗上多出了一個掌印。",
+        "五根骨節分明的手指，無論怎麼看都是人類的手。",
+        "然而，大小足以覆蓋整扇窗戶。",
+        // 紅色粗體、較慢、不能被點擊或按鍵跳過
+        { text: "「松江南京站，到了。」", cls: "announce", speed: 140, lock: true },
+        "耳邊響起廣播。",
+        "我，果然遺忘了什麼重要的事。",
+        { text: "BAD END：地獄再臨", cls: "end" }
+      ],
+      choices: [
+        { text: "重新來過", to: "omen" },
+        { text: "回首頁", to: "@title" }
+      ]
+    },
+    recall: {
+      lines: [
+        "沒錯，我並不是第一次經歷「今天」。",
+        "無盡的循環同一層樓、永遠站在月台上的乘客、越來越扭曲的文字。",
+        "鮮明的記憶刺痛著腦海。",
+        "我立刻回頭，卻發現身後變成了封閉整個入口的鐵捲門。",
+        "只能硬著頭皮前進了嗎……",
+        "這時，我注意到牆上貼著一張海報。",
+        IMG("https://images.plurk.com/1ieYfiF8m3Er9uVt56nbAk.png"),
+        "粗製濫造、毫無設計感，文字也不知所云。",
+        "每個人的笑臉都一模一樣。",
+        "仔細一看，海報角落有一個小小的QR碼。",
+        "如果這是線索的話……"
+      ],
+      // 開啟網頁視窗，同時劇情接到 afterQR
+      choices: [
+        { text: "掃描QR碼", action: () => { openQR(); goScene("afterQR"); } }
+      ]
+    },
+  };
+  let runCount = 0;
+  // 女廁的第一個問題：答錯接「可惜、可惜！」（撿到鑰匙）
+  // 跑酷之後遇到的男子：「遇到BUG的時候，應該怎麼做呢？」
+  const BUG_ASK = {
+    placeholder: "輸入你的回答……",
+    label: "你的回答",
+    button: "確認",
+    answer: (v) => /konami\s*code/i.test(v) ? "trackKonami" : "endBeheaded"
+  };
+  // 棺材的【檢查其他位置】：輸入 ring 或「戒指」才會找到戒指，其他答案清空重打
+  const RING_ASK = {
+    placeholder: "要檢查哪裡？",
+    label: "要檢查的位置",
+    button: "確認",
+    answer: (v) => /^(ring|戒指)$/i.test(v.replace(/\s/g, "")) ? "coffinRing" : null
+  };
+  // 走完跑酷之後的劇情：解鎖【開始探索】的其他地點
+  function finishTrack() {
+    if (!trackDone) notifyUnlock(["電梯", "對向月台", "控制室"]);
+    setTrackDone(true);
+    goScene("explore");
+  }
+  const WOMENS_ASK = {
+    placeholder: "輸入你的回答……",
+    label: "你的回答",
+    button: "確認",
+    // 正確答案：獲得內臟庇佑的好日子（忽略空白與標點）
+    answer: (v) => v.replace(/[\s，。、！？!?,.「」『』…~～]/g, "") === "獲得內臟庇佑的好日子" ? "rightAnswer" : "notEnough"
+  };
+  let answering = false;
+  let trueNewsOpens = 0, trueSecret = false, newsGirlsRed = false;   // TRUE END 新聞的狀態（見 openTrueNews）
+  let gateWait = false;   // 停在頁面中間的按鈕（例如 TRUE END 的【閱讀】）
+  // 撥打電話：只比對數字（忽略空白、橫線、括號）
+  function dialRoute(who) {
+    const n = who.replace(/\D/g, "");
+    if (n === "110") return "call110";
+    if (n === "09108885555") return "callNote";
+    if (n === "08007301730") return "callSite";
+    // 失蹤人口協尋網的電話：男廁路線在網頁按過【知道】才打得通
+    if (n === "08006657006") return missingChoice === "yes" ? "callMissing" : { modal: "打不通……" };
+    return "dialed";
+  }
+  let forceCollapse = false;
+  let seaReplay = false;       // 從結局列表重看「海」時使用   // 從結局列表重看「精神崩潰」時使用
+  let safeMode = (() => { try { return localStorage.getItem("sjnj-safe") === "1"; } catch (e) { return false; } })();
+
+  // 結局清單：依序列出，達成後記錄在瀏覽器中
+  const endings = [
+    { id: "vanish", title: "BAD END：人間蒸發" },
+    { id: "welcome", title: "NORMAL END：歡迎來到松江南京站" },
+    { id: "you", title: "BAD END：你也來了" },
+    { id: "pray", title: "BAD END：求佛" },
+    { id: "hell", title: "BAD END：地獄再臨" },
+    { id: "wrong", title: "BAD END：錯誤的回答" },
+    { id: "crush", title: "BAD END：禁止突破" },
+    { id: "breakdown", title: "BAD END：精神崩潰" },
+    { id: "battery", title: "BAD END：電量過低" },
+    { id: "understand", title: "BAD END：理解" },
+    { id: "regret", title: "BAD END：千金難買早知道" },
+    { id: "forever", title: "BAD END：永遠的列車" },
+    { id: "unblessed", title: "BAD END：不被庇佑的人" },
+    { id: "tunnel", title: "BAD END：逃不掉了" },
+    { id: "behead", title: "BAD END：斬首" },
+    { id: "secret", title: "BAD END：商業機密" },
+    { id: "broadcast", title: "BAD END：不該播出的電話" },
+    { id: "sea", title: "NORMAL END：海" },
+    { id: "organ", title: "NORMAL END：內臟" },
+    { id: "illusion", title: "NORMAL END：幻夢" },
+    { id: "her", title: "GOOD END_女主角SIDE：她的名字" },
+    { id: "obsession", title: "GOOD END_男主角SIDE：執念" },
+    { id: "cheat", title: "CHEAT END：專業玩家" },
+    { id: "dream", title: "DREAM END：回家" },
+    { id: "true", title: "TRUE END：到站" },
+    { id: "help", title: "SECRET END：援手" }
+  ];
+  const STORE_KEY = "sjnj-endings";
+  function loadUnlocked() {
+    try { return new Set(JSON.parse(localStorage.getItem(STORE_KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  const unlocked = loadUnlocked();   // 結局列表（清除記錄也不會刪除）
+  // 劇情狀態：是否走過「歡迎來到松江南京站」（首頁變形、進站後的劇情、【開始探索】都看這個；清除記錄會重置）
+  const WELCOME_KEY = "sjnj-welcome-reached";
+  let welcomeReached = (() => {
+    try {
+      const v = localStorage.getItem(WELCOME_KEY);
+      return v === null ? unlocked.has("welcome") : v === "1";   // 舊存檔沿用結局紀錄
+    } catch (e) { return unlocked.has("welcome"); }
+  })();
+  // ---------- 鎖住的選項解開時，畫面上方跳出「【ｘｘｘ】已解放。」 ----------
+  const TOAST_KEY = "sjnj-toast-pending";   // 重新整理後才看得到的通知（例如作弊結局）
+  function notifyUnlock(names, later) {
+    const msgs = [].concat(names).map((n) => `【${n}】已解放。`);
+    if (later) {
+      try {
+        const old = JSON.parse(localStorage.getItem(TOAST_KEY) || "[]");
+        localStorage.setItem(TOAST_KEY, JSON.stringify(old.concat(msgs)));
+      } catch (e) {}
+      return;
+    }
+    let box = document.getElementById("toasts");
+    if (!box) { box = document.createElement("div"); box.id = "toasts"; box.setAttribute("aria-live", "polite"); document.body.appendChild(box); }
+    msgs.forEach((m, i) => setTimeout(() => {
+      const t = document.createElement("div");
+      t.className = "toast";
+      t.textContent = m;
+      box.appendChild(t);
+      setTimeout(() => t.classList.add("out"), 5500);
+      setTimeout(() => t.remove(), 6100);
+    }, i * 350));
+  }
+  function setWelcomeReached(v) {
+    if (v && !welcomeReached) notifyUnlock(pickedMoney ? ["開始探索", "下車", "給他更多"] : ["開始探索", "下車"]);
+    welcomeReached = v;
+    try { localStorage.setItem(WELCOME_KEY, v ? "1" : "0"); } catch (e) {}
+  }
+  // TRUE END：兩個 GOOD END 都在結局列表裡就開啟。
+  // 清除記錄後先暫停（不發光、開始遊戲走一般開頭），之後重新達成任一個 GOOD END 就恢復。
+  // （兩條 GOOD END 分屬男廁／女廁，同一份記錄裡不可能都達成，所以不能要求清除後兩個都重拿）
+  const GOOD_KEY = "sjnj-true-paused";
+  let truePaused = (() => { try { return localStorage.getItem(GOOD_KEY) === "1"; } catch (e) { return false; } })();
+  function setTruePaused(v) {
+    truePaused = v;
+    try { v ? localStorage.setItem(GOOD_KEY, "1") : localStorage.removeItem(GOOD_KEY); } catch (e) {}
+  }
+  function unlockEnding(id, replay) {
+    if (id === "cheat" && !unlocked.has("cheat")) notifyUnlock("未知的門2", true);   // 作弊結局後會重新整理，回首頁再通知
+    // 從結局列表重看、或重新整理回到結局頁時不算這一輪達成
+    if (!replay && (id === "her" || id === "obsession")) setTruePaused(false);
+    unlocked.add(id);
+    try { localStorage.setItem(STORE_KEY, JSON.stringify([...unlocked])); } catch (e) {}
+  }
+  // 讀過的劇情頁，用於「跳轉劇情」
+  const VISIT_KEY = "sjnj-visited";
+  const visited = (() => {
+    try { return new Set(JSON.parse(localStorage.getItem(VISIT_KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  })();
+  function markVisited(id) {
+    if (visited.has(id)) return;
+    visited.add(id);
+    try { localStorage.setItem(VISIT_KEY, JSON.stringify([...visited])); } catch (e) {}
+  }
+  // 道具：銀色小鑰匙（記錄在瀏覽器中，清除記錄時一併刪除）
+  // 之後的劇情可用 hasKey() 判斷玩家是否拿過鑰匙
+  const KEY_KEY = "sjnj-silver-key";
+  let silverKey = (() => { try { return localStorage.getItem(KEY_KEY) === "1"; } catch (e) { return false; } })();
+  function hasKey() { return silverKey; }
+  function setKey(v) {
+    silverKey = v;
+    try { v ? localStorage.setItem(KEY_KEY, "1") : localStorage.removeItem(KEY_KEY); } catch (e) {}
+  }
+
+  // 選過的廁所（"men" / "women"），記錄在瀏覽器中
+  const RESTROOM_KEY = "sjnj-restroom";
+  let restroom = (() => { try { return localStorage.getItem(RESTROOM_KEY) || ""; } catch (e) { return ""; } })();
+  function setRestroom(v) {
+    if (v && !restroom) notifyUnlock("保全");
+    restroom = v;
+    try { v ? localStorage.setItem(RESTROOM_KEY, v) : localStorage.removeItem(RESTROOM_KEY); } catch (e) {}
+  }
+
+  // 是否已解鎖【停止呼吸】（聽過男廁大叔的警告），記錄在瀏覽器中
+  const BREATH_KEY = "sjnj-breath";
+  let breathUnlocked = (() => { try { return localStorage.getItem(BREATH_KEY) === "1"; } catch (e) { return false; } })();
+  function setBreathUnlocked(v) {
+    if (v && !breathUnlocked) notifyUnlock("停止呼吸");
+    breathUnlocked = v;
+    try { v ? localStorage.setItem(BREATH_KEY, "1") : localStorage.removeItem(BREATH_KEY); } catch (e) {}
+  }
+
+  // 是否給過老人一百塊（之後下樓七次才能離開輪迴）
+  const PAID_KEY = "sjnj-paid-oldman";
+  let paidOldMan = (() => { try { return localStorage.getItem(PAID_KEY) === "1"; } catch (e) { return false; } })();
+  function setPaidOldMan(v) {
+    paidOldMan = v;
+    try { v ? localStorage.setItem(PAID_KEY, "1") : localStorage.removeItem(PAID_KEY); } catch (e) {}
+  }
+  // 是否撿過錢（錢包從一百四十塊變成三百四十塊）；【撿錢】的劇情之後再接，呼叫 setPickedMoney(true) 即可
+  const MONEY_KEY = "sjnj-picked-money";
+  let pickedMoney = (() => { try { return localStorage.getItem(MONEY_KEY) === "1"; } catch (e) { return false; } })();
+  function setPickedMoney(v) {
+    if (v && !pickedMoney && welcomeReached) notifyUnlock("給他更多");
+    pickedMoney = v;
+    try { v ? localStorage.setItem(MONEY_KEY, "1") : localStorage.removeItem(MONEY_KEY); } catch (e) {}
+  }
+  // 是否走完【軌道】跑酷之後的劇情（之後【開始探索】的其他地點才解鎖；清除記錄時重置）
+  const TRACK_KEY = "sjnj-track-done";
+  let trackDone = (() => { try { return localStorage.getItem(TRACK_KEY) === "1"; } catch (e) { return false; } })();
+  function setTrackDone(v) {
+    trackDone = v;
+    try { v ? localStorage.setItem(TRACK_KEY, "1") : localStorage.removeItem(TRACK_KEY); } catch (e) {}
+  }
+  // 是否在內臟教網站用優惠碼訂購過茂夫石（跳出「訂購完成」）；有的話服務台才有平安符
+  const ORDER_KEY = "sjnj-mofu-ordered";
+  let mofuOrdered = (() => { try { return localStorage.getItem(ORDER_KEY) === "1"; } catch (e) { return false; } })();
+  function setMofuOrdered(v) {
+    mofuOrdered = v;
+    try { v ? localStorage.setItem(ORDER_KEY, "1") : localStorage.removeItem(ORDER_KEY); } catch (e) {}
+  }
+  // 是否在控制室按對顏色按鈕；按對之後才能進入成人網的「公廁無名屍」頁（清除記錄時重置）
+  const ADULT_MEMBER_KEY = "sjnj-adult-member";
+  let adultMember = (() => { try { return localStorage.getItem(ADULT_MEMBER_KEY) === "1"; } catch (e) { return false; } })();
+  function setAdultMember(v) {
+    adultMember = v;
+    try { v ? localStorage.setItem(ADULT_MEMBER_KEY, "1") : localStorage.removeItem(ADULT_MEMBER_KEY); } catch (e) {}
+  }
+  // 失蹤人口協尋網的【知道】／【不知道】：選過就不能改（"yes"＝男廁路線按了知道、"no"＝按了不知道；清除記錄時重置）
+  const MISSING_KEY = "sjnj-missing-choice";
+  let missingChoice = (() => { try { return localStorage.getItem(MISSING_KEY) || ""; } catch (e) { return ""; } })();
+  function setMissingChoice(v) {
+    missingChoice = v;
+    try { v ? localStorage.setItem(MISSING_KEY, v) : localStorage.removeItem(MISSING_KEY); } catch (e) {}
+  }
+  // 是否在內臟教網站輸入會員證號碼訂購過「內臟之水」；有的話對向月台的椅子上會放著水
+  const WATER_KEY = "sjnj-water-ordered";
+  let waterOrdered = (() => { try { return localStorage.getItem(WATER_KEY) === "1"; } catch (e) { return false; } })();
+  function setWaterOrdered(v) {
+    waterOrdered = v;
+    try { v ? localStorage.setItem(WATER_KEY, "1") : localStorage.removeItem(WATER_KEY); } catch (e) {}
+  }
+  // 道具：平安符（在服務處拿到；之後的劇情呼叫 setAmulet(true) 即可）。沒有的話電梯 B18 會進 BAD END
+  const AMULET_KEY = "sjnj-amulet";
+  let hasAmulet = (() => { try { return localStorage.getItem(AMULET_KEY) === "1"; } catch (e) { return false; } })();
+  function setAmulet(v) {
+    hasAmulet = v;
+    try { v ? localStorage.setItem(AMULET_KEY, "1") : localStorage.removeItem(AMULET_KEY); } catch (e) {}
+  }
+
+  function clearVisited() {
+    visited.clear();
+    try { localStorage.removeItem(VISIT_KEY); } catch (e) {}
+  }
+  // 分歧頁的名稱（有兩個以上選項、且不是結局的頁面會自動列入）
+  const NODE_LABELS = {
+    lobby: "進站大廳",
+    xindian: "往新店的月台",
+    stopThink: "列車進站了",
+    onTrain: "車門緩緩合攏",
+    backAgain: "又回到松江南京站",
+    loop: "又回到了月台",
+    turnBack: "「蘆洲迴龍↑」的樓梯",
+    keepGoing: "一模一樣的場景",
+    talk: "向月台上的人搭話",
+    lookClose: "隧道裡的東西",
+    oldManFlee: "能逃去哪裡？！",
+    omen: "一陣惡寒",
+    recall: "牆上的海報",
+    afterQR: "存在手機裡的網站",
+    noOneBoards: "車廂裡的演講",
+    askOldMan: "老人要錢",
+    giveMore: "還有四十塊",
+    closeLook: "口袋裡的兩百塊",
+    toilet: "廁所門口的字條",
+    womensRoom: "今天是什麼日子？",
+    explore: "開始探索",
+    liftFloor: "陌生的長廊",
+    explorePlatform: "命運的抉擇",   // 對向月台（訂過內臟之水後）的【喝】【不喝】
+    bones: "隧道的盡頭"
+  };
+  // 需要特定條件才會出現分歧的頁面（觸發過才列入）
+  const JUMP_EXTRA = {
+    "run@7": {
+      after: "run",
+      label: "無論如何都到不了",
+      choices: ["停下來"],
+      go: () => { runCount = 6; goScene("run"); },  // 進入時會 +1，剛好是第七次
+      show: () => paidOldMan
+    }
+  };
+  const choicesOf = (sc) => typeof sc.choices === "function" ? sc.choices() : sc.choices;
+  // 【繼續跑】那一頁另外處理（見 JUMP_EXTRA）
+  // 跳轉劇情列表的順序（依故事路線）。「run」那一列是第七次的【停下來】【打電話求救】
+  const JUMP_ORDER = [
+    "lobby", "omen", "afterQR",             // 進站
+    "toilet", "womensRoom",                 // 廁所
+    "xindian",                              // 往新店的月台
+    "loop", "keepGoing", "run",             // 重走一次 → 繼續走 → 無限下樓
+    "talk", "lookClose", "oldManFlee",      // 跟人搭話 → 老人 → 隧道裡的東西
+    "askOldMan",                            // 老人要錢
+    "stopThink", "onTrain", "backAgain",    // 停下來思考 → 上車
+    "closeLook",                            // 半截的男生
+    "noOneBoards",                          // 為什麼沒有人上車？
+    "explore", "liftFloor",                 // 開始探索 → 電梯裡的長廊
+    "bones"                                 // 地下十八樓：白骨與防洪門
+  ];
+  const isBranch = (sc) => !sc.noJump && !sc.ending && sc !== scenes.run && (choicesOf(sc) || []).length >= 2;
+
+  // 一行可以是字串、{ text, cls }，或 { segs: [[文字, class], ...] }（行內部分文字加特效）
+  const segsOf = (item) => typeof item === "string" ? [[item]] : typeof item === "function" ? [[item()]] : item.segs || [[item.text]];
+  const lenOf = (item) => segsOf(item).reduce((n, sg) => n + sg[0].length, 0);
+  function renderLine(item, n) {
+    currentP.textContent = "";
+    let left = n;
+    for (const [t, cls] of segsOf(item)) {
+      if (left <= 0) break;
+      const part = t.slice(0, left);
+      left -= part.length;
+      if (cls) {
+        const span = document.createElement("span");
+        span.className = cls;
+        span.textContent = part;
+        currentP.appendChild(span);
+      } else {
+        currentP.appendChild(document.createTextNode(part));
+      }
+    }
+    currentP.appendChild(caret);
+  }
+
+  const SPEED = 28; // 毫秒 / 字
+
+  const $ = (id) => document.getElementById(id);
+  const screens = { title: $("title-screen"), story: $("story-screen"), endings: $("endings-screen") };
+  const stage = $("stage");
+
+  let scene = null, lineIndex = 0, charIndex = 0, timer = null;
+  let typing = false, waitingChoice = false, currentP = null;
+  const caret = document.createElement("span");
+  caret.className = "caret";
+
+  function show(name) {
+    if (name === "title") applyTitleState();
+    Object.entries(screens).forEach(([k, el]) => el.hidden = k !== name);
+    currentScreen = name;
+    saveProgress();
+  }
+
+  // ---------- 重新整理後停在同一頁 ----------
+  const PROGRESS_KEY = "sjnj-progress";
+  let currentScreen = "title", sceneId = null;
+  function saveProgress() {
+    try {
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify({ screen: currentScreen, scene: sceneId, runCount }));
+    } catch (e) {}
+  }
+  function restoreProgress() {
+    let p = null;
+    try { p = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "null"); } catch (e) {}
+    if (!p) return;
+    if (p.scene === "dreamStay") { show("title"); return; }   // 留在夢裡：重新整理就回首頁
+    if (p.screen === "story" && p.scene && scenes[p.scene]) {
+      runCount = p.runCount || 0;
+      show("story");
+      goScene(p.scene, { restore: true });   // 從這一頁的開頭重新讀
+    } else if (p.screen === "endings") {
+      renderEndings();
+      show("endings");
+    }
+  }
+
+  // 觸發「歡迎來到松江南京站」後，首頁變成扭曲的樣子
+  // 記住首頁原本的樣子，清除記錄時還原
+  const titleOriginal = {
+    h1: document.querySelector("#title-screen h1").innerHTML,
+    intro: document.querySelector("#title-screen .intro").innerHTML,
+    start: $("btn-start").textContent
+  };
+  function resetTitle() {
+    screens.title.style.background = "";
+    document.querySelector("#title-screen h1").innerHTML = titleOriginal.h1;
+    const intro = document.querySelector("#title-screen .intro");
+    intro.classList.remove("broken");
+    intro.innerHTML = titleOriginal.intro;
+    $("btn-start").textContent = titleOriginal.start;
+  }
+
+  // 達成過「歡迎來到松江南京站」結局：出現「其他作品」「贊助我們」
+  function applyTitleLinks() {
+    $("extra-links").hidden = !unlocked.has("welcome");
+  }
+  // 兩個 GOOD END（她的名字、執念）都達成：首頁變回原本的樣子；
+  //「開始遊戲」會發光，之後按下去都會進入 TRUE END
+  const trueOpen = () => unlocked.has("her") && unlocked.has("obsession") && !truePaused;
+  const trueNext = trueOpen;
+  function applyTitleState() {
+    applyTitleLinks();
+    $("btn-start").classList.toggle("glow", trueNext());
+    if (trueOpen()) { resetTitle(); return; }
+    if (!welcomeReached) return;
+    screens.title.style.background =
+      'url("https://images.plurk.com/243lWGITn9lgeKFSBJrfaE.png") center / cover no-repeat, #0b0e0d';
+    document.querySelector("#title-screen h1").innerHTML = '木公氵工南京立占<span class="comma">，</span>至刂了';
+    const intro = document.querySelector("#title-screen .intro");
+    intro.classList.add("broken");
+    intro.textContent = "已經不 能回■了。\n辶言衤里不是亻尒 言亥? 白勺 土也 方。\n本故事不ˊ是真實的，不 是真 ?的。";
+    $("btn-start").textContent = "開?遊ァ戲?";
+  }
+
+  // 電梯門（0 = 全開）
+  const stageWrap = document.querySelector(".stage-wrap");
+  // 手電筒跟著游標（觸控時跟著手指）
+  // 手機：手指按下或拖曳時光圈跟著移動（手電筒期間畫面不捲動，見 CSS 的 touch-action）
+  const moveTorch = (ev) => {
+    if (!stageWrap.classList.contains("flashlight")) return;
+    const r = stageWrap.getBoundingClientRect();
+    stageWrap.style.setProperty("--fx", (ev.clientX - r.left) + "px");
+    stageWrap.style.setProperty("--fy", (ev.clientY - r.top) + "px");
+  };
+  document.addEventListener("pointermove", moveTorch);
+  document.addEventListener("pointerdown", moveTorch);
+  // 讓玩家把檔案存到電腦
+  function downloadB64({ b64, url: fileUrl, name, type }) {
+    if (fileUrl) {   // 發布版：檔案放在網站資料夾裡，直接下載
+      const a = document.createElement("a");
+      a.href = fileUrl; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      return;
+    }
+    const bin = atob(b64), arr = new Uint8Array(bin.length);
+    for (let k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
+    const url = URL.createObjectURL(new Blob([arr], { type: type || "application/octet-stream" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+  // anim：開門時保留門板，等滑開的動畫跑完才收起來
+  let doorTimer = 0;
+  function setDoor(v, anim) {
+    clearTimeout(doorTimer);
+    const on = stageWrap.classList.contains("doors");
+    if (v > 0 && !on) {
+      // 門板原本是隱藏的：先以寬度 0 出現，下一步再關上，才會有關門動畫
+      stageWrap.style.setProperty("--door", "0");
+      stageWrap.classList.add("doors");
+      void stageWrap.offsetWidth;
+    }
+    if (v === 0 && anim && on) {
+      stageWrap.style.setProperty("--door", "0");
+      doorTimer = setTimeout(() => stageWrap.classList.remove("doors"), 950);
+      return;
+    }
+    stageWrap.classList.toggle("doors", v > 0);
+    stageWrap.style.setProperty("--door", String(v));
+  }
+
+  // 劇情頁可用的背景特效（scene.bg）
+  const SCENE_BGS = ["blood", "fall", "dream", "white"];
+  function goScene(id, opts = {}) {
+    clearTimeout(timer);
+    seaReplay = false;
+    stageWrap.classList.remove("lift-shake");
+    screens.story.classList.remove("glitch", "glitch-soft");
+    if (opts.doorOpen) {
+      // 電梯門先保持關著，下一格畫面再打開（才會有開門的動畫）
+      setDoor(0.5);
+      requestAnimationFrame(() => requestAnimationFrame(() => setDoor(0, true)));
+    } else setDoor(0);
+    if (id === "@title") { SCENE_BGS.forEach((c) => screens.story.classList.remove(c)); stageWrap.classList.remove("flashlight"); bgm.muted = false; show("title"); return; }
+    if (id === "trueEnd") { trueNewsOpens = 0; trueSecret = !!opts.secret; newsGirlsRed = false; }   // 每次進 TRUE END 重新計算
+    scene = scenes[id];
+    stageWrap.classList.toggle("flashlight", !!scene.flashlight);
+    SCENE_BGS.forEach((c) => screens.story.classList.toggle(c, scene.bg === c));
+    bgm.muted = !!scene.flashlight;   // 手電筒那一頁背景音樂靜音
+    sceneId = id;
+    if (id === "giveTen" && !visited.has("giveTen")) notifyUnlock("軌道");   // 給過老人四十塊：【？？】變成【軌道】
+    markVisited(id);
+    if (scene.onEnter && !opts.restore) scene.onEnter();
+    saveProgress();
+    if (scene.ending) unlockEnding(scene.ending, opts.restore);
+    stage.innerHTML = "";
+    stage.scrollTop = 0;
+    lineIndex = 0;
+    currentP = null;
+    typing = false;
+    waitingChoice = false;
+    pendingEnd = null;
+    answering = false;
+    gateWait = false;
+    nextLine();
+  }
+
+  function startStory() {
+    show("story");
+    goScene(trueNext() ? "trueEnd" : "start");
+  }
+
+  function scrollDown() { stage.scrollTop = stage.scrollHeight; }
+
+  function nextLine() {
+    if (waitingChoice || gateWait) return;
+    if (lineIndex >= scene.lines.length) { showChoices(); return; }
+    if (currentP) currentP.classList.add("old");
+    const item = scene.lines[lineIndex];
+    if (item && item.door != null) setDoor(item.door);
+    if (item && item.unlock) unlockEnding(item.unlock);
+
+    // 控制室的顏色按鈕：答對才繼續往下
+    if (item.colorPad) {
+      caret.remove();
+      const cur = scene;
+      gateWait = true;
+      stage.appendChild(buildColorPad(() => { if (scene === cur && gateWait) { gateWait = false; nextLine(); } }));
+      currentP = null;
+      lineIndex++;
+      scrollDown();
+      return;
+    }
+
+    // 頁面中間的按鈕：按了才繼續往下（按鈕留著可以重複按）
+    if (item.gate) {
+      caret.remove();
+      const box = document.createElement("div");
+      box.className = "choices";
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "choice"; b.textContent = `【${item.gate}】`;
+      const cur = scene;
+      gateWait = true;
+      const release = () => { if (scene === cur && gateWait) { gateWait = false; nextLine(); } };
+      b.addEventListener("click", (ev) => { ev.stopPropagation(); item.action(release); });
+      box.appendChild(b);
+      stage.appendChild(box);
+      currentP = null;
+      lineIndex++;
+      scrollDown();
+      return;
+    }
+
+    if (item.video) {
+      caret.remove();
+      const fig = document.createElement("figure");
+      fig.className = "scene-video";
+      const v = document.createElement("video");
+      v.src = (safeMode && item.safe) ? item.safe : item.video;
+      v.playsInline = true;
+      v.preload = "auto";
+      v.addEventListener("loadeddata", scrollDown);
+      // 關掉瀏覽器自帶的子母畫面、投放等按鈕
+      v.disablePictureInPicture = true;
+      v.disableRemotePlayback = true;
+      v.setAttribute("disablepictureinpicture", "");
+      v.setAttribute("disableremoteplayback", "");
+      v.setAttribute("controlslist", "nodownload nofullscreen noplaybackrate noremoteplayback");
+      v.addEventListener("contextmenu", (ev) => ev.preventDefault());
+      fig.appendChild(v);
+      // 透明遮罩蓋在影片上：滑鼠碰不到影片，瀏覽器就不會跳出懸浮按鈕（例如 Edge 的影片加強）
+      const shield = document.createElement("div");
+      shield.className = "video-shield";
+      fig.appendChild(shield);
+      // 自動播放；若瀏覽器擋下有聲播放，改為靜音播放並顯示控制列讓玩家開聲音（此時拿掉遮罩）
+      v.play().catch(() => { v.muted = true; v.controls = true; shield.remove(); v.play().catch(() => {}); });
+      stage.appendChild(fig);
+      currentP = null;
+      lineIndex++;
+      scrollDown();
+      if (lineIndex >= scene.lines.length) showChoices();
+      return;
+    }
+
+    // 點一下畫面：把上一張圖換成另一張
+    if (item.swapImg) {
+      const imgs = stage.querySelectorAll("figure.scene-img img");
+      const last = imgs[imgs.length - 1];
+      if (last) last.src = (safeMode && item.safe) ? item.safe : item.swapImg;
+      currentP = null;
+      lineIndex++;
+      if (lineIndex >= scene.lines.length) showChoices();   // 這一下只換圖，下一下才出現下一行
+      return;
+    }
+
+    if (item.img) {
+      caret.remove();
+      const fig = document.createElement("figure");
+      fig.className = "scene-img";
+      const img = new Image();
+      img.src = (safeMode && item.safe) ? item.safe : item.img;
+      img.alt = "";
+      if (!item.noScroll) img.addEventListener("load", scrollDown);   // noScroll：圖片出現時不自動往下捲
+      if (item.download) {
+        img.classList.add("dl-img");
+        img.title = "點擊下載";
+        img.addEventListener("click", (ev) => { ev.stopPropagation(); downloadB64(item.download); });
+      }
+      fig.appendChild(img);
+      if (item.download) {
+        const cap = document.createElement("figcaption");
+        cap.className = "dl-cap";
+        cap.textContent = "點擊圖片可下載";
+        fig.appendChild(cap);
+      }
+      stage.appendChild(fig);
+      currentP = null;
+      lineIndex++;
+      if (!item.noScroll) scrollDown();
+      if (lineIndex >= scene.lines.length) showChoices();
+      return;
+    }
+
+    currentP = document.createElement("p");
+    if (item.cls) currentP.className = item.cls;
+    stage.appendChild(currentP);
+    charIndex = 0;
+    typing = true;
+    typeChar();
+  }
+
+  function typeChar() {
+    const item = scene.lines[lineIndex];
+    charIndex++;
+    renderLine(item, charIndex);
+    scrollDown();
+    if (charIndex < lenOf(item)) timer = setTimeout(typeChar, item.speed || SPEED);
+    else finishLine();
+  }
+
+  function finishLine() {
+    clearTimeout(timer);
+    renderLine(scene.lines[lineIndex], Infinity);
+    typing = false;
+    lineIndex++;
+    scrollDown();
+    if (lineIndex >= scene.lines.length) showChoices();
+  }
+
+  function showChoices() {
+    waitingChoice = true;
+    caret.remove();
+    if (scene.dial) { showDial(); return; }
+    if (scene.ask) { showAsk(); return; }
+    if (scene.liftPad) { showLiftPad(); return; }
+    if (scene.afterLines && scene.afterLines()) return;
+    if (scene.endOnClick) { pendingEnd = scene.endOnClick; return; }
+    // 選項照常顯示，但再點一下畫面就前往指定頁面
+    if (scene.thenClick) { const t = scene.thenClick(); if (t) pendingEnd = () => goScene(t); }
+    const list = typeof scene.choices === "function" ? scene.choices() : scene.choices;
+    if (scene === scenes.run && list.length >= 2) markVisited("run@7");
+    if (!list.length) return;
+    const box = document.createElement("div");
+    box.className = "choices";
+    list.forEach((c) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "choice";
+      if (c.cls) b.classList.add(c.cls);
+      b.textContent = `【${c.text}】`;
+      b.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        if (c.blocked) showModal(c.blocked);
+        else if (c.action) c.action();
+        else goScene(c.to);
+      });
+      box.appendChild(b);
+    });
+    stage.appendChild(box);
+    scrollDown();
+  }
+
+  // 文字回答（例如女廁的問題）
+  function startAnswer(a) {
+    answering = true;
+    const box = stage.querySelector(".choices");
+    if (box) box.remove();
+    showAsk(a);
+  }
+
+  function showAsk(a = scene.ask) {
+    const form = document.createElement("form");
+    form.className = "dial";
+    form.innerHTML = '<input id="ask-input" type="text" autocomplete="off">' +
+      '<button class="choice" type="submit"></button>';
+    const input = form.querySelector("input");
+    input.placeholder = a.placeholder || "";
+    input.setAttribute("aria-label", a.label || "回答");
+    form.querySelector("button").textContent = `【${a.button || "確認"}】`;
+    form.addEventListener("click", (ev) => ev.stopPropagation());
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const v = input.value.trim();
+      if (!v) { input.focus(); return; }
+      const to = a.answer(v);
+      if (!to) { input.value = ""; input.focus(); return; }   // 沒有對應的頁面：清空重打
+      goScene(to);
+    });
+    stage.appendChild(form);
+    scrollDown();
+    input.focus({ preventScroll: true });
+  }
+
+  // 控制室的十個顏色按鈕（點一下按下、再點一下彈起）；正確答案是義津川著作封面的五個顏色
+  const COLOR_BTNS = [
+    { name: "紅色", c: "#d32f2f" },
+    { name: "深藍色", c: "#1f2f6b", ok: true },
+    { name: "檸檬黃", c: "#f2d024" },
+    { name: "薰衣草紫", c: "#b39ddb", ok: true },
+    { name: "橘色", c: "#f57c00" },
+    { name: "粉紅色", c: "#f48fb1", ok: true },
+    { name: "天藍色", c: "#4fc3f7" },
+    { name: "乳白色", c: "#f5f0e1", ok: true },
+    { name: "咖啡色", c: "#6d4c41" },
+    { name: "深綠色", c: "#1e5631", ok: true }
+  ];
+  function buildColorPad(onSolved) {
+    const wrap = document.createElement("div");
+    wrap.className = "color-wrap";
+    wrap.addEventListener("click", (ev) => ev.stopPropagation());
+    const pad = document.createElement("div");
+    pad.className = "color-pad";
+    const btns = COLOR_BTNS.map((d) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "color-btn";
+      b.style.setProperty("--c", d.c);
+      b.setAttribute("aria-label", d.name);
+      b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        if (wrap.classList.contains("done")) return;
+        const on = b.getAttribute("aria-pressed") !== "true";
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      pad.appendChild(b);
+      return b;
+    });
+    wrap.appendChild(pad);
+    const ok = document.createElement("button");
+    ok.type = "button"; ok.className = "choice"; ok.textContent = "【確定】";
+    let msg = null;
+    ok.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      if (wrap.classList.contains("done")) return;
+      const right = btns.every((b, i) => (b.getAttribute("aria-pressed") === "true") === !!COLOR_BTNS[i].ok);
+      if (msg) { msg.remove(); msg = null; }
+      if (right) {
+        wrap.classList.add("done");
+        ok.remove();
+        setAdultMember(true);
+        onSolved();
+        return;
+      }
+      // 按錯：同一頁顯示「沒有反應……」，按鈕全部彈起
+      btns.forEach((b) => b.setAttribute("aria-pressed", "false"));
+      msg = document.createElement("p");
+      msg.className = "color-msg";
+      msg.textContent = "沒有反應……";
+      wrap.appendChild(msg);
+      scrollDown();
+    });
+    wrap.appendChild(ok);
+    return wrap;
+  }
+
+  // 電梯按鈕面板：0～4、5～9 各一直排，下方是確認、取消
+  // 輸入的樓層 → 抵達的場景
+  // B18：沒有拿到【平安符】的話會到 BAD END：不被庇佑的人
+  const LIFT_FLOORS = { "2503071213159": "liftFloor", get B18() { return hasAmulet ? "underpass" : "endUnblessed"; } };
+  function showLiftPad() {
+    const pad = document.createElement("div");
+    pad.className = "lift-pad";
+    pad.addEventListener("click", (ev) => ev.stopPropagation());
+    const screen = document.createElement("div");
+    screen.className = "lift-screen";
+    screen.setAttribute("aria-live", "polite");
+    pad.appendChild(screen);
+    let code = "";
+    const show = () => { screen.textContent = code || " "; screen.scrollLeft = screen.scrollWidth; };
+    show();
+    const btn = (label, cls, fn, aria) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "lift-btn" + (cls ? " " + cls : "");
+      b.textContent = label;
+      if (aria) b.setAttribute("aria-label", aria);
+      b.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        if (pad.classList.contains("done")) return;
+        b.classList.add("lit"); setTimeout(() => b.classList.remove("lit"), 220);
+        fn();
+      });
+      return b;
+    };
+    const cols = document.createElement("div");
+    cols.className = "lift-cols";
+    [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]].forEach((col) => {
+      const c = document.createElement("div");
+      c.className = "lift-col";
+      col.forEach((n) => c.appendChild(btn(String(n), "", () => { if (code.length < 20) { code += n; show(); } })));
+      cols.appendChild(c);
+    });
+    pad.appendChild(cols);
+    const bRow = document.createElement("div");
+    bRow.className = "lift-ctl";
+    bRow.appendChild(btn("B", "", () => { if (code.length < 20) { code += "B"; show(); } }, "地下"));
+    pad.appendChild(bRow);
+    const ctl = document.createElement("div");
+    ctl.className = "lift-ctl";
+    ctl.appendChild(btn("確認", "word", () => {
+      if (!code) return;
+      const dest = LIFT_FLOORS[code];
+      if (dest) { pad.classList.add("done"); liftRide(dest); return; }
+      // 輸入錯誤：面板留著可以重新輸入，面板下方出現「電梯沒有動……」（重複輸入錯誤只會有一行）
+      code = ""; show();
+      let msg = pad.nextElementSibling;
+      if (!msg || msg.tagName !== "P") { msg = document.createElement("p"); pad.after(msg); }
+      else msg.style.animation = "none", void msg.offsetWidth, msg.style.animation = "";
+      msg.className = "lift-msg";
+      msg.textContent = "電梯沒有動……";
+      scrollDown();
+    }));
+    ctl.appendChild(btn("取消", "word", () => { code = ""; show(); }));
+    pad.appendChild(ctl);
+    stage.appendChild(pad);
+    const box = document.createElement("div");
+    box.className = "choices";
+    const out = document.createElement("button");
+    out.type = "button"; out.className = "choice"; out.textContent = "【出去】";
+    out.addEventListener("click", (ev) => { ev.stopPropagation(); if (!pad.classList.contains("done")) goScene("explore"); });
+    box.appendChild(out);
+    stage.appendChild(box);
+    scrollDown();
+  }
+  // 輸入正確：電梯門關上 → 輕微晃動 → 三秒後門打開，來到新的樓層
+  function liftRide(dest) {
+    setDoor(0.5);
+    timer = setTimeout(() => {
+      stageWrap.classList.add("lift-shake");
+      timer = setTimeout(() => {
+        stageWrap.classList.remove("lift-shake");
+        goScene(dest, { doorOpen: true });
+      }, 3000);
+    }, 900);
+  }
+
+  function showDial() {
+    const form = document.createElement("form");
+    form.className = "dial";
+    form.innerHTML = '<input id="dial-input" type="text" autocomplete="off" placeholder="請輸入電話號碼……" inputmode="tel" aria-label="電話號碼">' +
+      '<button class="choice" type="submit">【撥打】</button>';
+    form.addEventListener("click", (ev) => ev.stopPropagation());
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const input = form.querySelector("input");
+      const who = input.value.trim();
+      if (!who) { input.focus(); return; }
+      const to = scene.dial(who);
+      if (to && typeof to === "object") { showModal(to.modal); input.value = ""; return; }   // 只跳彈窗、留在這一頁
+      goScene(to);
+    });
+    stage.appendChild(form);
+    if (scene.giveUp) {
+      const box = document.createElement("div");
+      box.className = "choices";
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "choice";
+      b.textContent = "【放棄】";
+      b.addEventListener("click", (ev) => { ev.stopPropagation(); goScene(scene.giveUp); });
+      box.appendChild(b);
+      stage.appendChild(box);
+    }
+    scrollDown();
+    form.querySelector("input").focus({ preventScroll: true });
+  }
+
+  // ---------- 跳轉劇情 ----------
+  const jump = $("jump"), jumpList = $("jump-list");
+  function openJump() {
+    jumpList.innerHTML = "";
+    const ids = [];
+    // 依故事路線排序；不在 JUMP_ORDER 裡的分歧頁排在最後
+    const order = [...JUMP_ORDER, ...Object.keys(scenes).filter((id) => !JUMP_ORDER.includes(id))];
+    order.forEach((id) => {
+      if (scenes[id] && visited.has(id) && isBranch(scenes[id])) ids.push(id);
+      Object.entries(JUMP_EXTRA).forEach(([xid, x]) => { if (x.after === id && visited.has(xid) && (!x.show || x.show())) ids.push(xid); });
+    });
+    if (!ids.length) {
+      const li = document.createElement("li");
+      li.className = "jump-empty";
+      li.textContent = "還沒有讀過任何分歧點。";
+      jumpList.appendChild(li);
+    }
+    ids.forEach((id) => {
+      const x = JUMP_EXTRA[id];
+      if (x) {
+        const li = document.createElement("li");
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "jump-item";
+        const title = document.createElement("b");
+        title.textContent = x.label;
+        const sub = document.createElement("span");
+        sub.textContent = x.choices.map((c) => `【${c}】`).join("");
+        b.append(title, sub);
+        b.addEventListener("click", (ev) => { ev.stopPropagation(); jump.hidden = true; x.go(); });
+        li.appendChild(b);
+        jumpList.appendChild(li);
+        return;
+      }
+      const sc = scenes[id];
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "jump-item";
+      const title = document.createElement("b");
+      title.textContent = NODE_LABELS[id] || segsOf(sc.lines.find((l) => !l.img && !l.video)).map((x) => x[0]).join("").slice(0, 16);
+      const sub = document.createElement("span");
+      sub.textContent = choicesOf(sc).map((c) => `【${c.text}】`).join("");
+      b.append(title, sub);
+      b.addEventListener("click", (ev) => { ev.stopPropagation(); jump.hidden = true; goScene(id); });
+      li.appendChild(b);
+      jumpList.appendChild(li);
+    });
+    jump.hidden = false;
+    jumpList.scrollTop = 0;
+    $("jump-close").focus();
+  }
+  $("story-jump").addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    if (inDream()) { askWake(); return; }
+    if (scene === scenes.endWelcome) { showModal("無法選擇！"); return; }
+    { const lock = navLock(); if (lock) { showModal(lock); return; } }
+    openJump();
+  });
+  $("jump-close").addEventListener("click", (ev) => { ev.stopPropagation(); jump.hidden = true; });
+  jump.addEventListener("click", (ev) => { ev.stopPropagation(); if (ev.target === jump) jump.hidden = true; });
+
+  // ---------- 掃描 QR 碼後的網頁 ----------
+  // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
+  const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
+  // 網頁內的連結 → 頁面
+  const QR_LINKS = { "色情網頁.html": "adult" };
+  const qrWin = $("qr-win"), qrFrame = $("qr-frame");
+  // 網頁內的捲軸改成遊戲的細綠色樣式
+  const QR_SCROLL_CSS = "<style>*{-webkit-tap-highlight-color:transparent}html{scrollbar-width:thin;scrollbar-color:#3aa36a transparent}" +
+    "::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}" +
+    "::-webkit-scrollbar-thumb{background:#3aa36a;border-radius:2px}::-webkit-scrollbar-thumb:hover{background:#4fc283}" +
+    "::-webkit-scrollbar-corner{background:transparent}<\/style>";
+  const QR_KEY = "sjnj-qr-seen";
+  const browserBtn = $("story-browser");
+  function loadQrSeen() { try { return localStorage.getItem(QR_KEY) === "1"; } catch (e) { return false; } }
+  browserBtn.hidden = !loadQrSeen();
+  // 簡易瀏覽紀錄：上一頁／下一頁
+  let qrHistory = ["home"], qrIndex = 0;
+  // 網頁內容：開發版直接放在 QR_PAGES 裡；發布版改成需要時才從 sites/ 資料夾讀取
+  let qrRenderToken = 0;
+  const qrCache = {};
+  function getQrPage(pg) {
+    if (!(pg in QR_PAGES)) return Promise.resolve(null);
+    return qrCache[pg] ? Promise.resolve(qrCache[pg]) : fetch("sites/" + pg + ".html").then((r) => r.text()).then((t) => (qrCache[pg] = t));
+  }
+  function renderQR() {
+    const pg = qrHistory[qrIndex];
+    if (pg === "adult-toilet" && !toiletRead) { toiletRead = true; try { localStorage.setItem(TOILET_READ_KEY, "1"); } catch (e) {} }
+    const token = ++qrRenderToken;
+    getQrPage(pg).then((html) => {
+      if (token !== qrRenderToken || html == null) return;   // 期間又換了頁就不理會
+      qrFrame.srcdoc = (pg === "news" ? newsHtml(html) : html)
+        .replace(/javascript:history\.back\(\)/g, "#qr-back")
+        .replace("</head>", QR_SCROLL_CSS + QR_HOOK + "</head>");
+    });
+    $("qr-back").disabled = qrIndex <= 0;
+    $("qr-fwd").disabled = qrIndex >= qrHistory.length - 1;
+  }
+  function qrGo(page) {
+    qrHistory = qrHistory.slice(0, qrIndex + 1);
+    qrHistory.push(page);
+    qrIndex++;
+    renderQR();
+  }
+  function qrBack() { if (qrIndex > 0) { qrIndex--; renderQR(); } }
+  function qrFwd() { if (qrIndex < qrHistory.length - 1) { qrIndex++; renderQR(); } }
+  $("qr-back").addEventListener("click", (ev) => { ev.stopPropagation(); qrBack(); });
+  $("qr-fwd").addEventListener("click", (ev) => { ev.stopPropagation(); qrFwd(); });
+
+  let bgmWasPlaying = false;
+  function openQR() {
+    if (qrWin.hidden) { bgmWasPlaying = !bgm.paused; bgm.pause(); }
+    browserBtn.hidden = false;
+    try { localStorage.setItem(QR_KEY, "1"); } catch (e) {}
+    qrHistory = ["home"]; qrIndex = 0;
+    renderQR();
+    qrWin.hidden = false;
+    $("qr-close").focus();
+  }
+  // TRUE END：只顯示新聞網頁，關閉後執行 onClose（不提示、不記錄成看過內臟教網站）
+  // 讀過成人網「公廁無名屍」（記在瀏覽器中，只有「全部清除」才會刪掉）
+  const TOILET_READ_KEY = "sjnj-toilet-read";
+  let toiletRead = (() => { try { return localStorage.getItem(TOILET_READ_KEY) === "1"; } catch (e) { return false; } })();
+  // TRUE END 的新聞：第一次打開才能點「內臟女孩」；點過再關掉網頁 → SECRET END
+  function openTrueNews(release) {
+    trueNewsOpens++;
+    openNews(() => { if (newsGirlsRed && !trueSecret && trueNewsOpens === 1) trueSecret = true; release(); });
+  }
+  window.__newsGirlsClick = () => { if (trueNewsOpens === 1) newsGirlsRed = true; };
+  const NEWS_GIRLS_CSS = "<style>.ng{font-weight:bold;text-decoration:underline;}.ng.click{cursor:pointer}.ng.red{color:#d00000}<\/style>";
+  const NEWS_GIRLS_JS = "<script>document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.ng.click');if(!t)return;" +
+    "document.querySelectorAll('.ng').forEach(function(x){x.classList.add('red');x.classList.remove('click');});try{parent.__newsGirlsClick();}catch(err){}});<\/script>";
+  function newsHtml(html) {
+    if (!toiletRead || sceneId !== "trueEnd") return html;
+    const cls = trueNewsOpens === 1 && !newsGirlsRed ? "ng click" : (newsGirlsRed ? "ng red" : "ng");
+    const a = html.indexOf("<article"), b = html.indexOf("</article>");
+    if (a < 0 || b < 0) return html;
+    const body = html.slice(a, b).replace(/內臟女孩/g, '<span class="' + cls + '">內臟女孩</span>');
+    return (html.slice(0, a) + body + html.slice(b)).replace("</head>", NEWS_GIRLS_CSS + "</head>").replace("</body>", NEWS_GIRLS_JS + "</body>");
+  }
+  let newsOnClose = null;
+  function openNews(onClose) {
+    newsOnClose = onClose;
+    qrHistory = ["news"]; qrIndex = 0;
+    renderQR();
+    qrWin.hidden = false;
+    $("qr-close").focus();
+  }
+  // 第一次關閉網頁視窗前，先提示「查看瀏覽器」按鈕的位置
+  const QR_TIP_KEY = "sjnj-qr-tip";
+  function closeQR() {
+    if (newsOnClose) {
+      const cb = newsOnClose; newsOnClose = null;
+      qrWin.hidden = true; qrFrame.srcdoc = "";
+      cb(); return;
+    }
+    let tipped = false;
+    try { tipped = localStorage.getItem(QR_TIP_KEY) === "1"; } catch (e) {}
+    if (!tipped) {
+      try { localStorage.setItem(QR_TIP_KEY, "1"); } catch (e) {}
+      showModal("可隨時點擊左下角的按鈕查看網頁！", { onClose: closeQR });
+      return;
+    }
+    qrWin.hidden = true;
+    qrFrame.srcdoc = "";
+    if (bgmWasPlaying) { const p = bgm.play(); if (p && p.catch) p.catch(() => {}); }
+    bgmWasPlaying = false;
+  }
+  // 網頁內指向尚未製作之頁面的連結先不動作；外部連結開新分頁
+  // 網頁內的點擊交給遊戲處理（在頁面一開始解析時就註冊，圖片還沒載完也有效）
+  // 外部連結開新分頁；本日推薦等站內連結在視窗內換頁；返回上一頁走視窗的紀錄；其餘連結不動作
+  // 成人網：回答過「年滿18歲」後不再詢問（清除記錄時重置）
+  const AGE_KEY = "sjnj-adult-ok";
+  window.__qrAgeOk = () => { try { return localStorage.getItem(AGE_KEY) === "1"; } catch (e) { return false; } };
+  window.__qrSetAgeOk = () => { try { localStorage.setItem(AGE_KEY, "1"); } catch (e) {} };
+  // 成人網預約 Cherry：關掉瀏覽器，跳出手機來電
+  const call = $("call");
+  // 來電鈴聲：用 Web Audio 合成（440＋480Hz 的電話鈴），響到接聽或掛斷為止
+  let ringCtx = null, ringTimer = 0;
+  function ringOnce() {
+    const ctx = ringCtx, t0 = ctx.currentTime + 0.02;
+    const out = ctx.createGain(); out.gain.value = 0; out.connect(ctx.destination);
+    [440, 480].forEach((f) => { const o = ctx.createOscillator(); o.frequency.value = f; o.connect(out); o.start(t0); o.stop(t0 + 1.25); });
+    [[0, 0.4], [0.6, 1.0]].forEach(([a, b]) => {   // 響兩聲
+      out.gain.setValueAtTime(0, t0 + a);
+      out.gain.linearRampToValueAtTime(0.12, t0 + a + 0.02);
+      out.gain.setValueAtTime(0.12, t0 + b - 0.02);
+      out.gain.linearRampToValueAtTime(0, t0 + b);
+    });
+  }
+  function startRing() {
+    try {
+      ringCtx = ringCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (ringCtx.state === "suspended") ringCtx.resume();
+      ringOnce();
+      clearInterval(ringTimer);
+      ringTimer = setInterval(ringOnce, 2600);
+    } catch (e) {}
+  }
+  function stopRing() {
+    clearInterval(ringTimer); ringTimer = 0;
+    if (ringCtx) { try { ringCtx.close(); } catch (e) {} ringCtx = null; }
+  }
+  window.__qrCherryCall = () => {
+    call.hidden = false;   // 瀏覽器維持開著，來電彈窗蓋在上面
+    startRing();
+    $("call-answer").focus();
+  };
+  call.addEventListener("click", (ev) => ev.stopPropagation());
+  // 接聽：播放音檔（通話中不能掛斷），播完彈窗改成【下載】，點了才下載音檔並關掉來電畫面
+  const CALL_FILE = { url: "media/unknown.m4a", name: "unknown.m4a", type: "audio/mp4" };
+  let callAudio = null, callUrl = "", callTick = 0;
+  function endCall(done) {
+    clearInterval(callTick); callTick = 0;
+    if (callAudio) { callAudio.pause(); callAudio = null; }
+    if (callUrl) { URL.revokeObjectURL(callUrl); callUrl = ""; }
+    call.classList.remove("in-call");
+    $("call-status").textContent = "📞 來電中……";
+    if (done) { call.classList.add("after"); $("call-dl").focus(); }
+    else call.hidden = true;
+  }
+  // 下載過錄音之後，成人網上 Cherry 的照片會換掉（清除記錄時重置）
+  const CHERRY_FACE_KEY = "sjnj-cherry-face";
+  window.__qrCherryFace = () => { try { return localStorage.getItem(CHERRY_FACE_KEY) === "1"; } catch (e) { return false; } };
+  $("call-dl").addEventListener("click", () => {
+    downloadB64(CALL_FILE);
+    try { localStorage.setItem(CHERRY_FACE_KEY, "1"); } catch (e) {}
+    try { const w = qrFrame.contentWindow; if (w && w.__applyCherryFace) w.__applyCherryFace(); } catch (e) {}
+    call.hidden = true;
+    call.classList.remove("after");
+  });
+  $("call-answer").addEventListener("click", () => {
+    stopRing();
+    call.classList.add("in-call");
+    const status = $("call-status"), t0 = Date.now();
+    const fmt = () => { const sec = Math.floor((Date.now() - t0) / 1000); return "通話中　" + String(Math.floor(sec / 60)).padStart(2, "0") + ":" + String(sec % 60).padStart(2, "0"); };
+    status.textContent = fmt();
+    callTick = setInterval(() => { status.textContent = fmt(); }, 500);
+    try {
+      if (CALL_FILE.url) callAudio = new Audio(CALL_FILE.url);
+      else {
+      const bin = atob(CALL_AUDIO_B64), arr = new Uint8Array(bin.length);
+      for (let k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
+      callUrl = URL.createObjectURL(new Blob([arr], { type: "audio/mp4" }));
+      callAudio = new Audio(callUrl);
+      }
+      callAudio.addEventListener("ended", () => endCall(true));
+      const pr = callAudio.play();
+      if (pr && pr.catch) pr.catch(() => endCall(true));
+    } catch (e) { endCall(true); }
+  });
+  $("call-hang").addEventListener("click", () => { stopRing(); call.hidden = true; });
+  // ---------- 隧道逃生小遊戲 ----------
+  const tunnelWin = $("tunnel-win"), tunnelFrame = $("tunnel-frame");
+  let tunnelCache = null;
+  function getTunnelHtml() { return tunnelCache ? Promise.resolve(tunnelCache) : fetch("tunnel.html").then((r) => r.text()).then((t) => (tunnelCache = t)); }   // 發布版改成讀取 tunnel.html
+  function openTunnel() {
+    tunnelFrame.onload = () => { try { tunnelFrame.contentWindow.focus(); } catch (e) {} };
+    // 安心開關打開時，小遊戲的怪物換成安心版本
+    getTunnelHtml().then((html) => {
+      tunnelFrame.srcdoc = safeMode ? html.replace('<html lang="zh-Hant">', '<html lang="zh-Hant" data-safe="1">') : html;
+    });
+    tunnelWin.hidden = false;
+  }
+  function closeTunnel() { tunnelWin.hidden = true; tunnelFrame.srcdoc = ""; }
+  // 通關過一次就記住（清除記錄時重置），之後可以選擇跳過
+  const TUNNEL_KEY = "sjnj-tunnel-cleared";
+  let tunnelCleared = (() => { try { return localStorage.getItem(TUNNEL_KEY) === "1"; } catch (e) { return false; } })();
+  const skipTunnel = $("skip-tunnel");
+  function askSkipTunnel() { skipTunnel.hidden = false; $("skip-yes").focus(); }
+  skipTunnel.addEventListener("click", (ev) => ev.stopPropagation());
+  $("skip-yes").addEventListener("click", () => { skipTunnel.hidden = true; goScene("trackEscape"); });
+  $("skip-no").addEventListener("click", () => { skipTunnel.hidden = true; openTunnel(); });
+  // 小遊戲回報：win＝撐過 60 秒、dead＝被追上（BAD END：逃不掉了）、title＝在失敗畫面選回首頁
+  window.__tunnelDone = (r) => {
+    if (r === "dead") { unlockEnding("tunnel"); return; }
+    closeTunnel();
+    if (r === "win") {
+      tunnelCleared = true;
+      try { localStorage.setItem(TUNNEL_KEY, "1"); } catch (e) {}
+      goScene("trackEscape");
+    }
+    else if (r === "title") goScene("@title");
+  };
+  // 茂夫石頁面輸入正確優惠碼時呼叫
+  window.__qrOrdered = () => setMofuOrdered(true);
+  window.__qrWaterOrdered = () => setWaterOrdered(true);
+  window.__qrSafe = () => safeMode;
+  window.__qrMissing = () => missingChoice;
+  window.__qrSetMissing = (v) => { if (!missingChoice) setMissingChoice(v); };
+  window.__qrRestroom = () => restroom;
+  window.__qrModal = (msg) => showModal(msg);   // 網頁裡跳出遊戲的彈窗   // 網頁裡的圖片依安心開關換成安心版
+  window.__qrClick = (ev) => {
+    const a = ev.target.closest && ev.target.closest("a");
+    if (!a) return;
+    const href = a.getAttribute("href") || "";
+    if (/^https?:/i.test(href)) { a.target = "_blank"; a.rel = "noopener"; return; }
+    ev.preventDefault();
+    // 成人網的「公廁無名屍」：在控制室按對按鈕之前都會被擋
+    if (href === "page:adult-toilet" && !adultMember) {
+      const w = ev.target.ownerDocument && ev.target.ownerDocument.defaultView;
+      if (w && w.xpDialog) w.xpDialog("錯誤", "錯誤！本網頁僅限會員！", [{ label: "確定", onClick: (d) => d.close() }]);
+      else showModal("錯誤！本網頁僅限會員！");
+      return;
+    }
+    if (QR_LINKS[href]) { qrGo(QR_LINKS[href]); return; }
+    if (href.startsWith("page:") && href.slice(5) in QR_PAGES) { qrGo(href.slice(5)); return; }
+    if (href === "action:mail") { sendMailTip(); return; }
+    if (href === "#qr-back" || /history\.back/.test(href)) { qrBack(); return; }
+  };
+  // 內臟教的意見信箱：顯示信箱並複製到剪貼簿
+  const BUG_MAIL = "yoyo168yes@gmail.com";
+  function copyText(text) {
+    const fallback = () => {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(fallback);
+      else fallback();
+    } catch (e) { fallback(); }
+  }
+  // 劇情裡可以點擊複製的字串（class="copy-code"，複製時去掉【】）
+  stage.addEventListener("click", (ev) => {
+    const el = ev.target.closest && ev.target.closest(".copy-code");
+    if (!el) return;
+    ev.stopPropagation();
+    copyText(el.textContent.replace(/[【】]/g, ""));
+    showModal("已複製至剪貼簿！");
+  });
+  function sendMailTip() {
+    copyText(BUG_MAIL);
+    showModal(`這是用於回報遊戲BUG、給予建議的信箱：${BUG_MAIL}`, { sub: "（已將信箱複製至剪貼簿）" });
+  }
+  const QR_HOOK = "<script>document.addEventListener('click',function(e){parent.__qrClick&&parent.__qrClick(e);},true);<\/script>";
+  browserBtn.addEventListener("click", (ev) => { ev.stopPropagation(); if (inDream()) { askWake(); return; } openQR(); });
+  $("qr-close").addEventListener("click", (ev) => { ev.stopPropagation(); closeQR(); });
+  qrWin.addEventListener("click", (ev) => { ev.stopPropagation(); if (ev.target === qrWin) closeQR(); });
+
+  // 這一頁是否禁止「跳轉劇情」與「返回標題」；lockNav 可以是文字或函式
+  function navLock() {
+    if (collapsing) return "錯誤！輪迴還沒有結束。";
+    if (!scene || !scene.lockNav || screens.story.hidden) return "";
+    return typeof scene.lockNav === "function" ? scene.lockNav() : scene.lockNav;
+  }
+
+  const modal = $("modal");
+  let modalOnClose = null;
+  function showModal(msg, opts = {}) {
+    $("modal-text").textContent = msg;
+    $("modal-sub").textContent = opts.sub || "";
+    $("modal-sub").hidden = !opts.sub;
+    modal.querySelector(".modal-box").classList.toggle("bad", !!opts.bad);
+    modalOnClose = opts.onClose || null;
+    modal.hidden = false;
+  }
+  // 畫面故障 →「無法修復的BUG！」→ 回首頁
+  function glitchThen(cb, cls = "glitch") {
+    const box = stage.querySelector(".choices");
+    if (box) box.remove();
+    screens.story.classList.add(cls);
+    timer = setTimeout(() => { screens.story.classList.remove(cls); cb(); }, 1400);
+  }
+  function bugCrash() {
+    glitchThen(() => showModal("無法修復的BUG！", { bad: true, onClose: () => goScene("@title") }));
+  }
+  // DREAM END：要從夢裡醒來嗎？【是】畫面故障後回到進站那一頁；【否】留在夢裡
+  const wake = $("wake");
+  function askWake() { wake.hidden = false; $("wake-no").focus(); }
+  const inDream = () => sceneId === "endDream" && !screens.story.hidden;
+  wake.addEventListener("click", (ev) => ev.stopPropagation());
+  $("wake-yes").addEventListener("click", () => { wake.hidden = true; glitchThen(() => goScene("start"), "glitch-soft"); });
+  $("wake-no").addEventListener("click", () => { wake.hidden = true; goScene("dreamStay"); });
+  function hideModal() {
+    modal.hidden = true;
+    const cb = modalOnClose;
+    modalOnClose = null;
+    if (cb) cb();
+  }
+  modal.addEventListener("click", (ev) => { ev.stopPropagation(); hideModal(); });
+
+  // ---------- BAD END：電量過低（強制關機） ----------
+  let pendingEnd = null;
+  function shutdown(title) {
+    collapsing = true;
+    caret.remove();
+    const over = document.createElement("div");
+    over.className = "shutdown";
+    document.body.appendChild(over);
+    setTimeout(() => {
+      unlockEnding("battery");
+      showModal(title, {
+        bad: true,
+        onClose: () => {
+          collapsing = false;
+          over.remove();
+          clearTimeout(timer);
+          stage.innerHTML = "";
+          show("title");
+        }
+      });
+    }, 1100);
+  }
+
+  // ---------- BAD END：精神崩潰（畫面崩壞） ----------
+  let collapsing = false;
+  const GLITCH = "▓▒░█■□◆◇※＃＠％＆＊？！不行到出口無論如何樓梯松山新店";
+  function collapse() {
+    collapsing = true;
+    const ps = [...stage.querySelectorAll("p")];
+    const orig = ps.map((p) => p.textContent);
+    screens.story.classList.add("collapse");
+    const iv = setInterval(() => {
+      ps.forEach((p, i) => {
+        p.textContent = [...orig[i]].map((ch) => Math.random() < 0.45 ? GLITCH[Math.floor(Math.random() * GLITCH.length)] : ch).join("");
+      });
+    }, 70);
+    setTimeout(() => {
+      clearInterval(iv);
+      unlockEnding("breakdown");
+      showModal("BAD END：精神崩潰", {
+        bad: true,
+        onClose: () => {
+          collapsing = false;
+          screens.story.classList.remove("collapse");
+          clearTimeout(timer);
+          stage.innerHTML = "";
+          show("title");
+        }
+      });
+    }, 2600);
+  }
+
+  function advance() {
+    if (collapsing) return;
+    if (pendingEnd && !typing) { const f = pendingEnd; pendingEnd = null; f(); return; }
+    if (typing && scene.lines[lineIndex].lock) return;  // 這一行不能被跳過
+    if (typing) finishLine();
+    else nextLine();
+  }
+
+  function renderEndings() {
+    const list = $("endings-list");
+    list.innerHTML = "";
+    if (!unlocked.size) {
+      const li = document.createElement("li");
+      li.innerHTML = '<span class="empty">尚未解鎖任何結局。</span>';
+      list.appendChild(li);
+    }
+    if (!endings.length) {
+      const li = document.createElement("li");
+      li.innerHTML = '<span class="empty">尚未解鎖任何結局。</span>';
+      list.appendChild(li);
+      return;
+    }
+    endings.forEach((e, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="no">結局 ${String(i + 1).padStart(2, "0")}</span>`;
+      if (unlocked.has(e.id)) {
+        // 已解鎖：點標題直接跳到該結局的頁面
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "ending-link";
+        b.textContent = e.title;
+        b.addEventListener("click", () => playEnding(e.id));
+        li.appendChild(b);
+      } else {
+        const sp = document.createElement("span");
+        sp.textContent = "？？？";
+        li.appendChild(sp);
+      }
+      list.appendChild(li);
+    });
+  }
+
+  // 結局 → 劇情頁；「精神崩潰」和「電量過低」是特效結局，從觸發它們的那一頁開始
+  function playEnding(id) {
+    show("story");
+    if (id === "breakdown") { runCount = 9; forceCollapse = true; goScene("run"); return; }
+    if (id === "battery") { goScene("lowBattery"); return; }
+    if (id === "tunnel") { goScene("exploreTrack", { restore: true }); return; }
+    if (id === "true") { goScene("trueEnd", { restore: true }); return; }
+    if (id === "help") { goScene("trueEnd", { restore: true, secret: true }); return; }
+    if (id === "cheat") { show("title"); triggerCheat(); return; }
+    if (id === "sea") { goScene("seaEnd", { restore: true }); return; }
+    const sid = Object.keys(scenes).find((k) => scenes[k].ending === id);
+    if (sid) goScene(sid, { restore: true });   // 不重複觸發進入時的效果（例如清空跳轉紀錄）
+  }
+
+  // 背景音樂已移除；保留一個什麼都不做的替身，讓其他地方的呼叫不會出錯（影片的聲音不受影響）
+  const bgm = { muted: false, paused: true, volume: 0, play() { return Promise.resolve(); }, pause() {} };
+
+  $("btn-start").addEventListener("click", startStory);
+
+  // ---------- Konami Code：上上下下左右左右BA ----------
+  const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  let konamiPos = 0, cheating = false;
+  document.addEventListener("keydown", (ev) => {
+    if (screens.title.hidden || cheating) return;
+    if (ev.target.closest && ev.target.closest("input, textarea")) return;
+    if (!modal.hidden || !safeDlg.hidden || !reset.hidden) return;
+    const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
+    if (k === KONAMI[konamiPos]) {
+      konamiPos++;
+      if (konamiPos === KONAMI.length) { konamiPos = 0; triggerCheat(); }
+    } else {
+      konamiPos = k === KONAMI[0] ? 1 : 0;
+    }
+  });
+  $("cheat-form").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const v = $("cheat-input").value.replace(/\s/g, "").toUpperCase();
+    $("cheat-input").value = "";
+    if (v === "上上下下左右左右BA") { $("cheat-input").blur(); triggerCheat(); return; }
+    const f = $("cheat-form");
+    f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
+  });
+
+  const CHEAT_LINES = [
+    "真不愧是你，居然能發現這個辦法。",
+    "你也厭倦這個遊戲了嗎？",
+    "是誰告訴你的？那個戴眼鏡的宅男嗎？",
+    "算了，是誰都不重要。",
+    "相信你也發現了，這裡並不是真正的松江南京站。",
+    "@clear",   // 這一行之後清空畫面
+    "本來想和你多玩一會，但看來你累了呢。",
+    "回到現實世界的門，已經在某處為你敞開了。",
+    "再會了，庸俗的凡人啊……",
+    "@end"
+  ];
+
+  function triggerCheat() {
+    if (cheating) return;
+    cheating = true;
+    const W = innerWidth, H = innerHeight;
+    const cx = W * 0.5, cy = H * 0.45;
+    const wrap = document.createElement("div");
+    wrap.className = "shatter";
+    // 以撞擊點為中心切出放射狀的碎片
+    const rays = 14, rings = [0, 0.18, 0.42, 0.75, 1.6];
+    const R = Math.hypot(W, H);
+    const angs = Array.from({ length: rays }, (_, i) => (i / rays) * Math.PI * 2 + (Math.random() - .5) * 0.35);
+    const pt = (ri, ai) => {
+      const r = rings[ri] * R * (ri === 0 ? 0 : (0.85 + Math.random() * 0.3));
+      return [cx + Math.cos(angs[ai % rays]) * r, cy + Math.sin(angs[ai % rays]) * r];
+    };
+    const grid = rings.map((_, ri) => angs.map((_, ai) => pt(ri, ai)));
+    const shards = [];
+    for (let ri = 0; ri < rings.length - 1; ri++) {
+      for (let ai = 0; ai < rays; ai++) {
+        const a = grid[ri][ai], b = grid[ri][(ai + 1) % rays], c = grid[ri + 1][(ai + 1) % rays], d = grid[ri + 1][ai];
+        const poly = (ri === 0 ? [a, c, d] : [a, b, c, d]).map(([x, y]) => `${x}px ${y}px`).join(",");
+        const sh = document.createElement("div");
+        sh.className = "shard";
+        sh.style.clipPath = `polygon(${poly})`;
+        const clone = screens.title.cloneNode(true);
+        clone.removeAttribute("id");
+        clone.classList.add("title-clone");
+        clone.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
+        clone.style.position = "absolute"; clone.style.inset = "0";
+        clone.querySelectorAll(".title-inner").forEach((n) => { n.style.animation = "none"; });
+        clone.style.background = screens.title.style.background || getComputedStyle(screens.title).background;
+        sh.appendChild(clone);
+        wrap.appendChild(sh);
+        const mx = (a[0] + c[0]) / 2 - cx, my = (a[1] + c[1]) / 2 - cy;
+        shards.push({ el: sh, mx, my, ri });
+      }
+    }
+    // 裂痕
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "crack");
+    let d = "";
+    for (let ai = 0; ai < rays; ai++) d += `M${cx},${cy} ` + [1, 2, 3].map((ri) => `L${grid[ri][ai][0]},${grid[ri][ai][1]}`).join(" ") + " ";
+    for (let ri = 1; ri < 3; ri++) d += "M" + grid[ri].map(([x, y]) => `${x},${y}`).join(" L") + " Z ";
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d);
+    svg.appendChild(path);
+    wrap.appendChild(svg);
+    document.body.appendChild(wrap);
+    screens.title.style.visibility = "hidden";
+
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(() => {
+      svg.remove();
+      shards.forEach(({ el, mx, my, ri }) => {
+        const dist = Math.hypot(mx, my) || 1;
+        const tx = (mx / dist) * (120 + Math.random() * 260), ty = (my / dist) * (80 + Math.random() * 200) + 500 + Math.random() * 400;
+        const rot = (Math.random() - .5) * 120;
+        el.animate([
+          { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
+          { transform: `translate(${tx}px, ${ty}px) rotate(${rot}deg)`, opacity: 0 }
+        ], { duration: reduce ? 1 : 1100 + Math.random() * 600, delay: reduce ? 0 : ri * 60 + Math.random() * 120, easing: "cubic-bezier(.4,0,.9,.6)", fill: "forwards" });
+      });
+    }, reduce ? 0 : 450);
+    setTimeout(() => { wrap.remove(); startCheatText(); }, reduce ? 50 : 2300);
+  }
+
+  function startCheatText() {
+    const box = document.createElement("div");
+    box.className = "cheat-text";
+    box.setAttribute("role", "log");
+    document.body.appendChild(box);
+    let i = 0, done = false;
+    const next = () => {
+      if (done) { location.reload(); return; }   // 重新整理回到首頁
+      let line = CHEAT_LINES[i++];
+      if (line === "@clear") { box.innerHTML = ""; line = CHEAT_LINES[i++]; }
+      const p = document.createElement("p");
+      if (line === "@end") {
+        unlockEnding("cheat");
+        p.className = "end";
+        p.textContent = "CHEAT END：專業玩家";
+        done = true;
+      } else {
+        p.textContent = line;
+      }
+      box.appendChild(p);
+    };
+    box.addEventListener("click", next);
+    document.addEventListener("keydown", (ev) => {
+      if (!box.isConnected) return;
+      if (ev.key === " " || ev.key === "Enter") { ev.preventDefault(); next(); }
+    });
+    next();
+  }
+
+  // ---------- 安心開關：把部分恐怖圖片換成綿綿（設定，不會被清除記錄刪掉） ----------
+  const SAFE_KEY = "sjnj-safe";
+  const safeDlg = $("safe");
+  function updateSafeLabel() { $("btn-safe").textContent = safeMode ? "安心開關（開）" : "安心開關"; }
+  updateSafeLabel();
+  $("btn-safe").addEventListener("click", () => {
+    $("safe-msg").textContent = safeMode
+      ? "確定要關掉安心開關嗎？遊戲內可能存在令人不安的圖片。可隨時調整設定。"
+      : "安心開關會將遊戲中部分恐怖圖片替換成綿綿，要將開關開啟嗎？可隨時調整設定。";
+    safeDlg.hidden = false;
+    $("safe-no").focus();
+  });
+  $("safe-yes").addEventListener("click", () => {
+    safeMode = !safeMode;
+    try { safeMode ? localStorage.setItem(SAFE_KEY, "1") : localStorage.removeItem(SAFE_KEY); } catch (e) {}
+    updateSafeLabel();
+    safeDlg.hidden = true;
+  });
+  $("safe-no").addEventListener("click", () => { safeDlg.hidden = true; });
+  safeDlg.addEventListener("click", (ev) => { if (ev.target === safeDlg) safeDlg.hidden = true; });
+  document.addEventListener("keydown", (ev) => { if (!safeDlg.hidden && ev.key === "Escape") safeDlg.hidden = true; });
+  $("btn-endings").addEventListener("click", () => { renderEndings(); show("endings"); });
+
+  // ---------- 清除記錄 ----------
+  const reset = $("reset");
+  $("btn-reset").addEventListener("click", () => {
+    // 達成過 TRUE END：讓玩家選擇要不要保留結局列表
+    const asked = unlocked.has("true");
+    $("reset-title").textContent = asked ? "要保留結局列表嗎？" : "確定要清除所有記錄嗎？";
+    $("reset-note").textContent = asked
+      ? "讀過的劇情和遊戲進度都會被刪除，無法復原。保留結局列表的話，之後不必再達成任何結局也能前往 TRUE END；全部清除則從零開始。"
+      : "讀過的劇情和遊戲進度都會被刪除，無法復原。結局列表會保留。";
+    $("reset-yes").textContent = asked ? "【保留結局列表】" : "【確定】";
+    $("reset-all").hidden = !asked;
+    $("reset-yes").hidden = false;
+    $("reset-no").textContent = "【取消】";
+    reset.hidden = false;
+    $("reset-no").focus();
+  });
+  $("reset-no").addEventListener("click", () => { reset.hidden = true; });
+  reset.addEventListener("click", (ev) => { if (ev.target === reset) reset.hidden = true; });
+  $("reset-yes").addEventListener("click", () => {
+    setWelcomeReached(false);   // 結局列表保留，但劇情回到「還沒走過歡迎來到松江南京站」的狀態
+    visited.clear();
+    try { localStorage.removeItem(VISIT_KEY); localStorage.removeItem(QR_KEY); localStorage.removeItem(QR_TIP_KEY); } catch (e) {}
+    setKey(false);
+    setRestroom("");
+    setBreathUnlocked(false);
+    setPaidOldMan(false);
+    setPickedMoney(false);
+    setAmulet(false);
+    setMofuOrdered(false);
+    setWaterOrdered(false);
+    setAdultMember(false);
+    setMissingChoice("");
+    setTrackDone(false);
+    setTruePaused(true);
+    tunnelCleared = false;
+    try { localStorage.removeItem(TUNNEL_KEY); } catch (e) {}
+    $("btn-start").classList.remove("glow");
+    try { localStorage.removeItem(AGE_KEY); localStorage.removeItem("sjnj-cherry-face"); } catch (e) {}
+    browserBtn.hidden = true;
+    runCount = 0;
+    resetTitle();
+    $("reset-title").textContent = "記錄已清除。";
+    $("reset-note").textContent = "";
+    $("reset-yes").hidden = true;
+    $("reset-all").hidden = true;
+    $("reset-no").textContent = "【關閉】";
+    $("reset-no").focus();
+  });
+  // 全部清除：刪掉這個遊戲存在瀏覽器裡的所有記錄（安心開關的設定保留），重新載入
+  $("reset-all").addEventListener("click", () => {
+    try {
+      const keys = [];
+      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith("sjnj-") && k !== SAFE_KEY) keys.push(k); }
+      keys.forEach((k) => localStorage.removeItem(k));
+    } catch (e) {}
+    location.reload();
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (!reset.hidden && ev.key === "Escape") reset.hidden = true;
+  });
+  $("story-back").addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    if (inDream()) { askWake(); return; }
+    { const lock = navLock(); if (lock) { showModal(lock); return; } }
+    clearTimeout(timer); stage.innerHTML = ""; bgm.muted = false; show("title");
+  });
+  $("endings-back").addEventListener("click", () => show("title"));
+  // 長按畫面：文字快速顯示，一路讀到出現選項為止（不會自動觸發「再點一下」才發生的事）
+  let holdTimer = 0, holdTick = 0, held = false;
+  const SKIP_IGNORE = ".back, .vol, .choice, .dial, .lift-pad, .color-wrap, input, button, a, video, .scene-video";
+  function stopHold() {
+    clearTimeout(holdTimer); clearInterval(holdTick);
+    holdTimer = holdTick = 0;
+  }
+  screens.story.addEventListener("pointerdown", (ev) => {
+    if (ev.button > 0 || ev.target.closest(SKIP_IGNORE)) return;
+    stopHold();
+    held = false;
+    holdTimer = setTimeout(() => {
+      held = true;
+      holdTick = setInterval(() => {
+        if (screens.story.hidden || collapsing || !modal.hidden) { stopHold(); return; }
+        if (pendingEnd && !typing) return;            // 等玩家自己點
+        if (typing && scene.lines[lineIndex].lock) return;
+        if (typing) finishLine(); else nextLine();
+      }, 50);
+    }, 450);
+  });
+  ["pointerup", "pointercancel", "pointerleave"].forEach((t) => screens.story.addEventListener(t, stopHold));
+  window.addEventListener("blur", stopHold);
+  screens.story.addEventListener("contextmenu", (ev) => { if (held || holdTimer) ev.preventDefault(); });
+  screens.story.addEventListener("click", (ev) => {
+    if (held) { held = false; return; }   // 長按放開時的那一下不算點擊
+    if (ev.target.closest(".back, .vol, .choice, .dial")) return;
+    advance();
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (!call.hidden) return;   // 來電畫面時用按鈕操作
+    if (!tunnelWin.hidden) return;   // 小遊戲進行中
+    if (!skipTunnel.hidden) return;
+    if (!modal.hidden) { ev.preventDefault(); hideModal(); return; }
+    if (!qrWin.hidden) { if (ev.key === "Escape") closeQR(); return; }
+    if (!jump.hidden) { if (ev.key === "Escape") jump.hidden = true; return; }
+    if (screens.story.hidden || ev.target.closest && ev.target.closest(".vol, .back, .choice, .dial")) return;
+    if (ev.key === " " || ev.key === "Enter") { ev.preventDefault(); advance(); }
+  });
+  applyTitleState();
+  restoreProgress();
+  // 重新整理前留下的通知
+  try {
+    const pend = JSON.parse(localStorage.getItem(TOAST_KEY) || "[]");
+    localStorage.removeItem(TOAST_KEY);
+    if (pend.length) setTimeout(() => notifyUnlock(pend.map((m) => m.replace(/^【|】已解放。$/g, ""))), 600);
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

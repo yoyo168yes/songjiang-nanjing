@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>404 Not Found</title>
+<style>
+  body { margin: 0; padding: 40px 48px; background: #c0c0c0; color: #000; font-family: "Times New Roman", "新細明體", PMingLiU, serif; font-size: 16px; line-height: 1.8; }
+  h1 { font-size: 40px; margin: 0 0 18px; font-weight: bold; }
+  p { margin: 0; }
+  a { color: #0000ee; text-decoration: underline; cursor: pointer; }
+  form { margin-top: 14px; }
+  input { font-size: 15px; padding: 2px 4px; width: 280px; }
+  button { font-size: 15px; }
+</style>
+</head>
+<body>
+<h1>404 Not Found</h1>
+<p>您欲前往的頁面已遺失。</p>
+<p>請檢查網址是否輸入錯誤，或<a href="#backup" onclick="document.getElementById('pw').hidden=false;document.getElementById('pw-in').focus();">點此</a>檢閱備份。</p>
+<form id="pw" hidden onsubmit="event.preventDefault();var v=document.getElementById('pw-in');if(v.value.replace(/\s/g,'')==='在沒有星星的夜晚對月亮祈禱吧'){var a=document.createElement('a');a.href='page:backup';a.hidden=true;document.body.appendChild(a);a.click();a.remove();}else{v.value='';v.focus();}">
+  <input id="pw-in" type="text" autocomplete="off" placeholder="請輸入密語！" aria-label="密語">
+  <button type="submit">確認</button>
+</form>
+</body>
+</html>

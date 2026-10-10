@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>內月藏的起源土也</title>
+<style>
+  body {
+    margin: 0;
+    padding: 10px 0;
+    background: #000;
+    color: #000;
+    font-family: "新細明體", PMingLiU, "MingLiU", Tahoma, serif;
+    font-size: 13px;
+  }
+  a { color: #0000ee; }
+  a:visited { color: #551a8b; }
+
+  /* 外框 */
+  .page {
+    width: 900px;
+    margin: 0 auto;
+    border: 2px solid #000080;
+    background: #fff;
+  }
+
+  /* 頁首 */
+  .header {
+    background: #000080;
+    background: linear-gradient(to right, #000080, #1084d0);
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    border-bottom: 3px solid #000040;
+    line-height: 1.6;
+  }
+  .title-box {
+    margin: 0 auto 8px auto;
+    text-align: center;
+  }
+  .title-box span {
+    font-size: 28px;
+    font-style: italic;
+    font-weight: bold;
+    color: red;
+    text-shadow: -1px -1px 0 #fff, 1px 1px 0 #800000;
+    font-family: "NotoSerifTC", "新細明體", PMingLiU, serif;
+  }
+
+  /* 三欄表格 */
+  table.layout { width: 100%; border-collapse: collapse; }
+  table.layout td { vertical-align: top; }
+  td.left  { width: 230px; background: #d4d0c8; border-right: 2px solid #000080; padding: 8px; }
+  td.main  { background: #fff; padding: 12px; border-right: 2px solid #000080; }
+  td.right { width: 180px; background: #e0e0e0; padding: 8px; }
+
+  .section-title {
+    background: #000080;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 6px;
+    margin: 8px 0 5px 0;
+  }
+  .yellow  { color: #ffff00; }
+  .magenta { color: #ff00ff; }
+
+  .ad-slot {
+    margin-bottom: 12px;
+    border: 1px dashed #808080;
+    background: #fff;
+    text-align: center;
+    padding: 5px;
+  }
+  td.left img { border: 2px outset #fff; }
+  td.left img, td.right img { display: block; margin: 6px auto; max-width: 100%; }
+
+  .author-name { font-weight: bold; font-size: 14px; }
+  .small { font-size: 15px; line-height: 1.6; font-weight: normal; }
+  .tiny  { font-size: 10px; }
+
+  .more {
+    display: inline-block;
+    background: #000080;
+    color: #ffff00 !important;
+    font-weight: bold;
+    padding: 2px 6px;
+    text-decoration: none;
+    border: 2px outset #8080ff;
+  }
+  .more:active { border-style: inset; }
+  .readmore { text-align: right; margin-top: 8px; }
+
+  .counter { text-align: center; margin: 6px 0 4px; }
+  .counter span {
+    display: inline-block; width: 18px; margin: 0 1px;
+    background: #000; color: #00ff00; border: 1px inset #808080;
+    font-family: "Courier New", monospace; font-size: 16px; font-weight: bold; line-height: 22px;
+  }
+  .art-list { margin: 4px 0 10px; padding-left: 18px; font-size: 14px; line-height: 1.7; }
+  .art-list a, .art-list a:visited { color: #000080; font-weight: bold; }
+  .art-list a:hover { color: #ffff00; background: #000080; }
+  .mail-link { display: block; margin-bottom: 12px; }
+  td.left img.mail-img { display: block; width: 100%; margin: 0; box-sizing: border-box; }
+  table.dead-list { width: 100%; border-collapse: collapse; background: #fff; font-size: 12px; margin: 4px 0 10px; }
+  table.dead-list th { background: #000080; color: #fff; font-weight: normal; padding: 3px 4px; text-align: left; }
+  table.dead-list td { border: 1px solid #c0c0c0; padding: 2px 4px; }
+  table.dead-list tr:nth-child(odd) td { background: #f0f0f0; }
+  .maint-link { margin-top: 14px; text-align: center; font-size: 11px; }
+  .maint-link a, .maint-link a:visited { color: #808080; }
+  .maint-link a:hover { color: #606060; }
+  td.main img.art-img { display: block; max-width: 100%; margin: 8px 0; }
+  /* Windows XP 風格彈窗與按鈕 */
+  .xp-btn {
+    font-family: Tahoma, "新細明體", PMingLiU, sans-serif; font-size: 12px; color: #000;
+    padding: 3px 14px; min-width: 75px; cursor: pointer;
+    background: linear-gradient(#fff, #ece9d8 85%, #d6d0c0);
+    border: 1px solid #003c74; border-radius: 3px;
+    box-shadow: inset 0 0 0 1px #fff;
+  }
+  .xp-btn:hover { box-shadow: inset 0 0 0 2px #f8b636; }
+  .xp-btn:active { background: linear-gradient(#e5e3d8, #f3f2ec); }
+  .xp-mask { position: fixed; inset: 0; z-index: 99999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.15); }
+  .xp-win { min-width: 300px; max-width: 420px; background: #ece9d8; border: 1px solid #0831d9; border-radius: 8px 8px 0 0; box-shadow: 2px 3px 10px rgba(0,0,0,.45); font-family: Tahoma, "新細明體", PMingLiU, sans-serif; overflow: hidden; }
+  .xp-title { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 4px 8px; color: #fff; font-weight: bold; font-size: 13px; text-shadow: 1px 1px #0a1e6e;
+    background: linear-gradient(#0997ff, #0053ee 8%, #0050ee 40%, #06f 88%, #06f 93%, #005bff 95%, #003dd7 96%, #003dd7); }
+  .xp-x { width: 21px; height: 21px; border: 1px solid #fff; border-radius: 3px; background: linear-gradient(#e97a5a, #c83a14); color: #fff; font-weight: bold; font-size: 13px; line-height: 17px; text-align: center; cursor: pointer; padding: 0; }
+  .xp-body { display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px 8px; font-size: 13px; line-height: 1.7; color: #000; }
+  .xp-icon { flex: none; width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #8ec5ff, #1c5fd1 70%); color: #fff; font: bold 20px/32px Georgia, serif; text-align: center; }
+  .xp-foot { text-align: center; padding: 8px 0 14px; }
+  .xp-icon.xp-err { background: radial-gradient(circle at 35% 30%, #ff9a8a, #d0200f 70%); font-family: Tahoma, sans-serif; }
+  .xp-input { display: block; width: 220px; margin-top: 6px; font-size: 12px; padding: 2px 3px; border: 1px solid #7f9db9; }
+  .xp-wrong { color: #c00; font-size: 12px; margin-top: 4px; }
+  /* 日曆 */
+  table.cal { width: 100%; border-collapse: collapse; background: #fff; font-size: 11px; text-align: center; margin-bottom: 6px; }
+  table.cal caption { font-weight: bold; font-size: 12px; padding: 3px 0; background: #d4d0c8; border: 1px solid #808080; border-bottom: 0; }
+  table.cal th { background: #000080; color: #fff; font-weight: normal; padding: 2px 0; }
+  table.cal td { border: 1px solid #c0c0c0; padding: 2px 0; }
+  table.cal th:first-child, table.cal td.sun { color: #c00; }
+  table.cal th:first-child { color: #ffb0b0; }
+  table.cal td.today { background: #c00; color: #fff; font-weight: bold; }
+  .fortune { text-align: center; margin: 4px 0 10px; }
+  .search { display: flex; gap: 4px; margin: 4px 0 6px; }
+  .search input { flex: 1 1 auto; width: 60px; min-width: 0; font-size: 12px; padding: 2px 3px; border: 2px inset #fff; }
+  .search-none { color: #808080; }
+  /* 跟「點擊閱讀更多內容...」一樣的藍底黃字按鈕 */
+  .more-btn { background: #000080; color: #ffff00; font-weight: bold; font-size: 13px; padding: 2px 8px; border: 2px outset #8080ff; cursor: pointer; font-family: "新細明體", PMingLiU, Tahoma, serif; }
+  .more-btn:active { border-style: inset; }
+  .footer {
+    background: #d4d0c8;
+    border-top: 2px solid #000080;
+    text-align: center;
+    font-size: 11px;
+    padding: 6px;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- 頁首 -->
+  <div class="header">
+    <div class="title-box"><span>為了见到更力口美女子白勺世界</span></div>
+    生?而為 人，有必須 得 到內月藏庇佑白勺 義 務。<br>
+    <span id="visitor-name">訪客</span>，您好！歡迎 來到內月藏的起源土也，請務必必力口入 我們，替 保護 地?球盡一份力。
+  </div>
+
+  <table class="layout">
+    <tr>
+      <!-- 左欄 -->
+      <td class="left">
+        <div class="section-title"><span class="yellow">👤 作者介紹</span></div>
+        <img src="https://images.plurk.com/2T8kfawKaH6nnZfSwPQ51v.jpg" width="200" alt="作者照片"><br>
+        <span class="author-name">義津川 茂夫</span>
+        <p class="small">1999年7月，恐怖大王並沒有降臨，但我得到了天啟。我理解了宇宙的真理，明白了人類尚未進化完成，此後我便致力於尋找自己的內臟。</p>
+
+        <div class="section-title"><span class="yellow">📜瀏覽我們的文章</span></div>
+        <ul class="art-list">
+          <li><a href="page:art-suicide">自殺是不正確的行為！</a></li>
+          <li><a href="page:art-death">台灣的內臟聖地巡禮</a></li>
+          <li><a href="page:art-lust">性慾為何應該被允許表達？</a></li>
+          <li><a href="page:art-organ">關於我的內臟</a></li>
+        </ul>
+
+        <div class="section-title"><span class="yellow">📢幫助我們做得更好</span></div>
+        <div class="ad-slot"><img src="ad1.jpg" alt="募款連結已失效"></div>
+        <div class="mail-link"><img class="mail-img help-img" src="https://images.plurk.com/7MLNYA3wKjnJhRu2mjJnb8.jpg" alt=""></div>
+        <a href="action:mail" class="mail-link"><img class="mail-img" src="https://images.plurk.com/29JcRJN236hXClw9XQNSQk.png" alt="意見信箱" onload="this.style.height=(this.clientWidth*this.naturalHeight/this.naturalWidth/2)+'px'"></a>
+
+        <div class="section-title"><span class="yellow">💵購買對您有用的商品</span></div>
+        <a href="page:mofu" class="mail-link"><img class="mail-img" src="https://images.plurk.com/7ymNOcwHjBk5L6SjIhnR8a.jpg" alt="茂夫石"></a>
+        <a href="page:water" class="mail-link"><img class="mail-img ad2-img" src="https://images.plurk.com/3BT4PseQa47Z523ykhql6o.jpg" alt=""></a>
+
+        <div class="section-title">🔢 訪客計數器</div>
+        <div class="counter">
+          <span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span>
+        </div>
+      </td>
+
+      <!-- 中間內容 -->
+      <td class="main">
+        <div class="section-title">📄 性慾為何應該被允許表達？</div>
+        <p class="small">
+          在日本，和很多國家，公然表達自己對性的慾望，被視為一件羞恥的事。<br>
+          然而人類本質上，與其他的動物並沒有區別，性慾與食慾、睡眠慾等本能需求同樣應該被重視。<br>
+          如果人們被允許隨意地閒聊吃飯的話題，「性」也應該要被如此對待。<br>
+          然而，礙於目前的社會風氣，短時間內恐怕難以改變，再這樣下去，是不健康的！<br>
+          為了讓會員們自由地抒發慾望，我們成立了會員專屬的「內臟女孩」團體，目前共有五名成員！持續募集中！
+        </p>
+        <img class="art-img" src="https://images.plurk.com/4XhXrskQxjCYSDRtNP6tex.png" alt="">
+        <p class="small">
+          由左至右，她們的名字分別是：AME、秋葉、Cherry、彩華、惠美。<br>
+          她們都是成年女性、持有身體檢查的證明，與她們相處的規範都在右邊的官方網站中。<br>
+          本協會絕對不存在任何脅迫女孩的行為，請各位安心、盡情地享樂。
+        </p>
+        <div class="readmore"><a class="more" href="page:home">← 回到首頁</a></div>
+      </td>
+
+      <!-- 右欄 -->
+      <td class="right">
+        <div class="section-title">🔎查詢已封存資料</div>
+        <form class="search" onsubmit="event.preventDefault();cultSearch(this.q.value);">
+          <input name="q" type="text" autocomplete="off" aria-label="查詢關鍵字">
+          <button class="more-btn" type="submit">搜尋</button>
+        </form>
+
+        <div class="section-title">📆 日曆</div>
+        <table class="cal"><caption>2016年 3月</caption>
+          <tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr>
+          <tr><td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+          <tr><td class="sun">6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td class="today">12</td></tr>
+          <tr><td class="sun">13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr>
+          <tr><td class="sun">20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td></tr>
+          <tr><td class="sun">27</td><td>28</td><td>29</td><td>30</td><td>31</td><td></td><td></td></tr>
+        </table>
+        <div class="fortune"><button class="more-btn" type="button" onclick="xpAlert('今天是獲得內臟庇佑的好日子！<br>要不要看一下本日推薦的內容呢？', '今日占卜')">今日占卜</button></div>
+
+        <div class="section-title"><span class="magenta">📌 本日推薦</span></div>
+        <a href="色情網頁.html">
+          <img src="https://images.plurk.com/1fQRaNTay98ogxGUGYItW5.jpg" width="160" alt="本日推薦">
+        </a>
+        <a href="https://mp3cut.net/tw/reverse-audio">
+          <img src="https://images.plurk.com/yAUZKet8vPmwb4ov1H6b2.jpg" width="160" alt="">
+        </a>
+        <a href="https://iloveviewer.com/tw/psd-viewer">
+          <img src="https://images.plurk.com/175gIFi270mWUw0ILVbFC5.png" width="160" alt="">
+        </a>
+        <div class="maint-link"><a href="page:maint">站內維護記錄</a></div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="footer">
+    本站最佳瀏覽解析度 1024×768 ｜ 建議使用 Internet Explorer 5.0 以上版本瀏覽
+  </div>
+</div>
+
+<script>
+  // 取代 Harlowe 的 $name：網址加 ?name=小明 即可顯示名字
+  var m = location.search.match(/[?&]name=([^&]*)/);
+  if (m) document.getElementById('visitor-name').textContent = decodeURIComponent(m[1]);
+</script>
+<script>
+function xpAlert(html, title) {
+  var m = document.createElement('div'); m.className = 'xp-mask';
+  m.innerHTML = '<div class="xp-win" role="alertdialog"><div class="xp-title"><span>' + (title || '訊息') + '</span><button class="xp-x" type="button" aria-label="關閉">×</button></div>' +
+    '<div class="xp-body"><div class="xp-icon">i</div><div>' + html + '</div></div>' +
+    '<div class="xp-foot"><button class="xp-btn" type="button">確定</button></div></div>';
+  var close = function () { m.remove(); };
+  m.querySelector('.xp-x').onclick = close; m.querySelector('.xp-foot .xp-btn').onclick = close;
+  document.body.appendChild(m); m.querySelector('.xp-foot .xp-btn').focus();
+}
+// 需要檢閱密碼的文章：密碼正確才換頁，錯誤就清空重新輸入
+function xpLocked(page, pw) {
+  var m = document.createElement('div'); m.className = 'xp-mask';
+  m.innerHTML = '<form class="xp-win" role="dialog"><div class="xp-title"><span>錯誤</span><button class="xp-x" type="button" aria-label="關閉">×</button></div>' +
+    '<div class="xp-body"><div class="xp-icon xp-err">×</div><div>錯誤！請輸入檢閱密碼：<br><input class="xp-input" type="password" autocomplete="off" aria-label="檢閱密碼"><div class="xp-wrong" hidden>密碼錯誤。</div></div></div>' +
+    '<div class="xp-foot"><button class="xp-btn" type="submit">確認</button></div></form>';
+  var close = function () { m.remove(); };
+  var f = m.querySelector('form'), inp = m.querySelector('.xp-input'), wrong = m.querySelector('.xp-wrong');
+  m.querySelector('.xp-x').onclick = close;
+  f.onsubmit = function (e) {
+    e.preventDefault();
+    if (inp.value.replace(/\s/g, '') === pw) {
+      close();
+      var a = document.createElement('a'); a.href = 'page:' + page; a.hidden = true;
+      document.body.appendChild(a); a.click(); a.remove();
+    } else { inp.value = ''; wrong.hidden = false; inp.focus(); }
+  };
+  document.body.appendChild(m); inp.focus();
+}
+</script><script>
+function cultSearch(raw) {
+  var q = String(raw).replace(/\s/g, ''), main = document.querySelector('td.main');
+  if (!q || !main) return;
+  var hit = {"義津川茂夫": "search-1", "松江南京站": "search-2", "松江南京": "search-3", "台灣分會": "search-4", "寧根": "search-5", "林志雄": "search-6"}[q];
+  if (hit) {   // 有結果：換到那一頁搜尋結果（網頁視窗的換頁會留下紀錄）
+    var a = document.createElement('a'); a.href = 'page:' + hit; a.hidden = true;
+    document.body.appendChild(a); a.click(); a.remove(); return;
+  }
+  var esc = q.replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+  main.innerHTML = '<div class="section-title">🔎 查詢結果：' + esc + '</div><p class="small search-none">查無資料。</p>' +
+    '<div class="readmore"><a class="more" href="page:home">← 回到首頁</a></div>';
+  main.scrollTop = 0; window.scrollTo(0, 0);
+}
+</script>
+<script>
+window.addEventListener('load', function () {
+  var mail = document.querySelector('td.left a.mail-link img.mail-img'), mid = document.querySelector('img.help-img');
+  if (mail && mid && mail.offsetHeight) mid.style.height = mail.offsetHeight + 'px';
+  var mofu = document.querySelector('a[href="page:mofu"] img'), ad2 = document.querySelector('img.ad2-img');
+  if (mofu && ad2 && mofu.offsetHeight) ad2.style.height = mofu.offsetHeight + 'px';
+});
+</script>
+</body>
+</html>

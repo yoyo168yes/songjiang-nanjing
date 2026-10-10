@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>公廁無名屍</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffc0cb;
+  color: #000000;
+  font-family: "微軟正黑體", "Noto Sans TC", Arial, sans-serif;
+}
+
+/* 固定寬度 1024 */
+#page {
+  width: 1024px;
+  margin: 0 auto;
+  background-color: #ffc0cb;
+}
+
+/* 頂部橫幅 */
+header {
+  width: 100%;
+  background-color: #ff1493;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 2em;
+  font-weight: bold;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+header .gif { flex: none; }
+/* 維持原本 1000:180 的拉長比例，等比縮到 800 寬內 */
+header .banner {
+  flex: 1 1 0;
+  min-width: 0;
+  aspect-ratio: 1000 / 180;
+  height: auto;
+}
+
+/* 黃色分類條 */
+.navbar {
+  width: 100%;
+  background-color: #ffeb3b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  gap: 12px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+.navbar a {
+  color: #000000;
+  font-weight: bold;
+  text-decoration: underline;
+  font-size: 1.2em;
+}
+.navbar a span { text-decoration: underline; }
+
+/* 三欄排版 */
+#layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 左右廣告欄 */
+.sidebar {
+  width: 200px;
+  flex: none;
+  background-color: #ffe0f0;
+  text-align: center;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  font-size: 0.9em;
+  color: #000000;
+  min-height: 100vh;   /* 隨中欄延伸 */
+}
+.sidebar img { display: block; margin: 0 auto 10px auto; max-width: 100%; }
+
+/* 中間圖片牆 */
+.gallery {
+  flex: 1;
+  position: relative;
+  padding: 30px;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+.gallery img {
+  position: absolute;
+  width: 150px;
+  height: auto;
+  object-fit: cover;
+}
+
+h1, h2, p {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.close-btn { cursor: pointer; }
+/* 右下角燈箱的關閉鈕：在燈箱內右上角 */
+.ad-x { position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; border-radius: 50%;
+  background: #ff1493; color: #fff; font: bold 18px/30px Arial, sans-serif; text-align: center;
+  border: 2px solid #fff; box-shadow: 0 0 6px rgba(0,0,0,.5); cursor: pointer; z-index: 2; }
+.ad-x:hover { background: #ff0060; transform: scale(1.08); }
+  /* Windows XP 風格彈窗與按鈕 */
+  .xp-btn {
+    font-family: Tahoma, "新細明體", PMingLiU, sans-serif; font-size: 12px; color: #000;
+    padding: 3px 14px; min-width: 75px; cursor: pointer;
+    background: linear-gradient(#fff, #ece9d8 85%, #d6d0c0);
+    border: 1px solid #003c74; border-radius: 3px;
+    box-shadow: inset 0 0 0 1px #fff;
+  }
+  .xp-btn:hover { box-shadow: inset 0 0 0 2px #f8b636; }
+  .xp-btn:active { background: linear-gradient(#e5e3d8, #f3f2ec); }
+  .xp-mask { position: fixed; inset: 0; z-index: 99999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.15); }
+  .xp-win { min-width: 300px; max-width: 420px; background: #ece9d8; border: 1px solid #0831d9; border-radius: 8px 8px 0 0; box-shadow: 2px 3px 10px rgba(0,0,0,.45); font-family: Tahoma, "新細明體", PMingLiU, sans-serif; overflow: hidden; }
+  .xp-title { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 4px 8px; color: #fff; font-weight: bold; font-size: 13px; text-shadow: 1px 1px #0a1e6e;
+    background: linear-gradient(#0997ff, #0053ee 8%, #0050ee 40%, #06f 88%, #06f 93%, #005bff 95%, #003dd7 96%, #003dd7); }
+  .xp-x { width: 21px; height: 21px; border: 1px solid #fff; border-radius: 3px; background: linear-gradient(#e97a5a, #c83a14); color: #fff; font-weight: bold; font-size: 13px; line-height: 17px; text-align: center; cursor: pointer; padding: 0; }
+  .xp-body { display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px 8px; font-size: 13px; line-height: 1.7; color: #000; }
+  .xp-icon { flex: none; width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #8ec5ff, #1c5fd1 70%); color: #fff; font: bold 20px/32px Georgia, serif; text-align: center; }
+  .xp-foot { text-align: center; padding: 8px 0 14px; }
+  .xp-icon.xp-err { background: radial-gradient(circle at 35% 30%, #ff9a8a, #d0200f 70%); font-family: Tahoma, sans-serif; }
+  .xp-input { display: block; width: 220px; margin-top: 6px; font-size: 12px; padding: 2px 3px; border: 1px solid #7f9db9; }
+  .xp-wrong { color: #c00; font-size: 12px; margin-top: 4px; }
+
+.xp-msg { font-size: 14px; }
+.xp-foot { display: flex; justify-content: center; gap: 10px; }
+.xp-foot a.xp-btn { display: inline-block; text-decoration: none; color: #000; line-height: 21px; text-align: center; }
+.xp-icon.xp-warn { background: radial-gradient(circle at 35% 30%, #ffe27a, #e0a400 70%); color: #000; }
+.xp-x-off { cursor: not-allowed; }
+.xp-shake { animation: xpshake .3s; }
+@keyframes xpshake { 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
+
+
+/* 浮動視窗限制在 1024 框架內：以框架邊緣為基準定位 */
+#float-left   { left:  calc(max(0px, 50% - 512px) + 20px) !important; }
+#float-right  { right: calc(max(0px, 50% - 512px) + 20px) !important; }
+
+/* 首頁歡迎文字 */
+.gallery.welcome { text-align: center; padding: 20px 30px 50px; }
+.welcome h1.rainbow { margin: 0 0 24px; font-size: 2.6em; font-weight: 900; letter-spacing: 2px;
+  background: linear-gradient(90deg, #ff2d55, #ff9500, #ffd60a, #34c759, #0a84ff, #5e5ce6, #bf5af2);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: .5px rgba(255,255,255,.5);
+  filter: drop-shadow(2px 2px 0 #fff); }
+.welcome p { font-size: 1.15em; line-height: 1.9; color: #7a1f4c; font-weight: bold; margin: 14px 0; }
+.welcome p.kao { color: #ff1493; font-size: 1.05em; }
+/* 首頁中間欄：低飽和彩虹漸層底色 */
+.gallery.welcome { background: linear-gradient(180deg, #f3d9dc, #f3e3d3, #f2efd4, #dcebd8, #d6e3ef, #dcd8ee, #ead8ec); }
+.gallery.welcome img.welcome-img { position: static; display: block; width: auto; max-width: 100%; height: auto; margin: 0 auto 24px; }
+.gallery.welcome img.welcome-img.bottom { margin: 24px auto 0; }
+/* 左欄：新書特報（圖片長寬跟右欄下面那張圖一樣） */
+.sidebar img.side-title-img { height: auto; object-fit: fill; }
+.sidebar img.side-gif2, .sidebar img.side-missing { object-fit: fill; }   /* 「新書特報」標題圖：長寬跟右欄最上方的 GIF 一樣（不等比例） */
+.sidebar img.side-book { width: 180px; height: auto; object-fit: fill; }
+/* 公廁無名屍：整個網站變成黑底紅字（XP 對話框除外） */
+html, body, #page, header, .navbar, #layout, .sidebar, .gallery, #float-left, #float-right { background: #000 !important; color: #d00000 !important; }
+.navbar a, .navbar a span { background: #000 !important; color: #d00000 !important; }
+#float-left, #float-right { border-color: #d00000 !important; box-shadow: none !important; }
+.gallery.toilet { padding: 30px 34px 50px; }
+.toilet-text { white-space: pre-wrap; text-align: left; font-size: 1.05em; line-height: 1.9; color: #d00000; }
+.toilet-text::first-line { font-size: 1.5em; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div id="page">
+
+  <header>
+    <img class="gif" src="https://images.plurk.com/3kUWMslu9YM8uJ5zDRCnE1.gif" alt="">
+    <img class="banner" src="https://images.plurk.com/7Gm7dM51ZKiShsCawraVdB.jpg" alt="">
+    <img class="gif" src="https://images.plurk.com/3kUWMslu9YM8uJ5zDRCnE1.gif" alt="">
+  </header>
+
+  <div class="navbar">
+    <a href="page:adult"><span style="background-color:white;">❤️首頁❤️</span></a>
+    <a href="page:adult-girls"><span style="background-color:red;">💛內臟女孩介紹💛</span></a>
+    <a href="#" onclick="xpDialog('訊息', '暫不開放', [{ label: '確定', onClick: function (d) { d.close(); } }])"><span style="background-color:orange;">💙小蜜蜂阿姨💙</span></a>
+    <a href="#" onclick="xpDialog('訊息', '暫不開放', [{ label: '確定', onClick: function (d) { d.close(); } }])"><span style="background-color:green;">🤍菜市場美女🤍</span></a>
+    <a href="#" onclick="xpDialog('訊息', '暫不開放', [{ label: '確定', onClick: function (d) { d.close(); } }])"><span style="background-color:navy;">🖤看守所女神🖤</span></a>
+    <a href="page:adult-toilet"><span style="background-color:grey;">💗公廁無名屍💗</span></a>
+  </div>
+
+  <div id="layout">
+    <div class="sidebar">
+      <img class="side-title-img" src="https://images.plurk.com/6yAo9H3DNNmaDzVIL5lpFC.gif" alt="☆㊣新書特報㊣☆">
+      <img class="side-book" src="https://images.plurk.com/17DHIyykACvSyAhhk70ID8.png" alt="">
+      <img class="side-gif2" src="https://images.plurk.com/6tOrpg3xYxFrXgwBgwD6zQ.gif" alt="">
+      <a href="page:missing"><img class="side-missing" src="https://images.plurk.com/4nv1cKA3oIxpysMudLKfA1.jpg" alt=""></a>
+    </div>
+
+    <div class="gallery toilet">
+      <div class="toilet-text">內臟女孩們的去向
+
+請看到這一頁的人將資訊盡可能 地　散播出去
+對不起 寫得相當臨時，可能有很多錯別字，
+內臟女孩是純粹的騙局
+女孩們出賣身體賺到的錢，絕大部分都會回到義津川的口袋裡
+她們無法實現夢想，她們只是與你我同樣在這個地獄裡輪迴
+
+對不起 時間快要來不及了
+她們都吃下了義津川提供的藥物、簽下合約，無法輕易脫身
+教團內部的向心力很強，她們即使知道自己可能被騙，也依舊懷抱著希望
+但絕大多數加入內臟女孩的人，都是向協會借錢，還不起高昂的利息才不得已賣身
+公權力無法介入
+義津川的妻子朱麗華，在政界、警界甚至軍方皆有人脈 她控制著整個協會
+我無法動搖她
+
+我希望所有的內臟女孩都能幸福，這個組織打從一開始就不該存在
+但她們一個個地走上了絕路
+公廁無名屍 是曾經的都市傳說：
+
+河濱公園某間公共廁所有一具全身焦黑的屍體
+因為燒灼得幾乎碳化，無法辨識身分
+深夜時她會從廁所出現，在公園不斷徘徊
+然而公廁並沒有任何起火的跡象
+那不是案發的第一現場，屍體被發現的時間，恰好與一名內臟女孩的失蹤時間吻合
+我懷疑那就是她
+不，我確信那就是她
+除了相信其中有超自然的力量介入，否則這起案件無法成立
+
+如果你能活著出去，請幫我找到18歲的AME，本名韓子娟
+她是我的 朋友
+我想讓她至少能夠入土為安</div>
+    </div>
+
+    <div class="sidebar">
+      <img src="https://images.plurk.com/KdwzfaUOyuXkzSDocHhM2.gif" alt="">
+      <img src="https://images.plurk.com/1fQRaNTay98ogxGUGYItW5.jpg" style="width:160px;" alt="">
+      <img src="https://images.plurk.com/3cgnUafpfDCLKkft1MMkcx.png" style="width:160px;" alt="">
+    </div>
+  </div>
+
+</div>
+
+<!-- 左下角浮動廣告 -->
+<div id="float-left" style="position: fixed; bottom: 20px; left: 20px; width: 120px; height: 120px; background: #ffe0f0; border: 1px solid #ff1493; box-shadow: 0 0 6px rgba(0,0,0,0.2); z-index: 9999; box-sizing: border-box; overflow: hidden;">
+  <div style="position: relative; width: 100%; height: 100%;">
+    <img src="https://images.plurk.com/6ClDLDIc07Pp2reD1MEaxo.gif" style="width: 100%; height: 100%; object-fit: cover;" alt="">
+    <div class="close-btn" style="position: absolute; top: 5px; right: 5px; font-size: 14px; background: rgba(255, 255, 255, 0.7); border-radius: 50%;" onclick="document.getElementById('float-left').style.display='none';">❌</div>
+  </div>
+</div>
+
+<!-- 右下角浮動廣告（友情連結） -->
+<div id="float-right" style="position: fixed; bottom: 10px; right: 20px; width: 300px; height: 300px; background: #ffe0f0; border: 1px solid #ff1493; box-shadow: 0 0 6px rgba(0,0,0,0.2); z-index: 9999; box-sizing: border-box; overflow: hidden; cursor: pointer;" onclick="askFriendLink()">
+  <img src="https://images.plurk.com/7jSPsY9XQKUyQPobAGHhl3.png" style="display: block; width: 100%; height: 100%; object-fit: cover;" alt="友情連結">
+  <div class="ad-x" title="關閉" onclick="event.stopPropagation(); document.getElementById('float-right').style.display='none';">✕</div>
+</div>
+
+<script>
+// XP 風格對話框：buttons = [{ label, onClick, href }]
+function xpDialog(title, html, buttons, opts) {
+  opts = opts || {};
+  var m = document.createElement('div'); m.className = 'xp-mask';
+  m.innerHTML = '<div class="xp-win" role="alertdialog"><div class="xp-title"><span>' + title + '</span><button class="xp-x" type="button" aria-label="關閉">×</button></div>' +
+    '<div class="xp-body"><div class="xp-icon' + (opts.warn ? ' xp-warn' : '') + '">' + (opts.warn ? '!' : 'i') + '</div><div class="xp-msg">' + html + '</div></div>' +
+    '<div class="xp-foot"></div></div>';
+  var close = function () { m.remove(); };
+  var x = m.querySelector('.xp-x');
+  if (opts.noClose) { x.classList.add('xp-x-off'); x.onclick = function () { var w = m.querySelector('.xp-win'); w.classList.remove('xp-shake'); void w.offsetWidth; w.classList.add('xp-shake'); }; }
+  else x.onclick = close;
+  var foot = m.querySelector('.xp-foot');
+  function render(btns) {
+    foot.innerHTML = '';
+    btns.forEach(function (b) {
+      var el = document.createElement(b.href ? 'a' : 'button');
+      el.className = 'xp-btn'; el.textContent = b.label;
+      if (b.href) { el.href = b.href; el.target = '_blank'; el.rel = 'noopener'; el.addEventListener('click', function () { setTimeout(close, 0); }); }
+      else { el.type = 'button'; el.onclick = function () { b.onClick && b.onClick({ close: close, set: set }); }; }
+      foot.appendChild(el);
+    });
+  }
+  function set(newHtml, btns) { m.querySelector('.xp-msg').innerHTML = newHtml; render(btns); }
+  render(buttons);
+  document.body.appendChild(m);
+  var first = foot.querySelector('.xp-btn'); if (first) first.focus();
+  return { close: close, set: set };
+}
+// 一進來就問年齡：按「否」回到內臟教網站
+function backToCult() { var a = document.createElement('a'); a.href = '#qr-back'; a.hidden = true; document.body.appendChild(a); a.click(); a.remove(); }
+// 回答過「是」之後就不再問（記在遊戲裡，清除記錄才會重置）
+var ageOk = false;
+try { ageOk = !!(parent.__qrAgeOk && parent.__qrAgeOk()); } catch (e) {}
+if (!ageOk) xpDialog('🈲警告🈲', '您是否年滿18歲？', [
+  { label: '是', onClick: function (d) { try { parent.__qrSetAgeOk && parent.__qrSetAgeOk(); } catch (e) {} d.close(); } },
+  { label: '否', onClick: function () { backToCult(); } }
+], { noClose: true, warn: true });
+// 右下角友情連結
+function askFriendLink() {
+  xpDialog('友情連結', '此為友情連結，要前往外面的世界嗎？', [
+    { label: '是', onClick: function (d) {
+        d.set('祝您有一趟愉快的冒險！上完廁所記得要沖水喔！', [{ label: '是', href: 'https://www.threads.com/share/HgPejKcyY/' }]);
+      } },
+    { label: '否', onClick: function (d) { d.close(); } }
+  ]);
+}
+</script>
+<script>
+// 左欄新書特報的圖：拉伸成跟右欄下面那張圖一樣的長寬
+(function () {
+  function fit() {
+    var src = document.querySelector('#layout .sidebar:last-child img[src*="1fQRaNTay98ogxGUGYItW5"]'), dst = document.querySelector('img.side-book');
+    if (!src || !dst || !src.offsetWidth) return;
+    dst.style.width = src.offsetWidth + 'px'; dst.style.height = src.offsetHeight + 'px';
+    var top = document.querySelector('#layout .sidebar:last-child img'), t = document.querySelector('img.side-title-img');
+    if (top && t && top.offsetWidth) { t.style.width = top.offsetWidth + 'px'; t.style.height = top.offsetHeight + 'px'; }
+    // 協尋網的圖：寬度跟新書圖一樣，高度維持原本顯示的高度（不等比例）
+    var ms = document.querySelector('img.side-missing');
+    if (top && ms && top.offsetWidth && ms.naturalWidth) {
+      var box = ms.parentNode.parentNode, cs = getComputedStyle(box);
+      var avail = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);   // 原本顯示時最多只能這麼寬
+      var h = Math.min(ms.naturalWidth, avail || top.offsetWidth) / ms.naturalWidth * ms.naturalHeight;
+      ms.style.width = src.offsetWidth + 'px'; ms.style.height = Math.round(h) + 'px'; ms.style.maxWidth = 'none';   // 跟新書圖（右欄下面那張）一樣寬
+    }
+    var g2 = document.querySelector('img.side-gif2');   // 第二張 GIF 也跟右欄最上方的 GIF 一樣長寬
+    if (top && g2 && top.offsetWidth) { g2.style.width = top.offsetWidth + 'px'; g2.style.height = top.offsetHeight + 'px'; }
+  }
+  window.addEventListener('load', fit);
+  window.addEventListener('resize', fit);
+  // 右欄的圖一載入或改變大小就重新對齊（不必等整頁載完）
+  var src = document.querySelector('#layout .sidebar:last-child img[src*="1fQRaNTay98ogxGUGYItW5"]');
+  if (src) {
+    src.addEventListener('load', fit);
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(src);
+  }
+  var dst = document.querySelector('img.side-book');
+  if (dst) dst.addEventListener('load', fit);
+  var ms0 = document.querySelector('img.side-missing');
+  if (ms0) { ms0.addEventListener('load', fit); if (window.ResizeObserver) new ResizeObserver(fit).observe(ms0); }
+  // 保險：載入初期每 0.3 秒再對齊一次，共 5 秒
+  var n = 0, iv = setInterval(function () { fit(); if (++n >= 16) clearInterval(iv); }, 300);
+  var top0 = document.querySelector('#layout .sidebar:last-child img');
+  if (top0) { top0.addEventListener('load', fit); if (window.ResizeObserver) new ResizeObserver(fit).observe(top0); }
+  fit();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1024">
+<title>失蹤人口協尋網</title>
+<style>
+@font-face {
+    font-family: "NotoSansTC";
+    src: url("fonts/NotoSansTC-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #e7ecf2;
+    color: #212529;
+    font-family: 'NotoSerifTC-VariableFont_wght', sans-serif;
+    font-size: 16px;
+    overflow: auto;   /* 遊戲內的瀏覽器視窗比 1024×768 小時可以捲動 */
+}
+
+/* 固定 1024x768 畫面，不捲動 */
+#screen {
+    width: 1024px;
+    height: 768px;
+    margin: 0 auto;
+    background-color: #e7ecf2;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* 橫幅、內容、頁尾同寬 */
+.page {
+    width: 920px;
+    height: 768px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    width: 100%;
+    background: linear-gradient(to right, #5D4037, #1565C0);
+    color: #ffffff;
+    padding: 16px 0;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+}
+
+header .sub {
+    display: block;
+    font-size: 0.4em;
+    font-weight: normal;
+    margin-top: 6px;
+}
+
+main {
+    width: 100%;
+    flex: 1 1 auto;
+    padding: 20px 30px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.breadcrumb {
+    font-size: 0.8em;
+    color: #212529;
+}
+
+h1, h2 {
+    color: #5D4037;
+    margin-top: 14px;
+    margin-bottom: 8px;
+}
+
+h1 {
+    font-size: 1.8em;
+    border-bottom: 2px solid #5D4037;
+    padding-bottom: 5px;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+.notice {
+    background-color: #f7f7f7;
+    padding: 15px;
+    margin: 14px 0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.profile {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.profile .photo {
+    flex: 0 0 220px;
+}
+
+.profile .photo img {
+    max-width: 100%;
+    max-height: 260px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.profile .info {
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: black;
+}
+
+.clue {
+    font-size: 0.8em;
+    color: #212529;
+    line-height: 1.8;
+}
+
+.answer {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.answer button {
+    background-color: #c62828;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 28px;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.answer button:hover {
+    background-color: #a31f1f;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+    padding: 12px 0;
+    flex: 0 0 auto;
+}
+
+/* 點【知道】之後：整頁顏色反轉，文字全部變成紅色的「求求你不要說出去」
+   （反轉後才會是紅色，所以這裡先設成反轉前的青色） */
+body.knew #screen { filter: invert(1); }
+body.knew #screen, body.knew #screen * { color: #00ffff !important; border-color: #00ffff !important; }
+body.knew .answer button { background-color: transparent; }
+html.knew, html.knew body { background-color: #18130d; }   /* 畫面外圍也跟著反轉 */
+.answer-msg { margin: 14px 0 0; font-size: .95em; color: #212529; }
+</style>
+</head>
+<body>
+<div id="screen">
+<div class="page">
+    <header>
+        失蹤人口協尋網
+        <span class="sub">台灣每年約有2000名以上的失蹤人口，每一個走失的人，背後都是一個心碎的家庭，請發揮善心，幫助他們找到回家的路。</span>
+    </header>
+
+    <main>
+        <div class="breadcrumb"><u>首頁</u>&gt;<u>失蹤者查詢</u>&gt;<u>2016年</u>&gt;<u>王百端</u></div>
+
+        <h1>失蹤者資料</h1>
+        <div class="notice">
+            <div class="profile">
+                <div class="photo">
+                    <img src="https://images.plurk.com/2Ta54AOrVLlr9avVW2iyE2.png" alt="王百端">
+                </div>
+                <div class="info">
+                    <strong>王　百端　（２５）</strong><br>
+                    性別：男<br>
+                    出生日期：１９９０年１２月１日<br>
+                    失蹤日期：２０１６年０１月０５日下午１０點１８分<br>
+                    失蹤地點：台北捷運松江南京站七號出口附近<br>
+                    特徵：皮膚較黑、身穿華淵中學制服、戴方形黑框眼鏡<br>
+                    <br>
+                    喜歡看動畫、漫畫，經常使用日文與人溝通。<br>
+                    此人刺殺義津川老師後便進入捷運站內，至今下落不明，請協助尋找。
+                </div>
+            </div>
+        </div>
+
+        <h2>提供線索</h2>
+        <div class="clue">
+            如有線索，請撥打 ０８００－６６５－７００６ 或聯絡當地警局。<br>
+            無法致電的民眾，請於月亮出現的夜晚雙手合十，對著天空祈禱。<br>
+            你知道他在哪裡嗎？
+        </div>
+        <div class="answer">
+            <button type="button" id="btn-yes">知道</button>
+            <button type="button" id="btn-no">不知道</button>
+        </div>
+    </main>
+
+    <footer>© 2001 失蹤人口協尋中心</footer>
+</div>
+</div>
+<script>
+// 【知道】【不知道】只能選一次（清除記錄才重置），選擇記錄在遊戲裡
+// 男廁路線按【知道】：整頁反轉、文字換成「求求你不要說出去」、大頭照換掉（之後再進來也維持）
+// 其他路線按【知道】：只跳出遊戲的彈窗「我似乎不認識這個人……」
+// 任何路線按【不知道】：兩個按鈕消失，顯示「那就好……」
+var G = {};
+try { G = parent; } catch (e) {}
+function getState() { try { return G.__qrMissing ? G.__qrMissing() : ''; } catch (e) { return ''; } }
+function setState(v) { try { if (G.__qrSetMissing) G.__qrSetMissing(v); } catch (e) {} }
+function isMen() { try { return !!(G.__qrRestroom && G.__qrRestroom() === 'men'); } catch (e) { return false; } }
+function applyKnew() {
+  if (document.body.classList.contains('knew')) return;
+  var info0 = document.querySelector('.profile .info'), iw0 = info0 ? info0.offsetWidth : 0, ih0 = info0 ? info0.offsetHeight : 0;   // 先記下原本那一格的大小
+  var w = document.createTreeWalker(document.getElementById('screen'), NodeFilter.SHOW_TEXT, null), n, list = [];
+  while ((n = w.nextNode())) if (n.nodeValue.trim()) list.push(n);
+  list.forEach(function (t) { t.nodeValue = '求求你不要說出去'; });
+  document.querySelectorAll('#screen img').forEach(function (img) { img.alt = '求求你不要說出去'; });
+  document.title = '求求你不要說出去';
+  document.body.classList.add('knew');
+  document.documentElement.classList.add('knew');
+  // 大頭照換掉：長寬跟原本一樣（不等比例），而且再反轉一次＝保持原本色調；安心開關打開時換成安心版
+  var ph = document.querySelector('.profile .photo img');
+  if (ph) {
+    var w0 = ph.offsetWidth, h0 = ph.offsetHeight, safe = false;
+    try { safe = !!(parent.__qrSafe && parent.__qrSafe()); } catch (e) {}
+    ph.style.width = w0 + 'px'; ph.style.height = h0 + 'px';
+    ph.style.maxWidth = 'none'; ph.style.maxHeight = 'none'; ph.style.objectFit = 'fill';
+    ph.style.filter = 'invert(1)';
+    ph.src = safe ? 'https://images.plurk.com/68L8IZ8LV0ItkCaw5jnCUr.png' : 'https://images.plurk.com/2cn3daUUnKCDdlFXnLptQe.png';
+  }
+  // 大頭照旁的文字迅速變多：不換行、一路接下去，只填滿原本那一格，不會超出範圍
+  var info = document.querySelector('.profile .info');
+  if (info) {
+    var iw = iw0, ih = Math.max(ih0, ph ? ph.offsetHeight : 0);
+    info.style.width = iw + 'px'; info.style.height = ih + 'px';
+    info.style.overflow = 'hidden'; info.style.wordBreak = 'break-all'; info.style.fontWeight = 'normal';
+    var text = '求求你不要說出去';
+    info.textContent = text;
+    var iv = setInterval(function () {
+      var next = text + '求求你不要說出去';
+      info.textContent = next;
+      if (info.scrollHeight > info.clientHeight) { info.textContent = text; clearInterval(iv); return; }   // 再多就超出了：停在剛好填滿
+      text = next;
+    }, 30);
+  }
+}
+function applyNo() {
+  var ans = document.querySelector('.answer');
+  if (!ans) return;
+  var p = document.createElement('p');
+  p.className = 'answer-msg';
+  p.textContent = '那就好……';
+  ans.parentNode.replaceChild(p, ans);
+}
+document.getElementById('btn-yes').addEventListener('click', function () {
+  if (getState()) return;
+  if (!isMen()) { try { G.__qrModal && G.__qrModal('我似乎不認識這個人……'); } catch (e) {} return; }
+  setState('yes');
+  applyKnew();
+});
+document.getElementById('btn-no').addEventListener('click', function () {
+  if (getState()) return;
+  setState('no');
+  applyNo();
+});
+// 之前已經選過：直接顯示選過之後的樣子
+(function () {
+  var st = getState();
+  if (st === 'no') applyNo();
+  else if (st === 'yes') { if (document.readyState === 'complete') applyKnew(); else window.addEventListener('load', applyKnew); }
+})();
+</script>
+</body>
+</html>
