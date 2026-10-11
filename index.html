@@ -91,6 +91,7 @@
 
   /* 首頁選單：滑鼠移過時以綠色【】框住文字 */
   .menu .link { position: relative; white-space: nowrap; }
+  .menu .link.run { color: #e0453a; }
   .menu { flex-wrap: wrap; justify-content: center; }
   @media (max-width: 480px) {
     .menu { gap: .9em; }
@@ -623,6 +624,8 @@
       <button class="link" id="btn-endings" type="button">結局列表</button>
       <button class="link" id="btn-reset" type="button">清除記錄</button>
       <button class="link" id="btn-safe" type="button">安心開關</button>
+      <!-- 通關過跑酷小遊戲後出現：直接重玩（含無盡模式） -->
+      <button class="link run" id="btn-run" type="button" hidden>跑酷遊戲</button>
     </nav>
     <!-- 達成過「歡迎來到松江南京站」後出現 -->
     <nav class="extra-links" id="extra-links" hidden>
@@ -3563,11 +3566,14 @@
   const tunnelWin = $("tunnel-win"), tunnelFrame = $("tunnel-frame");
   let tunnelCache = null;
   function getTunnelHtml() { return tunnelCache ? Promise.resolve(tunnelCache) : fetch("tunnel.html").then((r) => r.text()).then((t) => (tunnelCache = t)); }   // 發布版改成讀取 tunnel.html
-  function openTunnel() {
+  let tunnelArcade = false;   // 從首頁【跑酷遊戲】開啟：結果不影響劇情
+  function openTunnel(arcade = false) {
+    tunnelArcade = arcade;
     tunnelFrame.onload = () => { try { tunnelFrame.contentWindow.focus(); } catch (e) {} };
     // 安心開關打開時，小遊戲的怪物換成安心版本
     getTunnelHtml().then((html) => {
-      tunnelFrame.srcdoc = safeMode ? html.replace('<html lang="zh-Hant">', '<html lang="zh-Hant" data-safe="1">') : html;
+      const attrs = (safeMode ? ' data-safe="1"' : '') + (arcade ? ' data-arcade="1"' : '');
+      tunnelFrame.srcdoc = html.replace('<html lang="zh-Hant">', '<html lang="zh-Hant"' + attrs + '>');
     });
     tunnelWin.hidden = false;
   }
@@ -3575,6 +3581,8 @@
   // 通關過一次就記住（清除記錄時重置），之後可以選擇跳過
   const TUNNEL_KEY = "sjnj-tunnel-cleared";
   let tunnelCleared = (() => { try { return localStorage.getItem(TUNNEL_KEY) === "1"; } catch (e) { return false; } })();
+  $("btn-run").hidden = !tunnelCleared;
+  $("btn-run").addEventListener("click", () => openTunnel(true));
   const skipTunnel = $("skip-tunnel");
   function askSkipTunnel() { skipTunnel.hidden = false; $("skip-yes").focus(); }
   skipTunnel.addEventListener("click", (ev) => ev.stopPropagation());
@@ -3582,11 +3590,13 @@
   $("skip-no").addEventListener("click", () => { skipTunnel.hidden = true; openTunnel(); });
   // 小遊戲回報：win＝撐過 60 秒、dead＝被追上（BAD END：逃不掉了）、title＝在失敗畫面選回首頁
   window.__tunnelDone = (r) => {
+    if (tunnelArcade) { if (r !== "dead") closeTunnel(); return; }   // 首頁重玩：只關掉小遊戲
     if (r === "dead") { unlockEnding("tunnel"); return; }
     closeTunnel();
     if (r === "win") {
       tunnelCleared = true;
       try { localStorage.setItem(TUNNEL_KEY, "1"); } catch (e) {}
+      $("btn-run").hidden = false;
       goScene("trackEscape");
     }
     else if (r === "title") goScene("@title");
