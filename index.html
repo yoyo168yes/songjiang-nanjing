@@ -161,6 +161,7 @@
 
   /* 隧道逃生小遊戲 */
   .tunnel-win { position: fixed; top:0;right:0;bottom:0;left:0; z-index: 85; background: #020403; }
+  .modal.giveup-modal { z-index: 95; }   /* 要蓋在跑酷小遊戲（85）上面 */
   .tunnel-win iframe { display: block; width: 100%; height: 100%; border: 0; }
   .tunnel-loading { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; color: #a5b7ad; letter-spacing: .15em; text-align: center; line-height: 2; }
 
@@ -731,6 +732,16 @@
 </div>
 
 <!-- 通關過跑酷之後：要跳過小遊戲嗎？ -->
+<!-- 劇情中的跑酷失敗 5 次以上：問要不要跳過（蓋在小遊戲上面） -->
+<div class="modal giveup-modal" id="tunnel-giveup" hidden role="alertdialog" aria-modal="true" aria-labelledby="giveup-title">
+  <div class="modal-box">
+    <p id="giveup-title" class="skip-msg">要跳過小遊戲，直接閱讀後續劇情嗎？</p>
+    <div class="reset-actions">
+      <button class="choice" id="giveup-yes" type="button">【跳過】</button>
+      <button class="choice" id="giveup-no" type="button">【繼續挑戰】</button>
+    </div>
+  </div>
+</div>
 <div class="modal" id="skip-tunnel" hidden role="alertdialog" aria-modal="true" aria-labelledby="skip-title">
   <div class="modal-box">
     <p id="skip-title" class="skip-msg">要跳過小遊戲嗎？</p>
@@ -3393,7 +3404,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "0c4ddc9a";
+  const BUILD_VER = "bb90b40f";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
@@ -3626,6 +3637,14 @@
     $("btn-run").hidden = true;
     closeTunnel();
   };
+  const TUNNEL_FAIL_KEY = "sjnj-tunnel-fails";
+  let tunnelFails = (() => { try { return parseInt(localStorage.getItem(TUNNEL_FAIL_KEY), 10) || 0; } catch (e) { return 0; } })();
+  function setTunnelFails(v) { tunnelFails = v; try { v ? localStorage.setItem(TUNNEL_FAIL_KEY, String(v)) : localStorage.removeItem(TUNNEL_FAIL_KEY); } catch (e) {} }
+  const tunnelGiveup = $("tunnel-giveup");
+  tunnelGiveup.addEventListener("click", (ev) => ev.stopPropagation());
+  // 跳過：關掉小遊戲，直接接後續劇情（不算通關，首頁的【跑酷遊戲】不會因此出現）
+  $("giveup-yes").addEventListener("click", () => { tunnelGiveup.hidden = true; setTunnelFails(0); closeTunnel(); goScene("trackEscape"); });
+  $("giveup-no").addEventListener("click", () => { tunnelGiveup.hidden = true; try { tunnelFrame.contentWindow.focus(); } catch (e) {} });
   const skipTunnel = $("skip-tunnel");
   function askSkipTunnel() { skipTunnel.hidden = false; $("skip-yes").focus(); }
   skipTunnel.addEventListener("click", (ev) => ev.stopPropagation());
@@ -3634,9 +3653,16 @@
   // 小遊戲回報：win＝撐過 60 秒、dead＝被追上（BAD END：逃不掉了）、title＝在失敗畫面選回首頁
   window.__tunnelDone = (r) => {
     if (tunnelArcade) { if (r !== "dead") closeTunnel(); return; }   // 首頁重玩：只關掉小遊戲
-    if (r === "dead") { unlockEnding("tunnel"); return; }
+    if (r === "dead") {
+      unlockEnding("tunnel");
+      // 失敗 5 次以上：每次失敗都問要不要跳過（次數記在瀏覽器中，通關、跳過或清除記錄時歸零）
+      setTunnelFails(tunnelFails + 1);
+      if (tunnelFails >= 5) setTimeout(() => { if (!tunnelWin.hidden) { tunnelGiveup.hidden = false; $("giveup-no").focus(); } }, 1600);
+      return;
+    }
     closeTunnel();
     if (r === "win") {
+      setTunnelFails(0);
       tunnelCleared = true;
       try { localStorage.setItem(TUNNEL_KEY, "1"); } catch (e) {}
       runUnlocked = true;
@@ -4051,6 +4077,7 @@
     setTruePaused(true);
     tunnelCleared = false;
     try { localStorage.removeItem(TUNNEL_KEY); } catch (e) {}
+    setTunnelFails(0);
     $("btn-start").classList.remove("glow");
     try { localStorage.removeItem(AGE_KEY); localStorage.removeItem("sjnj-cherry-face"); } catch (e) {}
     browserBtn.hidden = true;
