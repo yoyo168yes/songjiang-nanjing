@@ -46,7 +46,7 @@
 
   /* ---------- 首頁 ---------- */
   #title-screen, .title-clone {
-    position: fixed; inset: 0;
+    position: fixed; top:0;right:0;bottom:0;left:0;
     display: flex; align-items: flex-end; justify-content: center;
     padding: 24px 16px calc(15vh + env(safe-area-inset-bottom, 0px));
     background:
@@ -140,7 +140,7 @@
   @keyframes toastin { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
 
   /* 來電彈窗 */
-  .call-mask { position: fixed; inset: 0; z-index: 75; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,.35); animation: fadein .2s ease-out both; }
+  .call-mask { position: fixed; top:0;right:0;bottom:0;left:0; z-index: 75; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,.35); animation: fadein .2s ease-out both; }
   .call-box { min-width: min(300px, 100%); padding: 24px 32px 26px; background: #000; border: 1px solid #555; text-align: center; color: #fff;
     font-family: var(--sans); box-shadow: 0 0 24px rgba(0,0,0,.8); }
   .call-status { font-size: .85rem; letter-spacing: .15em; color: #aaa; }
@@ -160,15 +160,16 @@
   .call-btn:hover, .call-btn:focus-visible { filter: brightness(1.15); outline: none; }
 
   /* 隧道逃生小遊戲 */
-  .tunnel-win { position: fixed; inset: 0; z-index: 85; background: #020403; }
+  .tunnel-win { position: fixed; top:0;right:0;bottom:0;left:0; z-index: 85; background: #020403; }
   .tunnel-win iframe { display: block; width: 100%; height: 100%; border: 0; }
+  .tunnel-loading { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; color: #a5b7ad; letter-spacing: .15em; text-align: center; line-height: 2; }
 
   /* ---------- 劇情頁 ---------- */
   #story-screen { transition: background-color 1.2s ease; }
   #story-screen.blood { background: #3a0707; }
   /* 下墜：往上飛的速度線 */
   #story-screen.fall::before {
-    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    content: ""; position: absolute; top:0;right:0;bottom:0;left:0; z-index: -1; pointer-events: none;
     background:
       linear-gradient(transparent 55%, rgba(255,255,255,0.5) 88%, transparent) 4% 0 / 1px 300px repeat-y,
       linear-gradient(transparent 55%, rgba(255,255,255,0.3) 88%, transparent) 11% 0 / 2px 200px repeat-y,
@@ -207,7 +208,7 @@
   #story-screen .stage p.reload-hint, #story-screen .stage p.reload-hint.old { margin-top: 2.2em; font-size: .8rem; letter-spacing: .12em; color: #c9b39b; }
   #story-screen.white .story-actions, #story-screen.white .story-left, #story-screen.white .hint { visibility: hidden; }
   #story-screen, #endings-screen {
-    position: fixed; inset: 0;
+    position: fixed; top:0;right:0;bottom:0;left:0;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 14px;
     padding: 16px;
@@ -266,7 +267,7 @@
   .stage-wrap:not(.doors) .door { display: none; }
   /* 手電筒：只有游標周圍看得見 */
   .torch {
-    position: absolute; inset: 0; z-index: 4; pointer-events: none; display: none;
+    position: absolute; top:0;right:0;bottom:0;left:0; z-index: 4; pointer-events: none; display: none;
     background: radial-gradient(circle 150px at var(--fx, 50%) var(--fy, 50%),
       rgba(0,0,0,0) 0, rgba(0,0,0,0) 55%, rgba(0,0,0,.85) 80%, #000 100%);
   }
@@ -280,7 +281,7 @@
   .stage .copy-code:hover { color: #5fd08f; }
   .scene-video { margin: .4em 0 1.4em; width: 100%; animation: fadein .6s ease-out both; }
   .scene-video { position: relative; }
-  .video-shield { position: absolute; inset: 0; z-index: 1; }
+  .video-shield { position: absolute; top:0;right:0;bottom:0;left:0; z-index: 1; }
   .scene-video video { display: block; width: 100%; height: auto; background: #000; }
   .choice.danger { color: #d8423a; }
   /* 電梯按鈕面板（金屬質感圓形按鈕） */
@@ -322,7 +323,7 @@
   .choice.danger:hover, .choice.danger:focus-visible { color: #ff5a4f; }
   /* QR 碼網頁視窗 */
   .qr-win {
-    position: fixed; inset: 0; z-index: 60;
+    position: fixed; top:0;right:0;bottom:0;left:0; z-index: 60;
     display: flex; align-items: center; justify-content: center;
     padding: 2vh 2vw; background: rgba(0,0,0,.7);
     animation: fadein .2s ease-out both;
@@ -337,7 +338,7 @@
   .crt-screen { position: relative; flex: 1; min-height: 0; display: flex; }
   .crt-screen::before,
   .crt-screen::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+    content: ""; position: absolute; top:0;right:0;bottom:0;left:0; pointer-events: none; z-index: 3;
   }
   .crt-screen::before { display: none; }   /* 掃描線已移除 */
   .crt-screen::after {
@@ -364,7 +365,7 @@
   }
   .qr-close:hover, .qr-close:focus-visible { border-color: var(--line-green); color: var(--line-green); outline: none; }
   .modal {
-    position: fixed; inset: 0; z-index: 70;
+    position: fixed; top:0;right:0;bottom:0;left:0; z-index: 70;
     display: flex; align-items: center; justify-content: center;
     padding: 16px; background: rgba(0,0,0,.55);
     animation: fadein .15s ease-out both;
@@ -383,9 +384,9 @@
   .wake-box .choice { color: #d8423a; }
   .wake-box .choice:hover, .wake-box .choice:focus-visible { color: #ff6a5f; }
   /* 電量過低：像被強制關機一樣變黑 */
-  .shutdown { position: fixed; inset: 0; z-index: 65; background: #000; overflow: hidden; }
+  .shutdown { position: fixed; top:0;right:0;bottom:0;left:0; z-index: 65; background: #000; overflow: hidden; }
   .shutdown::before {
-    content: ""; position: absolute; inset: 0; background: #e9ecea;
+    content: ""; position: absolute; top:0;right:0;bottom:0;left:0; background: #e9ecea;
     animation: poweroff .75s cubic-bezier(.6,0,.4,1) forwards;
   }
   @keyframes poweroff {
@@ -447,13 +448,13 @@
   /* 只在觸控裝置（手機、平板）顯示；電腦用鍵盤輸入上上下下左右左右BA */
   @media (hover: hover) and (pointer: fine) { .cheat-form { display: none; } }
   /* 玻璃碎裂 */
-  .shatter { position: fixed; inset: 0; z-index: 80; overflow: hidden; background: #fff; }
-  .shard { position: absolute; inset: 0; will-change: transform, opacity; }
-  .shard > * { position: absolute; inset: 0; }
-  .crack { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .shatter { position: fixed; top:0;right:0;bottom:0;left:0; z-index: 80; overflow: hidden; background: #fff; }
+  .shard { position: absolute; top:0;right:0;bottom:0;left:0; will-change: transform, opacity; }
+  .shard > * { position: absolute; top:0;right:0;bottom:0;left:0; }
+  .crack { position: absolute; top:0;right:0;bottom:0;left:0; width: 100%; height: 100%; pointer-events: none; }
   .crack path { fill: none; stroke: rgba(255,255,255,.9); stroke-width: 1.6; filter: drop-shadow(0 0 2px rgba(0,0,0,.8)); }
   .cheat-text {
-    position: fixed; inset: 0; z-index: 81; background: #fff;
+    position: fixed; top:0;right:0;bottom:0;left:0; z-index: 81; background: #fff;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.1em;
     padding: 24px 16px; cursor: pointer; user-select: none; text-align: center;
   }
@@ -742,6 +743,7 @@
 
 <!-- 隧道逃生小遊戲 -->
 <div class="tunnel-win" id="tunnel-win" hidden>
+  <div class="tunnel-loading" id="tunnel-loading" hidden>載入中……</div>
   <iframe id="tunnel-frame" title="隧道逃生" allow="autoplay"></iframe>
 </div>
 
@@ -3391,7 +3393,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "08064dfb";
+  const BUILD_VER = "26dfc30f";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
@@ -3412,7 +3414,7 @@
   const qrCache = {};
   function getQrPage(pg) {
     if (!(pg in QR_PAGES)) return Promise.resolve(null);
-    return qrCache[pg] ? Promise.resolve(qrCache[pg]) : fetch("sites/" + pg + ".html?v=" + BUILD_VER, { cache: "no-cache" }).then((r) => r.text()).then((t) => (qrCache[pg] = t));
+    return qrCache[pg] ? Promise.resolve(qrCache[pg]) : fetch("sites/" + pg + ".html?v=" + BUILD_VER, { cache: "no-cache" }).then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); }).then((t) => (qrCache[pg] = t));
   }
   function renderQR() {
     const pg = qrHistory[qrIndex];
@@ -3423,6 +3425,8 @@
       qrFrame.srcdoc = (pg === "news" ? newsHtml(html) : html)
         .replace(/javascript:history\.back\(\)/g, "#qr-back")
         .replace("</head>", QR_SCROLL_CSS + QR_HOOK + "</head>");
+    }).catch(() => {   // 網路不穩讀不到網頁
+      if (token === qrRenderToken) qrFrame.srcdoc = '<body style="margin:0;padding:2em;background:#111;color:#aaa;font:16px/1.8 sans-serif">網頁載入失敗，請關閉視窗後再試一次。</body>';
     });
     $("qr-back").disabled = qrIndex <= 0;
     $("qr-fwd").disabled = qrIndex >= qrHistory.length - 1;
@@ -3584,19 +3588,26 @@
   // ---------- 隧道逃生小遊戲 ----------
   const tunnelWin = $("tunnel-win"), tunnelFrame = $("tunnel-frame");
   let tunnelCache = null;
-  function getTunnelHtml() { return tunnelCache ? Promise.resolve(tunnelCache) : fetch("tunnel.html?v=" + BUILD_VER, { cache: "no-cache" }).then((r) => r.text()).then((t) => (tunnelCache = t)); }   // 發布版改成讀取 tunnel.html
+  function getTunnelHtml() { return tunnelCache ? Promise.resolve(tunnelCache) : fetch("tunnel.html?v=" + BUILD_VER, { cache: "no-cache" }).then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); }).then((t) => (tunnelCache = t)); }   // 發布版改成讀取 tunnel.html
+  const tunnelLoading = $("tunnel-loading");
   let tunnelArcade = false;   // 從首頁【跑酷遊戲】開啟：結果不影響劇情
   function openTunnel(arcade = false) {
     tunnelArcade = arcade;
     tunnelFrame.onload = () => { try { tunnelFrame.contentWindow.focus(); } catch (e) {} };
     // 安心開關打開時，小遊戲的怪物換成安心版本
+    tunnelLoading.hidden = false; tunnelLoading.textContent = "載入中……";
     getTunnelHtml().then((html) => {
+      tunnelLoading.hidden = true;
       const attrs = (safeMode ? ' data-safe="1"' : '') + (arcade ? ' data-arcade="1"' : '');
       tunnelFrame.srcdoc = html.replace('<html lang="zh-Hant">', '<html lang="zh-Hant"' + attrs + '>');
+    }).catch(() => {   // 網路不穩讀不到小遊戲：顯示重試
+      tunnelLoading.hidden = false;
+      tunnelLoading.innerHTML = "小遊戲載入失敗。<br><button type=\"button\" class=\"choice\" id=\"tunnel-retry\">【重試】</button>";
+      $("tunnel-retry").onclick = () => openTunnel(arcade);
     });
     tunnelWin.hidden = false;
   }
-  function closeTunnel() { tunnelWin.hidden = true; tunnelFrame.srcdoc = ""; }
+  function closeTunnel() { tunnelWin.hidden = true; tunnelLoading.hidden = true; tunnelFrame.srcdoc = ""; }
   // 通關過一次就記住（清除記錄時重置），之後可以選擇跳過
   const TUNNEL_KEY = "sjnj-tunnel-cleared";
   let tunnelCleared = (() => { try { return localStorage.getItem(TUNNEL_KEY) === "1"; } catch (e) { return false; } })();
@@ -3914,7 +3925,7 @@
         clone.removeAttribute("id");
         clone.classList.add("title-clone");
         clone.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
-        clone.style.position = "absolute"; clone.style.inset = "0";
+        clone.style.position = "absolute"; clone.style.top = clone.style.right = clone.style.bottom = clone.style.left = "0";
         clone.querySelectorAll(".title-inner").forEach((n) => { n.style.animation = "none"; });
         clone.style.background = screens.title.style.background || getComputedStyle(screens.title).background;
         sh.appendChild(clone);
