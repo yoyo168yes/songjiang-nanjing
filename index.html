@@ -3581,8 +3581,19 @@
   // 通關過一次就記住（清除記錄時重置），之後可以選擇跳過
   const TUNNEL_KEY = "sjnj-tunnel-cleared";
   let tunnelCleared = (() => { try { return localStorage.getItem(TUNNEL_KEY) === "1"; } catch (e) { return false; } })();
-  $("btn-run").hidden = !tunnelCleared;
+  // 跑酷遊戲的紀錄（首頁【跑酷遊戲】是否出現、無盡模式最高分）：跟劇情分開，清除記錄不會刪，只有跑酷遊戲裡的【清除記錄】會刪
+  const RUN_KEY = "sjnj-run-unlocked", RUN_BEST_KEY = "sjnj-run-best";
+  let runUnlocked = (() => { try { return localStorage.getItem(RUN_KEY) === "1"; } catch (e) { return false; } })();
+  $("btn-run").hidden = !runUnlocked;
   $("btn-run").addEventListener("click", () => openTunnel(true));
+  window.__runBest = () => { try { return parseInt(localStorage.getItem(RUN_BEST_KEY), 10) || 0; } catch (e) { return 0; } };
+  window.__runSetBest = (v) => { try { localStorage.setItem(RUN_BEST_KEY, String(v)); } catch (e) {} };
+  window.__runClear = () => {
+    try { localStorage.removeItem(RUN_KEY); localStorage.removeItem(RUN_BEST_KEY); } catch (e) {}
+    runUnlocked = false;
+    $("btn-run").hidden = true;
+    closeTunnel();
+  };
   const skipTunnel = $("skip-tunnel");
   function askSkipTunnel() { skipTunnel.hidden = false; $("skip-yes").focus(); }
   skipTunnel.addEventListener("click", (ev) => ev.stopPropagation());
@@ -3596,6 +3607,8 @@
     if (r === "win") {
       tunnelCleared = true;
       try { localStorage.setItem(TUNNEL_KEY, "1"); } catch (e) {}
+      runUnlocked = true;
+      try { localStorage.setItem(RUN_KEY, "1"); } catch (e) {}
       $("btn-run").hidden = false;
       goScene("trackEscape");
     }
@@ -4022,7 +4035,7 @@
   $("reset-all").addEventListener("click", () => {
     try {
       const keys = [];
-      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith("sjnj-") && k !== SAFE_KEY) keys.push(k); }
+      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith("sjnj-") && k !== SAFE_KEY && k !== "sjnj-run-unlocked" && k !== "sjnj-run-best") keys.push(k); }   // 跑酷遊戲的紀錄另外保留
       keys.forEach((k) => localStorage.removeItem(k));
     } catch (e) {}
     location.reload();
