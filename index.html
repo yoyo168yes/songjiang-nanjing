@@ -40,6 +40,9 @@
       url("https://images.plurk.com/354QmmqGvNUZIJ072J9KoI.png") center / cover no-repeat,
       #0b0e0d;
   }
+  /* 首頁最下方的作者與版本 */
+  .credit { position: absolute; left: 0; right: 0; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); margin: 0;
+    text-align: center; font-size: .75rem; letter-spacing: .12em; color: rgba(255,255,255,.45); pointer-events: none; }
   .title-inner {
     text-align: center;
     display: flex; flex-direction: column; align-items: center; gap: 20px;
@@ -627,6 +630,7 @@
       <a href="https://portaly.cc/beifudianxiaoer/support" target="_blank" rel="noopener">贊助我們</a>
     </nav>
   </div>
+  <p class="credit">作者：北府店小二[ver.1.0]</p>
 </section>
 
 <!-- 劇情 -->
@@ -2345,7 +2349,8 @@
       lockNav: () => SEA_LOCK, noJump: true,
       lines: [
         "叉路居然還變多了！該走哪邊才好……",
-        IMG("https://images.plurk.com/2efCD51uRvYUUgEfEtdCLV.png")
+        IMG("https://images.plurk.com/2efCD51uRvYUUgEfEtdCLV.png"),
+        "會不會跟風水有關係啊……"
       ],
       choices: [
         { text: "中", to: "seaRidge" }, { text: "西", to: "seaRidge" }, { text: "南", to: "seaRidge" },
