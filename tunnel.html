@@ -119,11 +119,14 @@ function begin(mode){endless=mode===true;score=0;scoreTick=0;voiceStop();bestAtS
 function playMonster(){monster.playbackRate=1.5;monster.muted=true;monster.volume=0;monster.play().catch(()=>{})}
 function end(win){if(!win)return;state='won';monster.pause();voiceStop();syncFootsteps();tone(680,.7,.1);modal('抵達出口！','拼命奔跑過後，總算是甩掉了「<span style="filter:blur(3px)">那個東西</span>」……<br>在隧道盡頭等著我的，會是什麼呢？',ARCADE?'回首頁':'繼續　→','ESCAPE COMPLETE');$('again').hidden=false;$('hint').textContent=''}
 const collisionAudio=$('collisionAudio');
-// 撞到障礙物回頭時的聲音：播完為止、音量漸小；只剩一條命時一直循環
-const voice=$('voiceAudio');let voiceWasPlaying=false;
-function voiceHit(){if(voice.paused||voice.ended){voice.currentTime=0;voice.play().catch(()=>{})}}
-function voiceUpdate(){const last=hits===2&&(state==='running'||state==='dying'||state==='paused');voice.loop=last;if(voice.paused)return;if(last)voice.volume=.85;else{const d=voice.duration||18.6;voice.volume=Math.max(0,Math.min(1,.85*(1-voice.currentTime/d)))}}
-function voiceStop(){voice.pause();voice.loop=false;try{voice.currentTime=0}catch(_){}}
+// 撞到障礙物回頭時的聲音：一律從第 2 秒開始播、播完為止、音量漸小；只剩一條命時播完會再從第 2 秒接著播（一直循環）
+const voice=$('voiceAudio'),VOICE_START=2;let voiceWasPlaying=false;
+const lastLife=()=>hits===2&&(state==='running'||state==='dying'||state==='paused');
+function voiceFrom2(){try{voice.currentTime=VOICE_START}catch(_){}voice.play().catch(()=>{})}
+function voiceHit(){if(voice.paused||voice.ended)voiceFrom2()}
+voice.addEventListener('ended',()=>{if(lastLife()&&state!=='paused')voiceFrom2()});
+function voiceUpdate(){voice.loop=false;if(voice.paused)return;if(lastLife())voice.volume=.85;else{const d=(voice.duration||18.6)-VOICE_START;voice.volume=Math.max(0,Math.min(1,.85*(1-Math.max(0,voice.currentTime-VOICE_START)/d)))}}
+function voiceStop(){voice.pause();try{voice.currentTime=VOICE_START}catch(_){}}
 function playCollisionSound(){collisionAudio.pause();collisionAudio.currentTime=0;collisionAudio.play().catch(()=>{});}
 function collide(o){if(o.hit||invulnerable>0||lookingBack)return;o.hit=true;hits++;playCollisionSound();voiceHit();impactShake=.42;lookingBack=true;lookTime=0;height=0;vy=0;if(hits>=3)state='dying';syncFootsteps();tone(65,.3,.08)}
 function pause(){if(state==='running'||state==='dying'){resumeState=state;state='paused';monster.pause();voiceWasPlaying=!voice.paused;voice.pause();$('overlay').hidden=true;$('pauseNotice').hidden=false;$('pause').textContent='繼續';syncFootsteps()}else if(state==='paused'){state=resumeState;playMonster();if(voiceWasPlaying)voice.play().catch(()=>{});$('pauseNotice').hidden=true;$('overlay').hidden=true;$('pause').textContent='暫停';syncFootsteps()}}
