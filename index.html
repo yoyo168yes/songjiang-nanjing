@@ -295,7 +295,7 @@
   .color-btn[aria-pressed="true"] { transform: translateY(3px); border-color: #fff; box-shadow: inset 0 4px 6px rgba(0,0,0,.4), 0 1px 0 #111, 0 0 10px rgba(255,255,255,.55); }
   .color-btn:focus-visible { outline: 2px solid #ffd76a; outline-offset: 3px; }
   .color-wrap.done .color-btn { cursor: default; }
-  .color-wrap .choice { display: block; }
+  .color-actions { display: flex; gap: 1.6em; }
   .stage p.color-msg { margin: .4em 0 0; color: #bbb; animation: fadein .3s ease-out both; }
   @media (max-width: 420px) { .color-pad { grid-template-columns: repeat(5, 40px); gap: 9px; padding: 14px; } .color-btn { width: 40px; height: 40px; } }
   .lift-pad { display: inline-flex; flex-direction: column; align-items: center; gap: 14px; margin: .6em 0 1em; padding: 18px 22px 20px;
@@ -3212,7 +3212,7 @@
       if (msg) { msg.remove(); msg = null; }
       if (right) {
         wrap.classList.add("done");
-        ok.remove();
+        ok.remove(); back.remove();
         setAdultMember(true);
         onSolved();
         return;
@@ -3225,7 +3225,14 @@
       wrap.appendChild(msg);
       scrollDown();
     });
-    wrap.appendChild(ok);
+    // 【返回】：還沒按對之前可以先回到「開始探索」
+    const back = document.createElement("button");
+    back.type = "button"; back.className = "choice"; back.textContent = "【返回】";
+    back.addEventListener("click", (ev) => { ev.stopPropagation(); goScene("explore"); });
+    const row = document.createElement("div");
+    row.className = "color-actions";
+    row.appendChild(ok); row.appendChild(back);
+    wrap.appendChild(row);
     return wrap;
   }
 
@@ -3404,7 +3411,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "bb90b40f";
+  const BUILD_VER = "47019455";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
