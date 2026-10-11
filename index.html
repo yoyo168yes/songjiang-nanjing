@@ -3373,6 +3373,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
+  const BUILD_VER = "b45e7a16";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
@@ -3393,7 +3394,7 @@
   const qrCache = {};
   function getQrPage(pg) {
     if (!(pg in QR_PAGES)) return Promise.resolve(null);
-    return qrCache[pg] ? Promise.resolve(qrCache[pg]) : fetch("sites/" + pg + ".html").then((r) => r.text()).then((t) => (qrCache[pg] = t));
+    return qrCache[pg] ? Promise.resolve(qrCache[pg]) : fetch("sites/" + pg + ".html?v=" + BUILD_VER).then((r) => r.text()).then((t) => (qrCache[pg] = t));
   }
   function renderQR() {
     const pg = qrHistory[qrIndex];
@@ -3565,7 +3566,7 @@
   // ---------- 隧道逃生小遊戲 ----------
   const tunnelWin = $("tunnel-win"), tunnelFrame = $("tunnel-frame");
   let tunnelCache = null;
-  function getTunnelHtml() { return tunnelCache ? Promise.resolve(tunnelCache) : fetch("tunnel.html").then((r) => r.text()).then((t) => (tunnelCache = t)); }   // 發布版改成讀取 tunnel.html
+  function getTunnelHtml() { return tunnelCache ? Promise.resolve(tunnelCache) : fetch("tunnel.html?v=" + BUILD_VER).then((r) => r.text()).then((t) => (tunnelCache = t)); }   // 發布版改成讀取 tunnel.html
   let tunnelArcade = false;   // 從首頁【跑酷遊戲】開啟：結果不影響劇情
   function openTunnel(arcade = false) {
     tunnelArcade = arcade;
