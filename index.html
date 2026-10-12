@@ -476,6 +476,7 @@
   .scene-img img.dl-img:hover { outline: 1px solid var(--line-green); outline-offset: 3px; }
   .scene-img img { display: block; width: 100%; height: auto; border-radius: 2px; }
   .choices { display: flex; flex-wrap: wrap; gap: 1.2em; margin-top: .6em; animation: fadein .4s ease-out both; }
+  .choices .choice-br { flex-basis: 100%; height: 0; margin-top: -1.2em; }
   .choice {
     background: none; border: 0; padding: 4px 0; cursor: pointer;
     font-family: var(--serif); font-weight: 700; font-size: 1.12rem; letter-spacing: .05em;
@@ -1655,7 +1656,21 @@
           { text: "TRUE END：到站", cls: "end true", unlock: "true" }
         ])
       ]; },
-      choices: [{ text: "回首頁", to: "@title" }]
+      choices: [{ text: "作者的話", to: "authorNote" }]
+    },
+    // 作者的話：TRUE END／SECRET END 之後（白底、棕字，跟 DREAM END 一樣）
+    authorNote: {
+      bg: "dream",
+      lines: [
+        "漫長的旅程終於結束了，恭喜脫出松江南京站！台北市民向您敬禮（？）",
+        "感謝您的遊玩，如果有什麼想說的話、想給予的建議，可以到下方的匿名表單填寫，或者來看看我的其他作品！"
+      ],
+      choices: [
+        { text: "回饋表單（全匿名）", action: () => openExternal("https://docs.google.com/forms/d/e/1FAIpQLSda0p9kbAGx7F-F8YIK_OtP6y82QDdLy4nGrO1DKiS-JQB5Hg/viewform?usp=publish-editor") },
+        { text: "其他作品", action: () => openExternal("https://portaly.cc/beifudianxiaoer") },
+        { text: "贊助連結", action: () => openExternal("https://portaly.cc/beifudianxiaoer/support") },
+        { text: "回首頁", to: "@title", br: true }
+      ]
     },
     unknownDoor: {
       lines: [
@@ -2925,6 +2940,7 @@
   const SCENE_BGS = ["blood", "fall", "dream", "white"];
   // 網站根目錄（遊戲一開始的網址）；之後網址暫時改變時，讀取檔案仍以這裡為準
   const SITE_BASE = location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "");
+  function openExternal(url) { window.open(url, "_blank", "noopener"); }
   function enterTrackedPath(sub) {
     try { if (location.href.replace(/[?#].*$/, "") !== SITE_BASE + sub) history.pushState(null, "", SITE_BASE + sub); } catch (e) {}
   }
@@ -3125,6 +3141,7 @@
     const box = document.createElement("div");
     box.className = "choices";
     list.forEach((c) => {
+      if (c.br) { const br = document.createElement("span"); br.className = "choice-br"; box.appendChild(br); }   // 換行
       const b = document.createElement("button");
       b.type = "button";
       b.className = "choice";
@@ -3428,7 +3445,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "8a6da304";
+  const BUILD_VER = "9944f593";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
