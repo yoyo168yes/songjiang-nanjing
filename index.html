@@ -570,6 +570,15 @@
   .reset-note { margin: 0; font-size: .85rem; line-height: 1.6; color: #8a9591; }
   .reset-actions { display: flex; justify-content: center; gap: 1.6em; margin-top: 8px; }
   .jump-empty { padding: 20px; font-size: .9rem; color: #8a9591; }
+  /* 樹狀圖：子分歧往右縮排，用細線連起來 */
+  .jump-list ul { list-style: none; margin: 0; padding: 0 0 0 18px; }
+  .jump-list > li + li { border-top: 1px solid #1f3a2b; }
+  .jump-list ul li { position: relative; }
+  .jump-list ul li::before { content: ""; position: absolute; left: 4px; top: 0; bottom: 0; border-left: 1px solid #2c5c41; }
+  .jump-list ul li:last-child::before { bottom: auto; height: 22px; }
+  .jump-list ul li::after { content: ""; position: absolute; left: 4px; top: 22px; width: 10px; border-top: 1px solid #2c5c41; }
+  .jump-list ul .jump-item { padding: 9px 14px 9px 20px; }
+  .jump-item.here b::after { content: "　◀ 目前"; font-size: .75rem; font-weight: 400; color: var(--line-green); }
   .endings .back { align-self: flex-end; }
   .back:hover, .back:focus-visible { color: #fff; }
 
@@ -1662,6 +1671,7 @@
     // 作者的話：TRUE END／SECRET END 之後（白底、棕字，跟 DREAM END 一樣）
     authorNote: {
       bg: "dream",
+      noJump: true,
       lines: [
         "漫長的旅程終於結束了，恭喜脫出松江南京站！台北市民向您敬禮（？）",
         "感謝您的遊玩，如果有什麼想說的話、想給予的建議，可以到下方的匿名表單填寫，或者來看看我的其他作品！"
@@ -2757,6 +2767,7 @@
     womensRoom: "今天是什麼日子？",
     explore: "開始探索",
     liftFloor: "陌生的長廊",
+    unknownDoor: "未知的門",
     explorePlatform: "命運的抉擇",   // 對向月台（訂過內臟之水後）的【喝】【不喝】
     bones: "隧道的盡頭"
   };
@@ -2786,6 +2797,19 @@
     "explore", "liftFloor",                 // 開始探索 → 電梯裡的長廊
     "bones"                                 // 地下十八樓：白骨與防洪門
   ];
+  // 跳轉劇情樹狀圖：每個分歧點的上一層分歧點（沒列在這裡的分歧點掛在最外層）
+  // 上一層沒讀過的話，會往上找最近一個讀過的分歧點
+  const JUMP_PARENT = {
+    lobby: null, omen: null,
+    recall: "omen", afterQR: "omen",
+    toilet: "lobby", womensRoom: "toilet",
+    xindian: "lobby",
+    loop: "xindian", turnBack: "loop", keepGoing: "loop", "run@7": "keepGoing",
+    talk: "keepGoing", lookClose: "talk", oldManFlee: "lookClose", askOldMan: "lookClose", giveMore: "askOldMan",
+    stopThink: "xindian", onTrain: "stopThink", backAgain: "onTrain", closeLook: "backAgain",
+    noOneBoards: "stopThink", explore: "noOneBoards",
+    liftFloor: "explore", unknownDoor: "liftFloor", explorePlatform: "explore", bones: "explore"
+  };
   const isBranch = (sc) => !sc.noJump && !sc.ending && sc !== scenes.run && (choicesOf(sc) || []).length >= 2;
 
   // 一行可以是字串、{ text, cls }，或 { segs: [[文字, class], ...] }（行內部分文字加特效）
@@ -3426,37 +3450,37 @@
       li.textContent = "還沒有讀過任何分歧點。";
       jumpList.appendChild(li);
     }
+    // 樹狀圖：找出每個分歧點最近一個讀過的上層分歧點
+    const shown = new Set(ids), kids = new Map([[null, []]]);
     ids.forEach((id) => {
-      const x = JUMP_EXTRA[id];
-      if (x) {
-        const li = document.createElement("li");
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "jump-item";
-        const title = document.createElement("b");
-        title.textContent = x.label;
-        const sub = document.createElement("span");
-        sub.textContent = x.choices.map((c) => `【${c}】`).join("");
-        b.append(title, sub);
-        b.addEventListener("click", (ev) => { ev.stopPropagation(); jump.hidden = true; x.go(); });
-        li.appendChild(b);
-        jumpList.appendChild(li);
-        return;
-      }
-      const sc = scenes[id];
-      const li = document.createElement("li");
+      let par = JUMP_PARENT[id] ?? null;
+      while (par && !shown.has(par)) par = JUMP_PARENT[par] ?? null;
+      if (!kids.has(par)) kids.set(par, []);
+      kids.get(par).push(id);
+    });
+    const makeItem = (id) => {
+      const x = JUMP_EXTRA[id], sc = scenes[id];
       const b = document.createElement("button");
       b.type = "button";
       b.className = "jump-item";
+      if (!x && sc === scene) b.classList.add("here");
       const title = document.createElement("b");
-      title.textContent = NODE_LABELS[id] || segsOf(sc.lines.find((l) => !l.img && !l.video)).map((x) => x[0]).join("").slice(0, 16);
+      title.textContent = x ? x.label : NODE_LABELS[id] || segsOf(sc.lines.find((l) => !l.img && !l.video)).map((y) => y[0]).join("").slice(0, 16);
       const sub = document.createElement("span");
-      sub.textContent = choicesOf(sc).map((c) => `【${c.text}】`).join("");
+      sub.textContent = x ? x.choices.map((c) => `【${c}】`).join("") : choicesOf(sc).map((c) => `【${c.text}】`).join("");
       b.append(title, sub);
-      b.addEventListener("click", (ev) => { ev.stopPropagation(); jump.hidden = true; goScene(id); });
-      li.appendChild(b);
-      jumpList.appendChild(li);
-    });
+      b.addEventListener("click", (ev) => { ev.stopPropagation(); jump.hidden = true; x ? x.go() : goScene(id); });
+      return b;
+    };
+    const build = (par, ul) => {
+      (kids.get(par) || []).forEach((id) => {
+        const li = document.createElement("li");
+        li.appendChild(makeItem(id));
+        if (kids.has(id)) { const sub = document.createElement("ul"); build(id, sub); li.appendChild(sub); }
+        ul.appendChild(li);
+      });
+    };
+    build(null, jumpList);
     jump.hidden = false;
     jumpList.scrollTop = 0;
     $("jump-close").focus();
@@ -3473,7 +3497,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "f1ca9143";
+  const BUILD_VER = "4bafd8b0";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
