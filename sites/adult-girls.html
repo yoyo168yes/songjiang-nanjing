@@ -190,6 +190,7 @@ a.g-page:hover { background: #ffe0f0; }
 .g-pic-wrap { position: relative; }
 .g-pic .g-pic-wrap img.g-broken { display: none; position: absolute; left: 50%; top: calc(24% - 35px); transform: translateX(-50%); width: 62.08px; height: 62.08px; border: 0; border-radius: 0; background: none; object-fit: fill; }
 .g-pic-wrap.broken img.g-broken { display: block; }
+.g-pic .g-pic-wrap img.g-broken.g-broken-draw { box-sizing: border-box; border: 1px solid #a9a9a9; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M1 1h10l4 4v4l-3-2-3 3-3-3-3 3-2-2z' fill='%23e8e8e8' stroke='%23999'/%3E%3Cpath d='M1 12l2 2 3-3 3 3 3-3 3 2v2H1z' fill='%23e8e8e8' stroke='%23999'/%3E%3C/svg%3E") 3px 3px no-repeat; color: transparent; }
 /* 左欄：新書特報（圖片長寬跟右欄下面那張圖一樣） */
 .sidebar img.side-title-img { height: auto; object-fit: fill; }
 .sidebar img.side-gif2, .sidebar img.side-missing { object-fit: fill; }   /* 「新書特報」標題圖：長寬跟右欄最上方的 GIF 一樣（不等比例） */
@@ -356,7 +357,17 @@ function pagerClosed() { xpDialog('訊息', '整修中，暫不開放！', [{ la
   var ok = false; try { ok = parent.__qrCherryFace && parent.__qrCherryFace(); } catch (e) {}
   if (!ok) return;
   var w = document.getElementById('cherry-pic'); if (!w || w.classList.contains('broken')) return;
-  var bk = w.querySelector('img.g-broken'); bk.src = bk.getAttribute('data-src');
+  var bk = w.querySelector('img.g-broken'), url = bk.getAttribute('data-src');
+  // Safari／iPhone 不會畫出破圖圖示，也沒有滑鼠移過去的提示：自己畫一個破圖框
+  if (!window.chrome) bk.classList.add('g-broken-draw');
+  bk.style.cursor = 'pointer';
+  // 點破圖：跟瀏覽器一樣告訴你圖片網址，可以開啟（手機長按不到網址）
+  bk.addEventListener('click', function (ev) {
+    ev.stopPropagation();
+    xpDialog('無法顯示圖片', '圖片載入失敗：<br><span style="word-break:break-all">' + decodeURI(url) + '</span>',
+      [{ label: '開啟圖片', href: url }, { label: '確定', onClick: function (d) { d.close(); } }], { warn: true });
+  });
+  bk.src = url;
   w.querySelector('img').src = 'https://images.plurk.com/3AUomYEcXZiX46AzWrAJQi.png';
   w.classList.add('broken');
 })();

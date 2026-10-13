@@ -2902,7 +2902,34 @@
   document.addEventListener("pointermove", moveTorch);
   document.addEventListener("pointerdown", moveTorch);
   // 讓玩家把檔案存到電腦
-  function downloadB64({ b64, url: fileUrl, name, type }) {
+  // iPhone／iPad：Safari 的 download 常常沒反應、App 內建瀏覽器完全不能下載
+  // → 先用分享選單（可「儲存到檔案」），不支援就開新分頁讓玩家自己存
+  const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  function b64File({ b64, name, type }) {
+    const bin = atob(b64), arr = new Uint8Array(bin.length);
+    for (let k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
+    return new File([arr], name, { type: type || "application/octet-stream" });
+  }
+  // 發布版的檔案先抓下來備用（分享選單必須在點擊當下就呼叫，不能等下載）
+  function prefetchFile(f) {
+    if (!IS_IOS || !f.url || f.file || f.fetching) return;
+    f.fetching = true;
+    fetch(f.url).then((r) => r.ok ? r.blob() : Promise.reject()).then((bl) => { f.file = new File([bl], f.name, { type: f.type || bl.type }); })
+      .catch(() => {}).then(() => { f.fetching = false; });
+  }
+  function downloadB64(f) {
+    const { b64, url: fileUrl, name, type } = f;
+    if (IS_IOS) {
+      const file = f.file || (b64 ? b64File(f) : null);
+      try {
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file] }).catch(() => {});
+          return;
+        }
+      } catch (e) {}
+      const u = fileUrl || URL.createObjectURL(file);
+      if (window.open(u, "_blank")) return;   // 開不了新分頁的話，照一般方式下載
+    }
     if (fileUrl) {   // 發布版：檔案放在網站資料夾裡，直接下載
       const a = document.createElement("a");
       a.href = fileUrl; a.download = name;
@@ -3446,7 +3473,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "6204505f";
+  const BUILD_VER = "832b5d95";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
@@ -3604,7 +3631,7 @@
     if (callUrl) { URL.revokeObjectURL(callUrl); callUrl = ""; }
     call.classList.remove("in-call");
     $("call-status").textContent = "📞 來電中……";
-    if (done) { call.classList.add("after"); $("call-dl").focus(); }
+    if (done) { call.classList.add("after"); $("call-dl").focus(); prefetchFile(CALL_FILE); }
     else call.hidden = true;
   }
   // 下載過錄音之後，成人網上 Cherry 的照片會換掉（清除記錄時重置）
@@ -3624,6 +3651,7 @@
     const fmt = () => { const sec = Math.floor((Date.now() - t0) / 1000); return "通話中　" + String(Math.floor(sec / 60)).padStart(2, "0") + ":" + String(sec % 60).padStart(2, "0"); };
     status.textContent = fmt();
     callTick = setInterval(() => { status.textContent = fmt(); }, 500);
+    prefetchFile(CALL_FILE);
     try {
       if (CALL_FILE.url) callAudio = new Audio(CALL_FILE.url);
       else {
