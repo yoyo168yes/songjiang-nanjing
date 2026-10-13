@@ -447,7 +447,8 @@
   .cheat-form button:hover, .cheat-form button:focus-visible { border-color: var(--line-green); color: var(--line-green); outline: none; }
   .cheat-form.shake { animation: quake .08s steps(2) 4; }
   /* 只在觸控裝置（手機、平板）顯示；電腦用鍵盤輸入上上下下左右左右BA */
-  @media (hover: hover) and (pointer: fine) { .cheat-form { display: none; } }
+  /* 有觸控能力的裝置一律顯示（部分手機會誤報 hover/pointer:fine） */
+  @media (hover: hover) and (pointer: fine) { html:not(.touch) .cheat-form { display: none; } }
   /* 玻璃碎裂 */
   .shatter { position: fixed; top:0;right:0;bottom:0;left:0; z-index: 80; overflow: hidden; background: #fff; }
   .shard { position: absolute; top:0;right:0;bottom:0;left:0; will-change: transform, opacity; }
@@ -626,7 +627,7 @@
 <!-- 首頁 -->
 <section id="title-screen">
   <form class="cheat-form" id="cheat-form" autocomplete="off">
-    <input id="cheat-input" type="text" aria-label="密碼">
+    <input id="cheat-input" type="text" aria-label="密碼" enterkeyhint="go" autocapitalize="off" autocorrect="off" spellcheck="false">
     <button type="submit">確認</button>
   </form>
   <div class="title-inner">
@@ -3445,7 +3446,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "9944f593";
+  const BUILD_VER = "6204505f";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
@@ -3934,7 +3935,8 @@
     if (screens.title.hidden || cheating) return;
     if (ev.target.closest && ev.target.closest("input, textarea")) return;
     if (!modal.hidden || !safeDlg.hidden || !reset.hidden) return;
-    const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
+    let k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
+    if (ev.code === "KeyB") k = "b"; else if (ev.code === "KeyA") k = "a";   // 中文輸入法開著時 key 會是 "Process"
     if (k === KONAMI[konamiPos]) {
       konamiPos++;
       if (konamiPos === KONAMI.length) { konamiPos = 0; triggerCheat(); }
@@ -3942,14 +3944,42 @@
       konamiPos = k === KONAMI[0] ? 1 : 0;
     }
   });
+  try {
+    if (navigator.maxTouchPoints > 0 || "ontouchstart" in window || matchMedia("(any-pointer: coarse)").matches)
+      document.documentElement.classList.add("touch");
+  } catch (e) {}
+  // 手機輸入法容易打出全形字、箭頭、空格或標點，統一整理後再比對
+  function isCheatCode(raw) {
+    let v = String(raw || "");
+    try { v = v.normalize("NFKC"); } catch (e) {}
+    v = v.toUpperCase()
+      .replace(/[↑⬆⇧⇑▲△]/g, "上").replace(/[↓⬇⇩⇓▼▽]/g, "下")
+      .replace(/[←⬅⇦⇐◀◁]/g, "左").replace(/[→➡⇨⇒▶▷]/g, "右")
+      .replace(/[^A-Z上下左右]/g, "")
+      .replace(/UP/g, "上").replace(/DOWN/g, "下").replace(/LEFT/g, "左").replace(/RIGHT/g, "右");
+    return v === "上上下下左右左右BA";
+  }
+  function cheatFromForm() {
+    if (cheating || screens.title.hidden) return;
+    const inp = $("cheat-input");
+    inp.value = "";
+    inp.blur();
+    cheating = true;
+    // 等手機鍵盤收起、畫面尺寸穩定後再碎裂
+    setTimeout(() => { cheating = false; triggerCheat(); }, 350);
+  }
   $("cheat-form").addEventListener("submit", (ev) => {
     ev.preventDefault();
-    const v = $("cheat-input").value.replace(/\s/g, "").toUpperCase();
+    if (isCheatCode($("cheat-input").value)) { cheatFromForm(); return; }
     $("cheat-input").value = "";
-    if (v === "上上下下左右左右BA") { $("cheat-input").blur(); triggerCheat(); return; }
     const f = $("cheat-form");
     f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
   });
+  // 有些輸入法按 Enter 不會送出表單：輸入正確就直接觸發
+  ["input", "compositionend", "change"].forEach((t) => $("cheat-input").addEventListener(t, (ev) => {
+    if (ev.isComposing) return;
+    if (isCheatCode($("cheat-input").value)) cheatFromForm();
+  }));
 
   const CHEAT_LINES = [
     "真不愧是你，居然能發現這個辦法。",
