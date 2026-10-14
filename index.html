@@ -88,6 +88,8 @@
     text-shadow: 0 0 3px #000, 0 1px 10px rgba(0,0,0,.95);
   }
   .intro.broken { white-space: pre-line; }
+  /* 首頁選單下方的路線說明 */
+  .route-note { margin: 18px 0 0; font-size: .78rem; line-height: 1.8; letter-spacing: .06em; color: rgba(255,255,255,.62); text-shadow: 0 1px 6px rgba(0,0,0,.9); }
   .intro .note { display: block; font-size: .85em; color: #fff; letter-spacing: .08em; }
   .menu { display: flex; gap: 2.4em; margin-top: 8px; }
   .link {
@@ -652,6 +654,7 @@
       <!-- 通關過跑酷小遊戲後出現：直接重玩（含無盡模式） -->
       <button class="link run" id="btn-run" type="button" hidden>跑酷遊戲</button>
     </nav>
+    <p class="route-note">本遊戲分為男女主雙路線，需達成兩條主線的GOOD END，真結局才會解放。<br>選擇主角之後，需清除遊戲記錄才能重新選擇。</p>
     <!-- 達成過「歡迎來到松江南京站」後出現 -->
     <nav class="extra-links" id="extra-links" hidden>
       <a href="https://portaly.cc/beifudianxiaoer" target="_blank" rel="noopener">其他作品</a>
@@ -3502,7 +3505,7 @@
 
   // ---------- 掃描 QR 碼後的網頁 ----------
   // 網頁視窗內的頁面：home＝內月藏的起源土也，adult＝「本日推薦」連到的網頁
-  const BUILD_VER = "654bd472";
+  const BUILD_VER = "0686cc14";
   const QR_PAGES = {"home": 1, "art-mirror": 1, "art-human": 1, "art-ningen": 1, "art-organ": 1, "art-suicide": 1, "art-death": 1, "art-letter": 1, "art-station": 1, "art-list2016": 1, "art-deleted": 1, "art-branch": 1, "art-lust": 1, "search-1": 1, "search-2": 1, "search-3": 1, "search-4": 1, "search-5": 1, "search-6": 1, "mofu": 1, "water": 1, "maint": 1, "backup": 1, "adult": 1, "adult-girls": 1, "adult-toilet": 1, "missing": 1, "news": 1};   // 內容放在 sites/ 資料夾
   // 網頁內的連結 → 頁面
   const QR_LINKS = { "色情網頁.html": "adult" };
